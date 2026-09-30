@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业清单</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(200,200,255,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(200,255,255,0.3) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 5px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        /* 统一玻璃卡片风格 */
+        .task-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .task-card:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subject-tag {
+            background: #1a1a1a;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .arrow {
+            transition: transform 0.3s;
+            color: #ccc;
+            font-size: 0.8rem;
+        }
+
+        .task-card.active .arrow {
+            transform: rotate(180deg);
+            color: #1a1a1a;
+        }
+
+        .task-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 0;
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .task-card.active .task-content {
+            max-height: 300px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>作业清单</h1>
+            <a href="index.html" class="back-btn">返回</a>
+        </header>
+
+        <!-- 语文 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：学法大视野<br>第一单元基础任务群</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》第一单元所有基础型任务群。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：学法大视野 P20-22</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》P20-22练习。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：学法大视野 P47-50</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》P47-50《醉翁亭记》练习。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：学法大视野 P52-54</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》P52-54《湖心亭看雪》练习。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：学法大视野 P56-58、P61-62</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》P56-58、P61-62练习。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：默写《沁园春·雪》<br>《我爱这土地》</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                默写《沁园春·雪》《我爱这土地》。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：默写《岳阳楼记》3-5段</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                默写《岳阳楼记》第3-5段。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：默写《醉翁亭记》1、2段</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                默写《醉翁亭记》第1、2段。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：默写《诗词三首》</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                默写《行路难》（其一）、《酬乐天扬州初逢席上见赠》、《水调歌头》（明月几时有）。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：作文《我眼中的祖国》</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成作文《我眼中的祖国》。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>语文：民族团结主题手抄报</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">语文</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                A3纸手绘，主题：石榴籽一家亲，铸牢中华民族共同体意识，10月9日前上交。
+            </div>
+        </div>
+
+        <!-- 数学 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：学法大视野 专练5</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》专练5 一元二次方程的解法 P71。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：学法大视野 专练6</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》专练6 根的判别式及根与系数的关系的综合运用 P76。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：学法大视野 专练7</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》专练7 一元二次方程的实际应用。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：假期数学素养训练（一）</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《假期数学素养训练(一)》。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：假期数学素养训练（二）</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《假期数学素养训练(二)》。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：少年智力开发报</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成第1期《少年智力开发报》3评、4评。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：复习教材</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                复习教材，第一学月检测考察到“相似三角形判定定理1”，包含七、八年级内容。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>数学：自主批改假期作业并更正</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">数学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                自主批改假期作业并更正错题。
+            </div>
+        </div>
+
+        <!-- 英语 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>英语：学法大视野 P1-44</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">英语</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》P1-44。
+            </div>
+        </div>
+
+        <!-- 道法 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>道德与法治：学法大视野1-4课<br>拓展提升材料题</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">道法</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《学法大视野》第1-4课“拓展提升”板块的材料题。
+            </div>
+        </div>
+
+        <!-- 世界历史 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>世界历史：同步优学  金学典 <br>P105-116</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">历史</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《同步优学 金学典》P105-116。
+            </div>
+        </div>
+
+        <!-- 物理 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>物理：同步优学  金学典 <br>P93-110</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">物理</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《同步优学 金学典》P93-110。
+            </div>
+        </div>
+
+        <!-- 化学 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>化学：能力培养与测试<br>写到P45</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">化学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成《能力培养与测试(精编版)》写到 P45。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>化学：完成卷② 第二单元试卷</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">化学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成卷② 第二单元试卷（初中上分卷）。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>化学：完成第二单元试卷</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">化学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成第二单元试卷。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>化学：完成第三单元试卷</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">化学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                完成第三单元试卷。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>化学：复习教材知识</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">化学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                复习教材知识，第一学月检测考察到“元素”。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>化学：制作化学模型</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">化学</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                制作化学模型。
+            </div>
+        </div>
+
+        <!-- 体育 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>体育：排球练习</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">体育</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                每天完整的过关排球练习2次；不能过关的完成总数200次垫球。
+            </div>
+        </div>
+
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>体育：跳绳训练</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">体育</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                每天跳绳150次×3组。
+            </div>
+        </div>
+
+        <!-- 注意事项 -->
+        <div class="task-card" onclick="this.classList.toggle('active')">
+            <div class="task-header">
+                <h3>注意事项</h3>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="subject-tag">注意事项</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+            <div class="task-content">
+                1.【第一学月检测】2026年10月09日起开始第一学月检测，考察科目有语文、数学、英语、物理、化学，请做好复习。<br>
+                2.【晚四安排】根据年级组安排，国庆放假回来部分学生(即周三读报课念到名字的学生)开始上晚自习(4)，下课时间为21:10。<br>
+                3.作业清单仅供参考，如有错误欢迎指出。
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
