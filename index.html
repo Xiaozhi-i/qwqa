@@ -1,106 +1,470 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>孤鸿组</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孤鸿组 · 学习资料中心</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-        body {
-            background: #f0f2f5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            /* 背景微弱光晕 */
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(200,200,255,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(200,255,255,0.3) 0%, transparent 50%);
-        }
+  body {
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
 
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+  .container {
+    width: 100%;
+    max-width: 420px;
+  }
 
-        .logo {
-            font-size: 2.8rem;
-            font-weight: 900;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-        }
+  /* ---------------- 顶部标题 ---------------- */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
 
-        .container {
-            width: 100%;
-            max-width: 360px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+  .logo {
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+    line-height: 1.2;
+  }
 
-        .glass-btn {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-decoration: none;
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 24px;
-            padding: 25px 30px;
-            color: #1a1a1a;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  .subtitle {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    letter-spacing: 6px;
+    color: #9a9a9a;
+    text-indent: 6px;
+  }
 
-        .glass-btn h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
+  .divider {
+    width: 36px;
+    height: 3px;
+    border-radius: 2px;
+    background: #1a1a1a;
+    opacity: 0.85;
+    margin: 18px auto 0;
+  }
 
-        .glass-btn .arrow {
-            font-size: 1.2rem;
-            color: #ccc;
-            transition: transform 0.3s;
-        }
+  /* ---------------- 倒计时 ---------------- */
+  .countdown {
+    display: grid;
+    margin-bottom: 16px;
+  }
 
-        .glass-btn:active {
-            transform: scale(0.96);
-            background: rgba(255, 255, 255, 0.85);
-        }
+  .countdown > .cd-card {
+    grid-area: 1 / 1;
+  }
 
-        .glass-btn:active .arrow {
-            transform: translateX(5px);
-            color: #1a1a1a;
-        }
-    </style>
+  .cd-card {
+    opacity: 0;
+    transform: scale(0.96);
+    pointer-events: none;
+    cursor: pointer;
+    min-height: 104px;
+    transition: opacity 0.18s ease-in,
+                transform 0.18s ease-in,
+                background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cd-card.is-visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    transition: opacity 0.34s ease-out 0.16s,
+                transform 0.34s ease-out 0.16s,
+                background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cd-label {
+    font-size: 0.72rem;
+    letter-spacing: 1.6px;
+    color: #9a9a9a;
+    margin-bottom: 5px;
+  }
+
+  .cd-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    letter-spacing: 0.5px;
+    line-height: 1.35;
+  }
+
+  .cd-num {
+    font-size: 1.55rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    margin: 0 4px;
+  }
+
+  .cd-affix,
+  .cd-unit {
+    font-weight: 600;
+  }
+
+  .cd-hint {
+    margin-top: 6px;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    color: #b5b5b5;
+  }
+
+  /* ---------------- 菜单入口 ---------------- */
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .glass-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    padding: 20px 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-card:active {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .icon {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    background: #1a1a1a;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .icon svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    overflow: visible;
+  }
+
+  .glass-card:active .icon {
+    transform: scale(0.92);
+  }
+
+  .card-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .card-text h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 1px;
+  }
+
+  .card-text p {
+    margin-top: 5px;
+    font-size: 0.78rem;
+    color: #9a9a9a;
+    letter-spacing: 0.5px;
+  }
+
+  .arrow {
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: #ccc;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-card:active .arrow {
+    transform: translateX(5px);
+    color: #1a1a1a;
+  }
+
+  /* ---------------- 页脚 ---------------- */
+  .footer {
+    margin-top: 44px;
+    text-align: center;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: #b5b5b5;
+  }
+
+  /* ---------------- 桌面端悬停 ---------------- */
+  @media (hover: hover) {
+    .glass-card:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+    }
+
+    .glass-card:hover .arrow {
+      transform: translateX(5px);
+      color: #1a1a1a;
+    }
+
+    .glass-card:hover .icon {
+      transform: rotate(-4deg) scale(1.05);
+    }
+
+    .cd-card.is-visible:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+    }
+  }
+
+  /* ---------------- 小屏适配 ---------------- */
+  @media (max-width: 360px) {
+    .logo {
+      font-size: 2rem;
+    }
+
+    .glass-card {
+      padding: 18px 20px;
+      gap: 13px;
+    }
+
+    .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+    }
+
+    .icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .cd-num {
+      font-size: 1.35rem;
+    }
+  }
+</style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo">孤鸿组</div>
+<div class="container">
+
+  <div class="header">
+    <div class="logo">孤鸿组</div>
+    <div class="subtitle">学习资料中心</div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- ================= 倒计时 ================= -->
+  <div class="countdown">
+
+    <!-- 卡片一：天数 -->
+    <div class="glass-card cd-card is-visible" id="cdDays" role="button" tabindex="0" aria-label="查看精确倒计时">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="5" width="17" height="15.5" rx="2.6"/>
+          <path d="M3.5 10.2h17"/>
+          <path d="M8.2 2.8v4.2"/>
+          <path d="M15.8 2.8v4.2"/>
+        </svg>
+      </div>
+      <div class="card-text">
+        <p class="cd-label" id="cdDaysLabel">距离第一学月检测</p>
+        <div class="cd-value" id="cdDaysValue">
+          <span class="cd-affix">还有</span><span class="cd-num">8</span><span class="cd-unit">天</span>
+        </div>
+        <p class="cd-hint">点击查看精确倒计时</p>
+      </div>
     </div>
 
-    <div class="container">
-        <a href="work.html" class="glass-btn">
-            <h2>作业清单</h2>
-            <span class="arrow">→</span>
-        </a>
-        
-        <a href="qa.html" class="glass-btn">
-            <h2>作业答案</h2>
-            <span class="arrow">→</span>
-        </a>
+    <!-- 卡片二：分秒 -->
+    <div class="glass-card cd-card" id="cdTime" role="button" tabindex="0" aria-label="返回天数显示">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12.3" r="8.6"/>
+          <path d="M12 7.6v4.9l3.2 1.9"/>
+        </svg>
+      </div>
+      <div class="card-text">
+        <p class="cd-label" id="cdTimeLabel">距离第一学月检测</p>
+        <div class="cd-value" id="cdTimeValue">
+          <span class="cd-affix">还有</span><span class="cd-num">11520</span><span class="cd-unit">分</span><span class="cd-num">00</span><span class="cd-unit">秒</span>
+        </div>
+        <p class="cd-hint">点击返回天数显示</p>
+      </div>
     </div>
+
+  </div>
+
+  <!-- ================= 菜单 ================= -->
+  <div class="menu">
+
+    <!-- 作业清单 -->
+    <a href="work.html" class="glass-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 2.5H6.5A2 2 0 0 0 4.5 4.5v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/>
+          <path d="M14 2.5V8h5.5"/>
+          <path d="M8.2 12.6l1.6 1.6 3.4-3.4"/>
+          <path d="M8.5 17.4h6.5"/>
+        </svg>
+      </div>
+      <div class="card-text">
+        <h2>作业清单</h2>
+        <p>查看各科作业安排</p>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <!-- 作业答案 -->
+    <a href="qa.html" class="glass-card">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.6"/>
+          <path d="M8.1 12.4l2.7 2.7 5.2-5.4"/>
+        </svg>
+      </div>
+      <div class="card-text">
+        <h2>作业答案</h2>
+        <p>对照参考答案</p>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+  </div>
+
+  <div class="footer">孤鸿组 · 好好学习 天天向上</div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     第一学月检测时间：2026年10月9日 08:00
+     ============================================================ */
+  var EXAM_TS  = new Date(2026, 9, 9, 8, 0, 0, 0).getTime();  // 精确时刻
+  var EXAM_MID = new Date(2026, 9, 9, 0, 0, 0, 0).getTime();  // 当日零点
+  var DAY_MS   = 86400000;
+
+  var cardDays  = document.getElementById('cdDays');
+  var cardTime  = document.getElementById('cdTime');
+  var labelDays = document.getElementById('cdDaysLabel');
+  var valueDays = document.getElementById('cdDaysValue');
+  var labelTime = document.getElementById('cdTimeLabel');
+  var valueTime = document.getElementById('cdTimeValue');
+
+  /* ---------------- 卡片切换 ---------------- */
+  function showTimeCard() {
+    cardDays.classList.remove('is-visible');
+    cardTime.classList.add('is-visible');
+  }
+  function showDaysCard() {
+    cardTime.classList.remove('is-visible');
+    cardDays.classList.add('is-visible');
+  }
+
+  cardDays.addEventListener('click', showTimeCard);
+  cardTime.addEventListener('click', showDaysCard);
+
+  cardDays.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showTimeCard(); }
+  });
+  cardTime.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDaysCard(); }
+  });
+
+  function pad2(n) { return n < 10 ? '0' + n : String(n); }
+
+  /* ---------------- 渲染 ---------------- */
+  function update() {
+    var now    = Date.now();
+    var diff   = EXAM_TS - now;          // 毫秒差，正=未来，负=已过
+    var isPast = diff < 0;
+    var abs    = Math.abs(diff);
+
+    /* —— 精确值：累计分钟 + 秒 —— */
+    var totalSec = Math.floor(abs / 1000);
+    var totalMin = Math.floor(totalSec / 60);   // 累计分钟（含小时/天数）
+    var sec      = totalSec % 60;
+
+    /* —— 日历天数差 —— */
+    var todayMid = new Date();
+    todayMid.setHours(0, 0, 0, 0);
+    var dayDelta = Math.round((EXAM_MID - todayMid.getTime()) / DAY_MS);
+    /* dayDelta > 0 → 还有 N 天
+       dayDelta = 0 → 今天
+       dayDelta < 0 → 已过去 N 天 */
+
+    /* ---------- 卡片一：天数 ---------- */
+    if (dayDelta > 0) {
+      labelDays.textContent = '距离第一学月检测';
+      valueDays.innerHTML =
+        '<span class="cd-affix">还有</span>' +
+        '<span class="cd-num">' + dayDelta + '</span>' +
+        '<span class="cd-unit">天</span>';
+    } else if (dayDelta === 0) {
+      labelDays.textContent = '第一学月检测';
+      valueDays.innerHTML =
+        '<span class="cd-num">今天</span>' +
+        '<span class="cd-unit">开考</span>';
+    } else {
+      labelDays.textContent = '第一学月检测';
+      valueDays.innerHTML =
+        '<span class="cd-affix">已过去</span>' +
+        '<span class="cd-num">' + (-dayDelta) + '</span>' +
+        '<span class="cd-unit">天</span>';
+    }
+
+    /* ---------- 卡片二：分秒 ---------- */
+    labelTime.textContent = isPast ? '第一学月检测' : '距离第一学月检测';
+    valueTime.innerHTML =
+      '<span class="cd-affix">' + (isPast ? '已过去' : '还有') + '</span>' +
+      '<span class="cd-num">' + totalMin + '</span>' +
+      '<span class="cd-unit">分</span>' +
+      '<span class="cd-num">' + pad2(sec) + '</span>' +
+      '<span class="cd-unit">秒</span>';
+  }
+
+  update();
+  setInterval(update, 1000);
+
+})();
+</script>
 
 </body>
 </html>

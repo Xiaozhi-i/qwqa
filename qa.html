@@ -1,915 +1,1780 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作业答案</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作业答案 · 孤鸿组</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-        body {
-            background: #f0f2f5;
-            min-height: 100vh;
-            padding: 20px;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(200,200,255,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(200,255,255,0.3) 0%, transparent 50%);
-        }
+  body {
+    background: #f0f2f5;
+    min-height: 100vh;
+    padding: 24px;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+  body.lightbox-lock {
+    overflow-y: hidden;
+  }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 0 5px;
-        }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
 
-        header h1 {
-            font-size: 1.8rem;
-            color: #1a1a1a;
-            font-weight: 700;
-        }
+  /* ---------------- 顶部标题 ---------------- */
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
+  }
 
-        .back-btn {
-            text-decoration: none;
-            color: #666;
-            font-size: 0.9rem;
-            padding: 8px 16px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-            transition: all 0.2s;
-        }
+  .header-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
 
-        .back-btn:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.85);
-        }
+  .header h1 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+  }
 
-        /* 统一玻璃卡片风格 */
-        .task-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.04);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
+  .subtitle {
+    font-size: 0.72rem;
+    letter-spacing: 5px;
+    color: #9a9a9a;
+    text-indent: 5px;
+  }
 
-        .task-card:active {
-            transform: scale(0.97);
-            background: rgba(255, 255, 255, 0.85);
-        }
+  .divider {
+    width: 32px;
+    height: 3px;
+    border-radius: 2px;
+    background: #1a1a1a;
+    opacity: 0.85;
+    margin: 14px auto 0;
+  }
 
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  /* 返回按钮 */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #666;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-        .subject-tag {
-            background: #1a1a1a;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
+  .back-btn svg { width: 14px; height: 14px; }
 
-        .arrow {
-            transition: transform 0.3s;
-            color: #ccc;
-            font-size: 0.8rem;
-        }
+  .back-btn:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.9);
+  }
 
-        .task-card.active .arrow {
-            transform: rotate(180deg);
-            color: #1a1a1a;
-        }
+  @media (hover: hover) {
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: translateY(-1px);
+    }
+  }
 
-        .task-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            margin-top: 0;
-            color: #555;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
+  /* ---------------- 卡片 ---------------- */
+  .task-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+    cursor: pointer;
 
-        .task-card.active .task-content {
-            max-height: 100000000px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed rgba(0,0,0,0.08);
-        }
-        .task-content img {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            object-fit: contain;
-            display:block;
-        }
-    </style>
+    /* 滚动入场基础态：向下 36px、透明 */
+    opacity: 0;
+    translate: 0 36px;
+
+    transition:
+      opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      translate 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(1);
+  }
+
+  /* 向上滚动进场：从上方 -36px 进入 */
+  .task-card.enter-from-top {
+    translate: 0 -36px;
+  }
+
+  /* 已进入视口：归位并显现 */
+  .task-card.reveal {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .task-card:active {
+    transform: scale(0.985);
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .task-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .task-title h3 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+  }
+
+  /* 科目图标 */
+  .icon {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #1a1a1a;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    overflow: visible;
+  }
+
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .subject-tag {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 7px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .arrow {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
+    color: #ccc;
+    font-size: 0.75rem;
+  }
+
+  .task-card.active .arrow {
+    transform: rotate(180deg);
+    color: #1a1a1a;
+  }
+
+  /* ---------------- 内容区域（grid 平滑展开） ---------------- */
+  .task-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    margin-top: 0;
+    color: #555;
+    line-height: 1.7;
+    font-size: 0.9rem;
+    transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                margin-top 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .task-card.active .task-content {
+    grid-template-rows: 1fr;
+    margin-top: 14px;
+  }
+
+  .task-content-inner {
+    overflow: hidden;
+    min-height: 0;
+    padding-top: 0;
+    border-top: 1px dashed transparent;
+    opacity: 0;
+    transition: opacity 0.25s ease,
+                padding-top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.42s ease;
+  }
+
+  .task-card.active .task-content-inner {
+    padding-top: 14px;
+    border-top-color: rgba(0, 0, 0, 0.08);
+    opacity: 1;
+    transition: opacity 0.4s ease 0.12s,
+                padding-top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.42s ease;
+  }
+
+  .task-content b {
+    color: #1a1a1a;
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 6px;
+  }
+
+  .task-content p { margin-bottom: 6px; }
+
+  .task-content img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+    margin: 6px 0;
+    cursor: zoom-in;
+    transition: opacity 0.2s;
+  }
+
+  .task-content img:active { opacity: 0.85; }
+
+  .task-content a {
+    color: #888;
+    text-decoration: none;
+    border-bottom: 1px dashed #ccc;
+    transition: all 0.2s;
+  }
+
+  .task-content a:active {
+    color: #1a1a1a;
+    border-bottom-color: #1a1a1a;
+  }
+
+  /* ---------------- 大图查看器（原版逻辑 + 玻璃按钮） ---------------- */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.32s ease;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .lightbox-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-img {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+    transition: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* 玻璃关闭按钮 */
+  .glass-close-btn-wrap {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    z-index: 10001;
+  }
+
+  .glass-close-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+      inset 2px -2px 1px -1px rgba(255, 255, 255, 0.55),
+      inset -2px 2px 1px -1px rgba(255, 255, 255, 0.55),
+      inset 0 0 2px rgba(0, 0, 0, 0.18),
+      0 4px 12px rgba(0, 0, 0, 0.32);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.25s ease;
+  }
+
+  .glass-close-btn:active {
+    transform: scale(0.9);
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .glass-close-btn svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  @media (hover: hover) {
+    .glass-close-btn:hover svg {
+      transform: rotate(90deg);
+    }
+  }
+
+  /* ---------------- 页脚 ---------------- */
+  .footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    color: #b5b5b5;
+    opacity: 0;
+    animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+  }
+
+  /* ---------------- 动画 ---------------- */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------------- 桌面端悬停 ---------------- */
+  @media (hover: hover) {
+    .task-card:hover {
+      transform: translateY(-2px) scale(1);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+    }
+
+    .task-card:hover .icon {
+      transform: rotate(-4deg) scale(1.06);
+    }
+
+    .task-card.active:hover .icon {
+      transform: rotate(-6deg) scale(1.06);
+    }
+  }
+
+  /* 按下 / 展开 —— 图标状态 */
+  .task-card:active .icon {
+    transform: scale(0.9);
+  }
+
+  .task-card.active .icon {
+    transform: rotate(-6deg) scale(1.06);
+  }
+
+  /* ---------------- 小屏适配 ---------------- */
+  @media (max-width: 360px) {
+    body { padding: 18px; }
+
+    .header h1 { font-size: 1.5rem; }
+
+    .task-card { padding: 16px 17px; }
+
+    .task-title h3 { font-size: 0.92rem; }
+
+    .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+    }
+
+    .icon svg { width: 16px; height: 16px; }
+
+    .subject-tag {
+      font-size: 0.62rem;
+      padding: 2px 7px;
+    }
+
+    .glass-close-btn {
+      width: 42px;
+      height: 42px;
+    }
+  }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>作业答案</h1>
-            <a href="index.html" class="back-btn">返回</a>
-        </header>
+<div class="container">
 
-        <!-- 语文 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：学法大视野<br>第一单元基础任务群</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <b>P2</b>
-                <p>1.驰　ráo<br>2.①　②<br>3.B<br>4.B<br>5.(1)须晴日　看红装素裹　分外妖娆<br>(2)江山如此多娇　引无数英雄竞折腰<br>(3)俱往矣　数风流人物　还看今朝</p>
-                <b>P5</b>
-                <p>1.穗<br>甸甸<br>zhā<br>2.A<br>3.D<br>4.D</p>
-                <b>P8</b>
-                <p>1.B<br>2.B<br>3.1936年他出版的第一本诗集《大堰河》，表达了他热爱祖国的深挚感情。<br>4.C</p>
-                <b>P11</b>
-                <p>1.D<br>2.A<br>3.B<br>4.C</p>
-                <b>P13</b>
-                <p>1.娉　冕　ní<br>2.B<br>3.将“书写”改成“诉说”。<br>4.C</p>
-                <b>P16</b>
-                <p>1.qī　勃<br>2.B<br>3.C<br>4.D</p>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：学法大视野 P20-22</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <p>1.呢　涌　qī<br>2.①　①<br>3.D<br>4.B<br>5.(示例)假如我是一种颜色，我愿是那一抹金黄。 就像行道树旁的那一盏街灯，点亮漆黑的小巷，让黑夜不再漫长。<br>6.①直挂云帆济沧海<br>②欲为圣明除弊事<br>③病树前头万木春<br>④(示例)人有悲欢离合/晴空一鹤排云上<br>⑤(示例)月有阴晴圆缺/便引诗情到碧霄<br>7.C<br>8.D<br>9.(1)(示例)江南古镇，黄昏时分<br>(2)(示例)枯藤缠绕的老树特写，昏鸦飞过<br>(3)(示例)一位旅人伫立在夕阳下，低头吟诵“夕阳西下，断肠人在天涯”，画面定格，镜头拉长<br>(4)(示例)文中强调短视频可通过视听演绎让诗词再现鲜活意象。本设计选取古镇黄昏实景，用镜头捕捉枯藤老树昏鸦等曲中意象，画面由近及远、由景及人，让观众沉浸于天涯游子的孤寂愁思之中，真切体会诗词的意境之美</p>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：学法大视野 <br>醉翁亭记 P47-50</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <p><b>课前预习</b><br>1.chú　hè　láng yá　míng　liè　gōng<br>2.蔚　潺潺　辄　伛　蔌　翳<br>3.丝，弦乐器；竹，管乐器　丝，蚕丝；竹，竹子<br>4.(1)名词活用作状语，沿着山路<br>(2)名词活用作状语，像鸟张开翅膀<br>(3)名词活用作状语，在前面<br>(4)形容词的意动用法，以……为快乐<br>5.(1)秀丽　茂盛<br>(2)居高面下　靠近，这里是在……旁边的意思<br>(3)取名，命名　名字<br>(4)命名　为，是<br>(5)意趣，情趣　意志<br>(6)领会　实现<br>(7)散开　指天气放晴<br>(8)聚拢　回去<br>6.(1)助词，的　代词，指亭子　结构助词，用于主谓之间，取消句子独立性，无实义<br>(2)在　对，对于<br>(3)连词，表递进　连词，表修饰　连词，表并列　连词，表承接　连词，表转折<br><b>课后提升</b><br>1.C<br>2.D<br>3.D<br>4.D<br>5.(1)宋　欧阳修　永叔　醉翁　六一居士<br>(2)觥筹交错　起坐而喧哗者<br>(3)山水之乐　得之心而寓之酒也<br>6.(1)A<br>(2)①苍老的容颜，花白的头发，醉倒在众人中间，这是太守喝醉了。<br>②人们知道跟随太守游玩而感到快乐，却不知道太守以游人的快乐为快乐。<br>(3)C<br>(4)(示例)我赞成闲适说。文章描写了滁州一带朝暮、四季自然景物不同的美、滁州百姓和平宁静的生活以及作者在山林中与民一齐游赏宴饮的乐趣，表现了作者随遇而安、与民同乐的旷达情怀，充满了士大夫悠闲自适的情调。<br>7.B<br>8.D<br>9.这样一个偏远的小县，尚且如此，整个国家的情况就可想而知了。<br>10.①严谨处理政务：遇事不敢忽，反复查阅旧案，避免出现冤假错案。②施政宽简不扰民：宽简而不扰，不为苛急、繁碎，使民便之。③慎用刑罚：继承其父的为政理念，常求其生，避免滥杀无辜。<br>11.①家风家教的影响：其父为官时谨慎办案、力求求生的仁政思想，以及母亲常求其生的家训，使他自幼形成恤民、仁爱的为政理念。②为政经历的触动：贬官夷陵时见冤案众多，深感天下固可知，从而树立遇事不敢忽的责任意识，主张宽简为民、惠及百姓。③社会制度的反思：在北宋榷酒制度等弊政下，官吏享乐而农民困苦，促使他通过诗文揭露时弊，呼吁关注民生。</p>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：学法大视野 <br>湖心亭看雪 P52-54</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <p><b>课前预习</b><br>1.zhēn　gēng　ná　cuì　hàng dàng　jiè<br>2.凇　毡<br>3.(1)我　剩下<br>(2)古人罚酒时用的酒杯　像霜或雪的颜色(跟黑相对)<br>4.名词活用作动词，客居<br>5.(1)全、皆　数目“一”<br>(2)古代夜间的计时单位　还<br>(3)这　表示肯定的判断<br>(4)消失　与外界隔绝<br><b>课后提升</b><br>1.D<br>2.C<br>3.B<br>4.B<br>5.(1)陶庵　《陶庵梦忆》<br>(2)湖上影子　惟长堤一痕　湖心亭一点　与余舟一芥　舟中人两三粒而已<br>(3)莫说相公痴　更有痴似相公者<br>6.(1)①裹、围。<br>②撑(船)。<br>③还。<br>④等到。<br>(2)①冰花周围弥漫着白汽，天与云与山与水，浑然一体，白茫茫一片。<br>②我尽力喝了三大杯酒，然后(和他们)道别。<br>(3)D<br>(4)(示例一)我支持小语的观点，张岱是惊喜的。张岱雪夜独往湖心亭赏雪，偶遇同有雅兴的金陵人，是知音相逢的喜悦，强饮三大白体现出他的尽兴，在孤寂中获得慰藉，因此是惊喜相遇。(示例二)我支持小文的观点，张岱是败兴的。张岱雪夜独游追求独处的清幽，金陵人的热闹打破了静谧，拉余同饮破坏了他独赏的心境，他们的痴并不相通，偶遇打扰了他的雅兴，因此是败兴而归。<br>7.(1)断绝、消失<br>(2)全、皆<br>(3)何况<br>(4)⑤<br>8.(1)我撑着一叶小舟，裹着裘皮衣服，围着火炉，独自前往湖心亭看雪。<br>(2)(我)躺在船里看月亮，小厮在船头唱曲，不知是醉里梦里。<br>9.B<br>10.①《庞公池》记录的是张岱年少读书时的经历，那时他因心中没有世事的纷扰，不知何为忧愁，与仆人乘船赏月，听曲饮酒，互相嬉戏，可见其随性、洒脱与率真。②《湖心亭看雪》则是张岱在经历国破家亡、家族衰变后所写。夜晚独往湖心亭看雪时，内心充满无人可解的孤独寂寞和淡淡的愁绪。<br>11.(示例)作者在自嘲中讽世，显示了自己的卓然独立之姿。</p>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：学法大视野 <br>P56-58、P61-62</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <b>P56-58</b>
-                <p><b>课前预习</b><br>1.zūn　zhù　zhǎng<br>2.阙　绮　婵<br>3.羞，同“馐”，美味的食物；直，同“值”，价值。<br><b>课后提升</b><br>1.C<br>2.B<br>3.D<br>4.(1)停杯投箸不能食　拔剑四顾心茫然<br>(2)长风破浪会有时　直挂云帆济沧海<br>(3)巴山楚水凄凉地　二十三年弃置身<br>(4)怀旧空吟闻笛赋　到乡翻似烂柯人<br>(5)人有悲欢离合　月有阴晴圆缺<br>(6)但愿人长久　千里共婵娟<br>5.(1)D<br>(2)李白化用鲍照的诗句，并在诗句中加入了“停杯投箸”的动作细节和“四顾心茫然”的心理描写，更能生动地展现诗人苦闷的精神世界。<br>6.(1)C<br>(2)(示例一)选择设计一。刘禹锡以沉舟病树自比，为自己的寂寞、蹉跎而忧伤，表达了世事变迁、宦海浮沉的感慨，所以将沉舟病树居中突出。而千帆过和万木春指的是后来者仕途得意，不是诗人的心情，应画得邈远。(示例二)选择设计二。沉舟病树固然使人感到惆怅，但沉舟侧畔有千帆竞发，病树前头正万木逢春，说明新事物必将取代旧事物的道理。这两句诗表现了诗人豁达的胸怀，因此应当用明亮的色彩渲染千帆过万木春的景象。<br>7.(1)D<br>(2)①词人的情感变化：先是思念亲人，辗转难眠(转朱阁，低绮户，照无眠)，继而仰首问月，感伤离别(不应有恨，何事长向别时圆)，最后由伤感转化为理性哲思，表达出对天下离人的真诚祝愿(人有悲欢离合，月有阴晴圆缺，此事古难全。但愿人长久，千里共婵娟)。<br>②(示例)我同意这种看法。词人没有沉浸在思念弟弟的伤感情绪中不能自拔，而是努力自我排解，进而表达出对天下经受离别之苦的人们的美好祝愿，表现出他乐观旷达的心胸和情怀。<br>8.(1)(示例)我认为风为微风，翻字应轻读。风翻蛛网开三面描绘的是微风轻拂，蛛网被吹开三面的景象，若为狂风，蛛网会被吹破，无法呈现开三面的画面。微风下的翻更显轻柔，体现出春日的平和，也契合诗人罢职后虽有失意却仍存闲适的心境。<br>(2)本诗情感基调是失意中透着豁达，与刘诗的昂扬进取不同。诗人罢职归家，生活清贫，虽有剩欲出门追语笑，却嫌归鬓逐尘沙的失意，但风翻蛛网开三面，雷动蜂窠趁两衙又展现出对自然生机的欣赏，只今容有未开花则暗含对未来的期许，整体在失意中不失豁达。<br>9.(1)D<br>(2)甲词体现了苏轼乐观旷达的人生态度，抒发了对天下离人的美好祝愿；乙词抒发了苏辙面对别离时的无奈、悲伤和难遣的愁绪。</p>
-                <b>P61-62</b>
-                <p>1.mì　漫<br>2.①  ①  ②<br>3.C<br>4.C<br>5.①安得广厦千万间<br>②长风破浪会有时<br>③直挂云帆济沧海<br>④报君黄金台上意<br>⑤提携玉龙为君死<br>6.这两句是词人情感由外放转为内收的转折点。“不须携酒登临”不是不想饮酒，而是难寻可共饮交心之人，饱含孤身登楼的寂寞惆怅。词人胸怀抗金复国壮志，在南宋苟安的时局下知音难遇、抱负无人理解，“何人共斟”抒发报国无门的悲愤，由个人孤独升华为对国事衰微、江山变迁的深切忧虑。<br>7.A<br>8.A<br>9.(1)如果没有这种人，我同谁一道呢？<br>(2)人虽很愚笨，责备别人却是很高明的；虽然十分聪明，但若原谅自己则导致昏蔽。<br>10.从范仲淹的精神倡导，到戴复古的文学抒发，再到范纯仁的躬身实践，三则材料层层递进，共同揭示了古代士人以天下为己任、忧国忧民、敢作敢为的家国情怀。这种情怀，既是面对历史兴替的深沉叹息，更是面对现实困境的挺身而出。</p>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：默写《沁园春·雪》<br>《我爱这土地》</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <b>《沁园春·雪》</b>
-<br>毛泽东<br>
-北国风光，千里冰封，万里雪飘。<br>
-望长城内外，惟余莽莽；大河上下，顿失滔滔。<br>
-山舞银蛇，原驰蜡象，欲与天公试比高。<br>
-须晴日，看红装素裹，分外妖娆。<br>
-<br>
-江山如此多娇，引无数英雄竞折腰。<br>
-惜秦皇汉武，略输文采；唐宗宋祖，稍逊风骚。<br>
-一代天骄，成吉思汗，只识弯弓射大雕。<br>
-俱往矣，数风流人物，还看今朝。</p>
-                <b>《我爱这土地》</b>
-                <br>艾青<br>
-                假如我是一只鸟，<br>
-我也应该用嘶哑的喉咙歌唱：<br>
-这被暴风雨所打击着的土地，<br>
-这永远汹涌着我们的悲愤的河流，<br>
-这无止息地吹刮着的激怒的风，<br>
-和那来自林间的无比温柔的黎明……<br>
-——然后我死了，<br>
-连羽毛也腐烂在土地里面。<br>
-<br>
-为什么我的眼里常含泪水？<br>
-因为我对这土地爱得深沉……<br>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：默写《岳阳楼记》3-5段</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                若夫霪雨霏霏，连月不开，阴风怒号，浊浪排空，日星隐耀，山岳潜形，商旅不行，樯倾楫摧，薄暮冥冥，虎啸猿啼。登斯楼也，则有去国怀乡，忧谗畏讥，满目萧然，感极而悲者矣。<br>
-至若春和景明，波澜不惊，上下天光，一碧万顷，沙鸥翔集，锦鳞游泳，岸芷汀兰，郁郁青青。而或长烟一空，皓月千里，浮光跃金，静影沉璧，渔歌互答，此乐何极！登斯楼也，则有心旷神怡，宠辱偕忘，把酒临风，其喜洋洋者矣。<br>
-嗟夫！予尝求古仁人之心，或异二者之为，何哉？不以物喜，不以己悲，居庙堂之高则忧其民，处江湖之远则忧其君。是进亦忧，退亦忧。然则何时而乐耶？其必曰“先天下之忧而忧，后天下之乐而乐”乎！噫！微斯人，吾谁与归？<br>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：默写《醉翁亭记》1、2段</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                环滁皆山也。其西南诸峰，林壑尤美，望之蔚然而深秀者，琅琊也。山行六七里，渐闻水声潺潺，而泻出于两峰之间者，酿泉也。峰回路转，有亭翼然临于泉上者，醉翁亭也。作亭者谁？山之僧智仙也。名之者谁？太守自谓也。太守与客来饮于此，饮少辄醉，而年又最高，故自号曰醉翁也。醉翁之意不在酒，在乎山水之间也。山水之乐，得之心而寓之酒也。<br>
-若夫日出而林霏开，云归而岩穴暝，晦明变化者，山间之朝暮也。野芳发而幽香，佳木秀而繁阴，风霜高洁，水落而石出者，山间之四时也。朝而往，暮而归，四时之景不同，而乐亦无穷也。<br>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：默写《诗词三首》</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <b>《行路难》（其一）</b>
-                <br>李白<br>
-                金樽清酒斗十千，玉盘珍羞直万钱。<br>
-停杯投箸不能食，拔剑四顾心茫然。<br>
-欲渡黄河冰塞川，将登太行雪满山。<br>
-闲来垂钓碧溪上，忽复乘舟梦日边。<br>
-行路难，行路难，多歧路，今安在？<br>
-长风破浪会有时，直挂云帆济沧海。<br>
-                <b>《酬乐天扬州初逢席上见赠》</b>
-                <br>刘禹锡<br>
-                巴山楚水凄凉地，二十三年弃置身。<br>
-怀旧空吟闻笛赋，到乡翻似烂柯人。<br>
-沉舟侧畔千帆过，病树前头万木春。<br>
-今日听君歌一曲，暂凭杯酒长精神。<br>
-                <b>《水调歌头》（明月几时有）</b>
-                <br>苏轼<br>
-明月几时有？把酒问青天。<br>
-不知天上宫阙，今夕是何年。<br>
-我欲乘风归去，又恐琼楼玉宇，高处不胜寒。<br>
-起舞弄清影，何似在人间。<br>
-转朱阁，低绮户，照无眠。<br>
-不应有恨，何事长向别时圆？<br>
-人有悲欢离合，月有阴晴圆缺，此事古难全。<br>
-但愿人长久，千里共婵娟。<br>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：作文《我眼中的祖国》</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                请豆包出山。
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>语文：民族团结主题手抄报</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">语文</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                请小红书出山。A3纸手绘，主题：石榴籽一家亲，铸牢中华民族共同体意识，10月9日前上交。
-            </div>
-        </div>
-
-        <!-- 数学 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：学法大视野 <br>专练5 P71</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <div style="font-family:SimSun,serif;line-height:1.8;font-size:16px;">
-<div>1.</div>
-<div>解: <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>x<sup>2</sup>=2,</div>
-<div>两边同时乘以2,得 x<sup>2</sup>=4,</div>
-<div>根据平方根的意义,得 x=&plusmn;2,即 x<sub>1</sub>=2, x<sub>2</sub>=-2.</div>
-<br>
-<div>2.</div>
-<div>解:移项得 (x&minus;1)<sup>2</sup>=9,</div>
-<div>开平方得 x&minus;1=&plusmn;3,</div>
-<div>当 x&minus;1=3时,x=4;当 x&minus;1=&minus;3时,x=&minus;2;</div>
-<div>故方程的解为 x<sub>1</sub>=4, x<sub>2</sub>=-2.</div>
-<br>
-<div>3.</div>
-<div>解:&because; (x&minus;2)<sup>2</sup> = (2x+3)<sup>2</sup>,</div>
-<div>&there4; x&minus;2=2x+3 或 x&minus;2=&minus;(2x+3),</div>
-<div>解得 x<sub>1</sub>=-5, x<sub>2</sub>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1</span><span style="border-top:1px solid #000;display:block;text-align:center;">3</span></span>.</div>
-<br>
-<div>4.</div>
-<div>解:将二次项系数化为1,得 x<sup>2</sup>&minus;2x&minus;<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>=0,</div>
-<div>配方,得 x<sup>2</sup>&minus;2x+1&minus;1&minus;<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>=0,</div>
-<div>&there4; x<sup>2</sup>&minus;2x+1=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">3</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
-<div>即 (x&minus;1)<sup>2</sup>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">3</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
-<div>&there4; x&minus;1=&plusmn;<span style="display:inline-block;vertical-align:middle;">√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">6</span></span><span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;"></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span></span>,</div>
-<div>解得 x<sub>1</sub>=1+<span style="display:inline-block;vertical-align:middle;">√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">6</span></span><span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;"></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span></span>, x<sub>2</sub>=1&minus;<span style="display:inline-block;vertical-align:middle;">√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">6</span></span><span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;"></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span></span>.</div>
-<br>
-<div>5.</div>
-<div>解:去分母,得 2x<sup>2</sup>+x&minus;6=0.</div>
-<div>将二次项系数化为1,得 x<sup>2</sup>+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>x&minus;3=0.</div>
-<div>配方,得 x<sup>2</sup>+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>x+ (<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>)<sup>2</sup>&minus; (<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>)<sup>2</sup>&minus;3=0.</div>
-<div>即 (x+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>)<sup>2</sup>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">49</span><span style="border-top:1px solid #000;display:block;text-align:center;">16</span></span>.</div>
-<div>&there4; x+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>=&plusmn;<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">7</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>.</div>
-<div>解得 x<sub>1</sub>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">3</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>, x<sub>2</sub>=-2.</div>
-<br>
-<div>解: x<sup>2</sup>+x&minus;3=0,</div>
-<div>a=1, b=1, c=-3,</div>
-<div>b<sup>2</sup>&minus;4ac=1<sup>2</sup>&minus;4&times;1&times;(-3)=13,</div>
-<div>x= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">13</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
-<div>x<sub>1</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">13</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>, x<sub>2</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1&minus;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">13</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>.</div>
-<div>6.</div>
-<div>解:方程化为一般形式为 4x<sup>2</sup>&minus;8x+1=0.</div>
-<div>&because; a=4, b=-8, c=1,</div>
-<div>&there4; b<sup>2</sup>&minus;4ac= (&minus;8)<sup>2</sup>&minus;4&times;4&times;1=48&gt;0,</div>
-<div>&there4; x= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">8&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">48</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2&times;4</span></span>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">2&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">3</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
-<div>解得 x<sub>1</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">2&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">3</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>, x<sub>2</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">2&minus;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">3</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>.</div>
-<br>
-<div>7.</div>
-<div>解: x(x&minus;2)=x&minus;2,</div>
-<div>x(x&minus;2)&minus;(x&minus;2)=0,</div>
-<div>(x&minus;2)(x&minus;1)=0,</div>
-<div>x&minus;2=0 或 x&minus;1=0,</div>
-<div>x<sub>1</sub>=2, x<sub>2</sub>=1.</div>
-<br>
-<div>8.</div>
-<div>解:&because; 2(x&minus;3)<sup>2</sup>=x<sup>2</sup>&minus;9,</div>
-<div>&there4; 2(x&minus;3)<sup>2</sup>&minus;(x+3)(x&minus;3)=0,</div>
-<div>则 (x&minus;3)(x&minus;9)=0,</div>
-<div>&there4; x&minus;3=0 或 x&minus;9=0,</div>
-<div>解得 x<sub>1</sub>=3, x<sub>2</sub>=9.</div>
-<br>
-<div>9.</div>
-<div>解:原方程可化为 x<sup>2</sup>+2x&minus;15=0,</div>
-<div>&there4; (x+5)(x&minus;3)=0,</div>
-<div>&there4; x+5=0 或 x&minus;3=0,</div>
-<div>解得 x<sub>1</sub>=-5, x<sub>2</sub>=3.</div>
-</div>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：学法大视野 <br>专练6 P76</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <div style="font-family: 'Microsoft YaHei', sans-serif; line-height: 1.8; font-size:16px;">
-<p>1.</p>
-<p>解:(1)∵方程有两个实数根,<br>
-∴Δ= (−6) <sup>2</sup>−4×1×(2m+1)≥0,<br>
-即36−8m−4≥0,<br>
-解得m≤4.</p>
-
-<p>(2)∵x<sub>1</sub>与x<sub>2</sub>是该方程的两个实数根,<br>
-∴x<sub>1</sub>+x<sub>2</sub>=6, x<sub>1</sub>x<sub>2</sub>=2m+1.<br>
-∵x<sub>1</sub><sup>2</sup>+x<sub>2</sub><sup>2</sup>=22,<br>
-∴x<sub>1</sub><sup>2</sup>+x<sub>2</sub><sup>2</sup>= (x<sub>1</sub>+x<sub>2</sub>) <sup>2</sup>−2x<sub>1</sub>x<sub>2</sub>=36−2(2m+1)=22,<br>
-解得m=3.</p>
-
-<br>
-<p>2.</p>
-<p>解:(1)∵关于x的一元二次方程x<sup>2</sup>−3x−k=0有两个不相等的实数根,<br>
-∴Δ=9+4k>0,解得k&gt;<span style="display:inline-block;vertical-align:middle;text-align:center;line-height:1;">−<span style="display:block;border-bottom:1px solid #000;">9</span><span style="display:block;">4</span></span>,<br>
-即k的取值范围为k&gt;<span style="display:inline-block;vertical-align:middle;text-align:center;line-height:1;">−<span style="display:block;border-bottom:1px solid #000;">9</span><span style="display:block;">4</span></span>.</p>
-
-<p>(2)x<sub>1</sub>,x<sub>2</sub>是方程x<sup>2</sup>−3x−k=0的两个实数根,<br>
-∴x<sub>1</sub>+x<sub>2</sub>=3, x<sub>1</sub>x<sub>2</sub>=−k.<br>
-∵2x<sub>1</sub>+x<sub>1</sub>x<sub>2</sub>+2x<sub>2</sub>=2(x<sub>1</sub>+x<sub>2</sub>)+x<sub>1</sub>x<sub>2</sub>=10,<br>
-∴6−k=10,<br>
-解得k=−4.<br>
-∵k&gt;<span style="display:inline-block;vertical-align:middle;text-align:center;line-height:1;">−<span style="display:block;border-bottom:1px solid #000;">9</span><span style="display:block;">4</span></span>,<br>
-∴不存在k值使得2x<sub>1</sub>+x<sub>1</sub>x<sub>2</sub>+2x<sub>2</sub>=10.</p>
-
-<br>
-<p>3.</p>
-<p>解:(1)由题意,得Δ= [−2(m+1)] <sup>2</sup>−4(m<sup>2</sup>+5)=8m−16≥0,<br>
-解得m≥2.<br>
-∵x<sub>1</sub>+x<sub>2</sub>=2(m+1), x<sub>1</sub>x<sub>2</sub>=m<sup>2</sup>+5,<br>
-∴(x<sub>1</sub>−1)(x<sub>2</sub>−1)=x<sub>1</sub>x<sub>2</sub>−(x<sub>1</sub>+x<sub>2</sub>)+1=m<sup>2</sup>+5−2(m+1)+1=28,<br>
-解得m<sub>1</sub>=6, m<sub>2</sub>=−4(不合题意,舍去).<br>
-∴m的值为6.</p>
-
-<p>(2)①当7为底边时,此时方程x<sup>2</sup>−2(m+1)x+m<sup>2</sup>+5=0有两个相等的实数根,<br>
-∴Δ=8m−16=0,<br>
-解得m=2,<br>
-∴原方程可化为x<sup>2</sup>−6x+9=0,<br>
-解得x<sub>1</sub>=x<sub>2</sub>=3.<br>
-∵3+3&lt;7,<br>
-∴不能构成三角形.</p>
-
-<p>②当7为腰时,设x<sub>1</sub>=7,<br>
-代入方程,得49−14(m+1)+m<sup>2</sup>+5=0,<br>
-解得m<sub>1</sub>=10, m<sub>2</sub>=4.<br>
-当m=10时,原方程可化为x<sup>2</sup>−22x+105=0,<br>
-解得x=7或x=15.<br>
-∵7+7&lt;15,<br>
-∴不能构成三角形.<br>
-当m=4时,原方程可化为x<sup>2</sup>−10x+21=0,<br>
-解得x=3或x=7.<br>
-∵3+7&gt;7,∴能构成三角形.<br>
-此时三角形的周长为7+7+3=17.</p>
-
-<p>综上所述,这个三角形的周长为17.</p>
-</div>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：学法大视野 <br>专练7</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <div style="font-family:system-ui;">
-<div>1.</div>
-<div>解:(1)设在该栽培模式下,每月产量的平均增长率为x.</div>
-<div>根据题意,得200(1+x)<sup>2</sup>=242,</div>
-<div>解得x<sub>1</sub>=0.1=10%, x<sub>2</sub>=-2.1(不合题意,舍去).</div>
-<div>答:在该栽培模式下,每月产量的平均增长率为10%.</div>
-<div>(2)242×(1+10%)=242×1.1=266.2(t).</div>
-<div>答:预计四月初水稻采收的产量将达到266.2 t.</div>
-<br>
-<div>2.</div>
-<div>解:(1)∵每盒礼盒每降低1元,平均每天可多售出10盒,</div>
-<div>∴每盒礼盒降价4元时,平均每天可多售出<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">4</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">1</span></span>×10=40(盒),此时平均每天售出礼盒50+40=90(盒),</div>
-<div>每天获利90×(15-4)=990(元).</div>
-<div>答:每盒礼盒降价4元时,平均每天可售出90盒礼盒,此时每天销售获利990元.</div>
-<div>(2)设每盒礼盒应降价x元,则平均每天可多售出10x盒,</div>
-<div>根据题意,得(50+10x)(15-x)=1 000,</div>
-<div>解得x<sub>1</sub>=x<sub>2</sub>=5,</div>
-<div>当每盒礼盒降价5元时,每盒盈利15-5=10(元),10>5,符合题意.</div>
-<div>答:每盒礼盒应降价5元.</div>
-<br>
-<div>3.</div>
-<div>解:(1)设出发x s后,点P,D之间的距离是点P,Q之间距离的2倍,此时AP=2x cm,BP=(10-2x)cm,BQ=x cm.</div>
-<div>∵四边形ABCD是矩形,</div>
-<div>∴∠A=∠B=90°,</div>
-<div>∴PD<sup>2</sup>=AP<sup>2</sup>+AD<sup>2</sup>,PQ<sup>2</sup>=BP<sup>2</sup>+BQ<sup>2</sup>.</div>
-<div>∵PD=2PQ,即PD<sup>2</sup>=4PQ<sup>2</sup>,</div>
-<div>∴(2x)<sup>2</sup>+8<sup>2</sup>=4[(10−2x)<sup>2</sup>+x<sup>2</sup>],</div>
-<div>解得x<sub>1</sub>=3,x<sub>2</sub>=7.</div>
-<div>当x=7时,10-2x<0,不合题意,舍去,</div>
-<div>∴x=3.</div>
-<div>答:出发3 s后,点P,D之间的距离是点P,Q之间距离的2倍.</div>
-<div>(2)不存在.理由如下:</div>
-<div>设出发y s后,△DPQ的面积是16 cm<sup>2</sup>.</div>
-<div>∵S<sub>△DPQ</sub>=S<sub>矩形ABCD</sub>−S<sub>△ADP</sub>−S<sub>△BQP</sub>−S<sub>△DCQ</sub>,</div>
-<div>∴<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>×8×2y + <span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>(10-2y)·y + <span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>(8-y)·10=80-16,</div>
-<div>整理,得y<sup>2</sup>-8y+24=0.</div>
-<div>∵Δ=(-8)<sup>2</sup>-4×24=-32<0,</div>
-<div>∴该方程无实数解,</div>
-<div>∴不存在某个时刻,使得△DPQ的面积是16 cm<sup>2</sup>.</div>
-<br>
-<div>4.</div>
-<div>解:设每轮感染中平均1台电脑会感染x台电脑,</div>
-<div>根据题意,得(1+x)<sup>2</sup>=25,</div>
-<div>解得x<sub>1</sub>=4,x<sub>2</sub>=-6(不合题意,舍去).</div>
-<div>答:每轮感染中平均1台电脑会感染4台电脑.</div>
-<br>
-<div>5.</div>
-<div>解:设原来个位上的数字为x,则十位上的数字为(8-x).</div>
-<div>根据题意,得</div>
-<div>[10×(8-x)+x](10x+8-x)=1 855,</div>
-<div>解得x<sub>1</sub>=3,x<sub>2</sub>=5.</div>
-<div>∴原来十位上的数字为5或3.</div>
-<div>答:这个两位数为53或35.</div>
-<br>
-<div>6.</div>
-<div>解:(1)根据题意,得<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>×(x−1)=40,</div>
-<div>∴x(x−1)=80,</div>
-<div>解得x=<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1±√321</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>,不为整数,</div>
-<div>∴方程的解不符合实际,按这个赛制不应该是40场,</div>
-<div>故淇淇的说法正确.</div>
-<div>(2)∵有一人比赛了4场后退出比赛,</div>
-<div>根据题意,得<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">(x−1)(x−2)</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>+4=40,</div>
-<div>解得x<sub>1</sub>=10,x<sub>2</sub>=-7(不合题意,舍去),</div>
-<div>∴x的值为10.</div>
-</div>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：假期数学素养训练（一）</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                老师会在群里发答案，此处略。
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：假期数学素养训练（二）</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                老师会在群里发答案，此处略。
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：少年智力开发报</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                完成第1期《少年智力开发报》3评、4评。
-                <br>
-                老师应该会在群里发答案，此处略。
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：复习教材</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                复习教材，第一学月检测考察到“相似三角形判定定理1”，包含七、八年级内容。
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>数学：自主批改假期作业并更正</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">数学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                自主批改假期作业并更正错题。
-            </div>
-        </div>
-
-        <!-- 英语 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>英语：学法大视野 P1-44</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">英语</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                答案由豆包生成，部分会出现多空，请注意修改。
-                <br>
-                <b>Unit 1 The Changing World</b><br><b>Section A (1a-2d)</b><br><b>课前预习</b><br>一、重点单词<br>1.rough  2.sandstorm  3.farmland  4.shortage  5.lack  6.bush  7.root  8.soil  9.sandy  10.government  11.support  12.corn<br>二、重点词组<br>13.bring about  14.be covered with<br>三、重点句型<br>15.took me  16.be covered with  17.support<br><b>课后提升</b><br>I.1.bushes  2.shrotage  3.sandy  4.supported  5.government<br>II.6.was covered with  7.It took; to work  8.Lack of  9.brought about  10.with; help of<br>III.11.C  12.B<br><b>Scetion A(3a-3d)</b><br><b>课前预习</b><br>一、重点单词<br>1.high-tech  2.greenhouse  3.highway  4.railway  5.attraction  6.product  7.greatly  8.socialist  9.electronic payment  10.housing<br>二、重点词组<br>11.used to do sth  12.tons of<br>三、重点句型<br>13.used to  14.tons of  15.local products<br><b>课后提升</b><br>I.1.attraction  2.product  3.greatly  4.socialist  5.housing<br>II.6.use to  7.plenty of  8.Over the past 20 years  9.local products  10.sell; products to<br>III.11.big  12.small  13.highway  14.attraction  15.all over China<br>IV.16.B  17.A  18.C  19.B<br>V.20.Ten years ago.  21.In the south of the town.  22.It is big and beautiful.  23.Great.（答案不唯一）  24.我的家乡变化如此之大，但它仍然给我家的感觉。<br><b>Section A(Grammar Focus)</b><br>综合训练<br>1.with  2.seen  3.take  4.well  5.watching  6.train  7.looks  8.fault  9.covered  10.difficult<br><b>Section B(1a-1f)</b><br><b>课前预习</b><br>一、重点单词<br>1.link  2.port  3.capital  4.convenient  5.business  6.ease  7.lorry  8.manager  9.conclusion<br>二、重点词组<br>10.be happy with  11.with ease<br>三、重点句型<br>12.benefited  13.taken place  14.am able to<br><b>课后提升</b><br>I.1.ports  2.business  3.convenient  4.manager  5.conclusion<br>II.6.benefit;from  7.satisfied with  8.with ease  9.take place  10.as a result  11.cut travel time  12.work hard to  13.Hundreds of<br>III.14.A  15.C  16.C  17.B  18.C  19.B  20.B  21.A  22.C  23.C<br>IV.24.hometown  25.perfect  26.includes  27.on  28.support  29.solve  30.success  31.thanks  32.wide  33.harder<br>V.34.They could only walk through the mountain roads.  35.They lived in low straw‑thatched cottages.  36.They would like to go to the park.  37.It has become better with many trees and flowers and a beautiful park.  38.十年前，它曾经是一个贫穷的村庄。<br><b>Section B(2a-3d)</b><br><b>课前预习</b><br>一、重点单词<br>1.narrow  2.villager  3.lead  4.man‑made  5.miracle  6.junior  7.flat  8.discussion  9.aspect<br>二、重点句型<br>10.made it; for; to  11.feed on  12.is known as<br><b>课后提升</b><br>I.1.villager  2.led  3.miracle  4.discussion  5.narrow<br>II.6.feed on  7.makes it;for;to  8.is known as  9.in aspects  10.in many aspects<br>III.11.C  12.B  13.C  14.A<br><b>单元复习课</b><br>II.21.A  22.C  23.B<br>III.24.B  25.D  26.E  27.C<br>IV.28.A  29.B  30.C  31.A  32.A  33.B  34.A  35.B  36.A  37.C<br>V.38.About thirty years ago.  39.They lived a hard and simple life.  40.Because the government carried out a new policy.  41.We should keep working hard.  42.但是随着科学技术的发展，我们的生活正变得越来越好。<br><b>Unit 2 Inspiring People</b><br><b>Scetion A(1a-2d)</b><br><b>课前预习</b><br>一、重点单词<br>1.inspiring  2.admire  3.historian  4.chemist  5.physicist  6.hunger  7.chemistry  8.calendar  9.discovery  10.century  11.wounded  12.British  13.airport  14.nation  15.spread  16.disease  17.pioneer  18.admirable<br>二、重点词组<br>19.even though/even if  20.drop out (of sth)<br>三、重点句型<br>21.carry out  22.dropped out of school<br><b>课后提升</b><br>I.1.inspiring  2.historian  3.hunger  4.discoveries  5.wounded  6.admirable  7.spread<br>II.8.dropping out of  9.doing research on  10.Even though<br>III.11.hunger  12.trained  13.research  14.of  15.scientist<br>16.writer  17.reviewing  18.discoveries  19.won  20.better<br><b>Section A(3a-3c)</b><br><b>课前预习</b><br>一、重点单词<br>1.pyramid  2.balance  3.courage  4.wisdom  5.inspiration  6.brave<br>二、重点词组<br>7.look up to<br>三、重点句型<br>8.you admire the most  9.of  10.to  11.look up to<br><b>课后提升</b><br>I.1.courage  2.inspiration  3.balance  4.Pyramid  5.brave  6.wisdom<br>II.7.look up to  8.the first Chinese woman to  9.very clever of her to  10.full of wisdom  11.to become; like<br>III.12.B  13.C  14.B  15.C<br>IV.16.In 2011.  17.She communicated with a doctor.  18.She pays attention to small things and practises moves many times.  19.We should be brave and keep training when facing difficulties.  20.这段经历使她更加勇敢、更加坚强。<br><b>Section A(Grammar Focus)</b><br>综合训练<br>1.the  2.learning  3.and  4.especially  5.make  6.of  7.richer  8.Through  9.to teach  10.art<br><b>Section B(1a-2f)</b><br><b>课前预习</b><br>一、重点单词<br>1.scientific  2.biologist  3.whole  4.bank  5.forever  6.radio  7.collection  8.exploration<br>二、重点词组<br>9.leave behind  10.live on<br>三、重点句型<br>11.biologist; researching  12.provided; with  13.left behind; a huge collection of  14.lives on<br><b>课后提升</b><br>I.1.scientific  2.biologist  3.banks  4.collection  5.exploration<br>II.6.Live life  7.Scientific exploration  8.provide; with  9.Leave behind  10.It; hard for; to<br>III.11.E  12.A  13.D  14.B  15.C<br>IV.16.Eastward Flows the River, Westward I come.  17.In 1922.  18.His hard work, practice and help from Professor Zhang Pengchun.  19.My teacher gives me useful advice and encourages me.  20.南开不仅给予他知识，也让他深深爱上戏剧。<br><b>Section B(2a-3d)</b><br><b>课前预习</b><br>一、重点单词<br>1.universe  2.socialism  3.hole  4.daughter  5.herself  6.flight  7.inventor  8.thinker  9.period  10.kindness<br>二、重点词组<br>11.above all<br>三、重点句型<br>12.Is said that  13.above all<br><b>课后提升</b><br>I.1.socialism  2.herself  3.flight  4.inventor  5.kindness<br>II.6.Above all  7.It is said that  8.made  9.avoid doing  10.treat; kindness to<br>III.11.B  12.A  13.B  14.A  15.C  16.B  17.A  18.C  19.A  20.C<br><b>单元复习课</b><br>II.21.C  22.A<br>III.23.A  24.D  25.C  26.E<br>IV.27.10 million yuan.  28.In 1933.  29.Because she thought if children kept studying, the country would be better.  30.We should be hard‑working and helpful. We should devote ourselves to our country.  31.她是年龄最大的女伞兵，并且拥有跳伞次数最多的纪录。<br><b>Unit 3 Smart Learning</b><br><b>Section A(1a-2d)</b><br><b>课前预习</b><br>一、重点单词<br>1.learner  2.flashcard  3.project  4.website  5.hands‑on  6.experiment  7.dictionary  8.aloud  9.dialogue/dialog  10.suit  11.general  12.speed  13.grammar<br>二、重点词组<br>14.look up/look over  15.in general/generally speaking<br>三、重点句型<br>16.How; by reviewing  17.aloud<br><b>课后提升</b><br>I.1.learner  2.dictionaries  3.aloud  4.suitable  5.speeded  6.grammar  7.website  8.experiments<br>II.9.look them up  10.In general  11.by asking<br>III.12.enjoy  13.something  14.remain  15.and  16.Connect  17.useful  18.spelling  19.by  20.museums  21.easy<br><b>Section A(3a-3e)</b><br><b>课前预习</b><br>一、重点单词<br>1.podcast  2.zero（或minimum）  3.actively  4.fun（或enjoyable）  5.strategy<br>二、重点短语<br>6.come across  7.step by step  8.build up<br>三、重点句型<br>9.step by step  10.puts off<br><b>课后提升</b><br>I.1.podcast  2.zero  3.strategy  4.enjoyable  5.actively<br>II.6.came across  7.step by step  8.build up  9.put off  10.start from zero<br>III.11.C  12.B  13.C  14.C<br>IV.15.B  16.C  17.A  18.C  19.B  20.A  21.B  22.C  23.C  24.B<br>V.25.At the age of 50.  26.Grammar.  27.By visiting England five times.  28.She is hard‑working and never gives up.  29.开始新事物，永远不会太晚，年龄再大也不算迟。<br><b>Section A(Grammar Focus)</b><br>对点训练<br>I.1.A  2.B  3.B  4.A  5.B<br>II.6.if/whether  7.whether  8.that<br>综合训练<br>1.achieve  2.making  3.harder  4.carefully  5.remember  6.on<br>7.that  8.improve  9.least  10.if<br><b>Section B(1a-1e)</b><br><b>课前预习</b><br>一、重点单词<br>1.grow/growth  2.mindset  3.material  4.guidance/guide  5.feedback  6.addition  7.resource  8.textbook  9.advantage  10.efficiently  11.valley<br>二、重点词组<br>12.in a way  13.in addition  14.made use of<br>三、重点句型<br>15.The more; the better  16.In addition  17.Take advantage of<br><b>课后提升</b><br>I.1.growth  2.guidance  3.addition  4.textbooks  5.efficiently<br>II.6.in some way  7.In addition  8.make full use of  9.The harder; the better  10.have difficulty learning; using<br>III.11.B  12.A  13.C  14.E  15.D<br>IV.16.us  17.difficult  18.ways  19.First  20.watch  21.with  22.make  23.better  24.everyone  25.learning<br>V.26.He reads different things like novels, poems and news.  27.Because it improved his ability to express himself and helped him understand his writing style.  28.Getting feedback from others.  29.Yes, I do. Because reading can open up my mind.(答案合理即可)  30.这让我的写作更加清晰有力。
-            </div>
-        </div>
-
-        <!-- 道法 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>道德与法治：学法大视野1-4课<br>拓展提升材料题</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">道法</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <b>P5　拓展提升　2.</b>
-                <br>①坚持党的全面领导。<br>②坚持改革开放。<br>③南泥湾人勇于创造，敢为人先，艰苦奋斗。
-                <br><b>P9　拓展提升　3.</b>
-                <br>①有利于激励全党全国各族人民攻坚克难、奋勇前行。<br>②有利于激励人们为实现中华民族伟大复兴而不懈奋斗。<br>③有利于增强民族凝聚力和向心力。<br>④有利于培育和践行社会主义核心价值观。
-                <br><b>P13　拓展提升　2.</b>
-                <br>①中国共产党是中国特色社会主义事业的领导核心，代表中国最广大人民的根本利益。<br>②中国共产党的初心使命是为中国人民谋幸福、为中华民族谋复兴。<br>③党的根本宗旨是全心全意为人民服务。<br>④党的最高理想和最终目标是实现共产主义。<br>⑤坚守初心使命，我们党才能在极端困境中发展壮大，在濒临绝境中突出重围，在困顿逆境中毅然奋起。
-                <br><b>P17　拓展提升　3.</b>
-                <br>(1)人民立场。<br>(2)①人民是历史的创造者，是决定党和国家前途命运的根本力量。<br>②这是由党的性质和根本宗旨决定的，党是人民的政党，必须始终为人民利益奋斗。<br>③只有站稳人民立场，才能赢得人民拥护，凝聚起实现民族复兴的磅礴力量。<br>(3)①认真学习党的理论知识，理解党坚守人民立场的重要意义，树立爱党爱国情怀。<br>②关注民生发展，积极宣传党的惠民政策，增强对党的认同和支持。<br>③努力学习科学文化知识，提升自身素质，将来投身国家建设，为人民幸福、民族复兴贡献力量。
-                <br><b>P23　拓展提升　2.</b>
-                <br>(1)①全心全意为人民服务。<br>②始终牢记为中国人民谋幸福、为中华民族谋复兴的初心使命。<br>③坚持以人民为中心。<br>④勤政为民、廉洁为民。<br>(2)①中国共产党是中国特色社会主义事业的坚强领导核心。<br>②党的领导是中国特色社会主义最本质的特征。<br>③党的领导是中国特色社会主义制度的最大优势。<br>④党的领导是实现社会主义现代化和中华民族伟大复兴的最根本保证。<br>⑤中国共产党是中国工人阶级的先锋队，同时是中国人民和中华民族的先锋队。
-                <br><b>P27　拓展提升　3.</b>
-                <br>(1)①确立和维护习近平同志党中央的核心、全党的核心地位，是全党全国各族人民的共同愿望，是党和国家事业沿着正确方向发展的根本保证。<br>②在新时代，坚决维护党中央权威和集中统一领导，最关键的是坚决维护习近平同志党中央的核心、全党的核心地位。<br>(2)①认真学习党的理论知识，了解党的路线方针政策，深刻领悟“两个确立”的决定性意义，树立正确的世界观、人生观、价值观，增强对党的认同感和归属感。<br>②刻苦学习、勤奋进取，提升自身综合素质，为将来投身社会主义建设、服务国家和人民打下坚实基础。<br>③自觉拥护党的决策部署，积极参与社会实践和志愿服务，将个人理想融入国家发展大局，主动承担时代责任，努力成长为德智体美劳全面发展的社会主义建设者和接班人。
-                <br><b>P36　拓展提升　3.</b>
-                <br>(1)示例：<br>选择A地。理由：离村民住宅区较近，方便村民参与。<br>选择B地。理由：离村民住宅区较远，不影响村民休息，满足村民安居环境的需要。<br>(2)①我国现阶段社会主要矛盾是人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾。<br>②我国农业、农村问题依然突出，城乡发展不平衡不协调，不利于解决我国社会主要矛盾。<br>(3)①坚持以经济建设为中心，大力发展生产力。<br>②改善当地基础设施，解决交通、网络问题，加强对外信息交流。<br>③培养和引进农业科技人才，改变落后农业生产方式，发展现代农业。
-                <br><b>P40　拓展提升　3.</b>
-                <br>小涛的观点是错误的，他对实现中国梦的长期性、艰巨性认识不足。<br>理由：<br>①改革开放以来，党领导全国各族人民不断取得建设中国特色社会主义的新成就，经过长期努力，中国特色社会主义进入新时代，这是我国发展新的历史方位。<br>②中国特色社会主义新时代是全体中华儿女勠力同心、奋力实现中华民族伟大复兴中国梦的时代。<br>③但是，当前我国还面临发展不平衡不充分、科技创新能力不够强、世界大变局还在不断发展演化等一系列现实挑战，中华民族伟大复兴的中国梦绝不是轻轻松松、敲锣打鼓就能实现的。
-            </div>
-        </div>
-
-        <!-- 世界历史 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>世界历史：同步优学  金学典 <br>P105-116</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">历史</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                 <b>第一、二单元综合评价</b><br>
-1.C 2.D 3.B 4.A 5.C 6.A 7.C<br>8.A 9.C 10.A 11.B 12.B<br>13.(1)用途：法老的陵墓。评价：是古代埃及劳动人民智慧和血汗的结晶，同时也给埃及人民带来无尽的苦难；古埃及文明的象征；等等。<br>(2)名称：《汉谟拉比法典》。地位：是迄今已知世界上第一部较为完备的成文法典。<br>(3)特点：等级森严、贵贱分明；等级、职业世代相袭；不同等级的人不得通婚。影响：致使印度社会矛盾激化，不利于印度的统一；对当今印度社会的影响依然存在，严重阻碍了社会的发展和进步；等等。<br>14.(1)原因：尼罗河是古埃及文明的发源地，孕育了古埃及文明。成就：罗马在法学、建筑等方面的成就。<br>(2)宗教：佛教。价值：《荷马史诗》是宝贵的文学遗产，也是了解早期希腊社会的主要文献。<br>(3)吸收借鉴希腊的优秀成果；各族各地匠师的贡献；政府的倡导；罗马皇帝注重挑选不同地区的优秀建筑师。<br>(4)(示例)文化遗产是人类在漫长的历史进程中创造并留存至今的文明成果与结晶；人类在漫长的演进历程中创造了辉煌璀璨的文化，留下了无数优秀的文化遗产；了解和认识文化遗产，有助于人类借鉴、继承和发扬世界各民族的文明成果，有利于保障和促进人类社会的可持续发展。(答出两点即可)<br>15.(示例)题目：多元格局，文明互鉴<br>论述：不同的自然地理环境，造就了不同的文明形态，因而古代文明呈现出多元发展格局。古希腊是欧洲文明的发祥地，古罗马以意大利半岛为中心，建立起地跨三洲的大帝国。作为海洋文明，古代欧洲文明以商品经济为主，实行民主制度，创造了灿烂的文明成就。不同地区的文明，在历史发展中不断交流，相互影响，亚历山大东征、罗马的征服与扩张、丝绸之路的开辟，促进了东西方文明的交流和互鉴。<br><b>第三、四单元综合评价</b><br>
-1.B 2.C 3.D 4.D 5.B 6.B 7.C<br>8.C 9.C 10.C 11.A 12.C<br>13.(1)纽带：土地的封赐。特点：权利与义务交织；等级森严且具有契约性。<br>(2)相互利用、相互依存。<br>(3)原因：内部基础薄弱；封建割据势力强大；继承人争夺权力。结果：形成后来德意志、法兰西、意大利三个国家的雏形。<br>14.(1)作者如何看待：作者认为中世纪是一个充满变化的时代。合理性：中世纪大学的兴起为文艺复兴运动准备了条件(或者大学的兴起推动文化教育的发展)。<br>(2)特点：权利与义务相交织，具有一定的契约意义。“我”“应得”的：土地或封地。<br>(3)变化：土地私有制转变为土地国有制。影响：加强了中央集权，增加了财政收入，巩固了统治。<br>(4)如何影响：阿拉伯人将古代希腊罗马文化成果保存下来并传回欧洲，为文艺复兴运动提供了条件。作用：阿拉伯人成为东西方文明交流的使者、桥梁。<br>15.(示例)观点：改革创新促国家繁荣昌盛，狭隘保守使民族落后衰亡。<br>论述：日本是东亚的一个岛国。6世纪下半叶，国内出现统治危机。从646年开始，孝德天皇仿效唐朝的典章制度，针对日本的政治、经济进行了一系列的改革，使日本发展成为一个中央集权制的封建国家。阿拉伯人崇尚学习，在吸收、消化外来文化的基础上，创造了有自己特色的阿拉伯文化，并且担当了沟通东西方文化的角色，为世界文化的发展作出了卓越贡献。拜占庭帝国也曾创造出独具特色的拜占庭文化，在世界上产生过重大影响，但是他们陶醉于已有的辉煌成就，不屑于学习和吸纳其他文明的优点与长处，最终湮灭在历史的长河中。<br>综上所述，一个国家、一个民族是否善于借鉴和学习其他民族的先进文明成果，事关兴衰之命运。它们的史实证明了：改革创新促国家繁荣昌盛，狭隘保守使民族落后衰亡。<br><b>期中综合评价(第一~四单元)</b><br>
-1.B 2.D 3.A 4.C 5.A 6.C 7.A<br>8.B 9.A 10.C 11.D 12.D<br>13.(1)材料一：大河文明；材料二：海洋文明。主要原因：不同的地理环境。<br>(2)材料三：君主专制；材料四：小国寡民，直接民主(或奴隶制民主政治)。<br>(3)相同点：都维护了统治阶级利益；内容都涉及社会生活方面；都对后世的法律制定产生了重要影响。史学价值：规范社会行为，为治国理政提供帮助；为后世的法律制定提供借鉴；都是研究当时政治法律的重要史料。<br>14.(1)层层分封，有严格的等级性，权利、义务交织在一起，有一定的契约意义。<br>(2)①自营地；②份地。庄园特点：庄园是一个独立的自给自足的经济和政治单位。<br>(3)城市的兴起；新兴的市民阶层对于文化知识的迫切需求。<br>(4)(示例)封建时代的欧洲。<br>15.(1)大化改新。<br>(2)(示例)观点：中古时期文化的互鉴与交流。<br>论述：古代印度人的数字符号系统经阿拉伯人向外传播；阿拉伯人修正古希腊人的天文计算方法，体现了对不同文明成果的传承与传播；在科学技术领域，中国的造纸术、指南针、火药等经阿拉伯人传入欧洲，阿拉伯人成为东西方科技交流的桥梁。<br>综上所述，中古时期文化交流在阿拉伯人的推动下，呈现出多元文明交融、传承发展的特点，促进了不同地区文化的传播与进步。
-            </div>
-        </div>
-
-        <!-- 物理 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>物理：同步优学  金学典 <br>P93-110</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">物理</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                 <div style="font-family:system-ui;line-height:1.8;">
-<div style="text-align:center;font-size:2em;margin:12px 0;">第十三章巩固练习</div>
-<div>1.B &nbsp;2.C &nbsp;3.B &nbsp;4.B &nbsp;5.B &nbsp;6.C &nbsp;7.A</div>
-<div>8.A &nbsp;9.D &nbsp;10.C &nbsp;11.C &nbsp;12.D</div>
-<br>
-<div>13.变大 &nbsp;引力</div>
-<div>14.每1 kg水温度升高(或降低)1 ℃吸收(或放出)的热量是4.2×10<sup>3</sup> J &nbsp;改变</div>
-<div>15.无规则运动 &nbsp;热传递</div>
-<div>16.(1)80 &nbsp;(2)2.1×10<sup>4</sup> &nbsp;(3)A</div>
-<div>17.如图所示</div>
-<div><img src="1.png" alt="图1" style="width:220px;"></div>
-<div>18.(1)(甲) &nbsp;(2)间隙 &nbsp;(3)引力</div>
-<div>19.(1)升高 &nbsp;增大</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(2)D</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(3)瓶内出现白雾 &nbsp;减小</div>
-<div>20.(1)控制水和煤油的质量相等</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(2)等于 &nbsp;小于</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(3)98 &nbsp;2.1×10<sup>3</sup></div>
-<div>21.(1)增大 &nbsp;(2)4.2×10<sup>5</sup> J &nbsp;(3)100 ℃</div>
-<div>22.(1)6.72×10<sup>5</sup> &nbsp;6.72×10<sup>5</sup> &nbsp;(2)2 kg</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(3)鱼汤升高的温度为</div>
-<div>
-Δt<sub>鱼汤</sub>=
-<span style="display:inline-block;text-align:center;vertical-align:middle;">
-<span style="display:block;">Q<sub>吸</sub></span>
-<hr style="margin:0;border:none;border-top:1px solid #000;">
-<span style="display:block;">c<sub>汤</sub> m<sub>鱼汤</sub></span>
-</span>
-=
-<span style="display:inline-block;text-align:center;vertical-align:middle;">
-<span style="display:block;">6.72×10<sup>5</sup> J</span>
-<hr style="margin:0;border:none;border-top:1px solid #000;">
-<span style="display:block;">4.2×10<sup>3</sup> J/(kg·℃)×4 kg</span>
-</span>
-=40 ℃。
-</div>
-<div>鱼汤的末温为 t = Δt<sub>鱼汤</sub> + t<sub>初</sub> = 40 ℃ + 30 ℃ =70 ℃＜100 ℃，</div>
-<div>故鱼汤不能沸腾。</div>
-<br>
-<div style="text-align:center;font-size:2em;margin:12px 0;">第十四章巩固练习</div>
-<div>1.C &nbsp;2.C &nbsp;3.C &nbsp;4.A &nbsp;5.D &nbsp;6.C &nbsp;7.C</div>
-<div>8.B &nbsp;9.B &nbsp;10.A &nbsp;11.B &nbsp;12.B</div>
-<div>13.内能 &nbsp;机械能</div>
-<div>14.小 &nbsp;不可能</div>
-<div>15.扩散 &nbsp;不变</div>
-<div>16.(1)热值 &nbsp;(2)1.4×10<sup>10</sup> &nbsp;(3)28%</div>
-<div>17.如图所示</div>
-<div><img src="2.png" alt="图2" style="width:180px;"></div>
-<div>18.(1)质量 &nbsp;(2)水升高的温度 &nbsp;(3)酒精</div>
-<div>19.(1)A &nbsp;(2)质量 &nbsp;温度计上升的示数</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(3)b</div>
-<div>20.(1)(甲) &nbsp;(丙) &nbsp;加热时间 &nbsp;(2)2∶1</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(3)温度计示数的变化量 &nbsp;(4)偏小</div>
-<div>21.(1)3.36×10<sup>5</sup> J &nbsp;(2)10%</div>
-<div>22.(1)4.6×10<sup>6</sup> J &nbsp;(2)1.15×10<sup>7</sup> J</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(3)40%</div>
-<br>
-<div style="text-align:center;font-size:2em;margin:12px 0;">第十五章巩固练习</div>
-<div>1.D &nbsp;2.D &nbsp;3.C &nbsp;4.B &nbsp;5.C &nbsp;6.C &nbsp;7.D</div>
-<div>8.B &nbsp;9.B &nbsp;10.C &nbsp;11.B &nbsp;12.C</div>
-<div>13.5 &nbsp;3×10<sup>4</sup></div>
-<div>14.摩擦起电 &nbsp;异种</div>
-<div>15.用电器 &nbsp;导体</div>
-<div>16.(1)S<sub>2</sub> &nbsp;(2)S<sub>1</sub>、S<sub>3</sub> &nbsp;(3)短路</div>
-<div>17.(1)如图所示</div>
-<div><img src="3.png" alt="图3" style="width:220px;"></div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(2)如图所示</div>
-<div><img src="4.png" alt="图4" style="width:260px;"></div>
-<div>18.(1)未调零 &nbsp;(2)0.2 &nbsp;(3)错误</div>
-<div>19.(1)异种</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(2)同种电荷相互排斥</div>
-<div>&nbsp;&nbsp;&nbsp;&nbsp;(3)负 &nbsp;得到</div>
-<div>20.(1)断开 &nbsp;(2)L<sub>1</sub> &nbsp;(3)不同 &nbsp;B &nbsp;(4)检查灯泡 L<sub>2</sub> 的接线柱是否连接好(或检查灯泡 L<sub>2</sub> 是否拧紧)</div>
-<div>21.(1)0.2 &nbsp;(2)0.5 A &nbsp;(3)0.3 A</div>
-<div>22.(1)45 Ω &nbsp;(2)4.5 V &nbsp;(3)0.45 A</div>
-</div>;
-            </div>
-        </div>
-
-        <!-- 化学 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>化学：能力培养与测试<br>写到P45</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">化学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck" style="color:#888888;text-decoration:none;">点击跳转</a>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>化学：完成卷② 第二单元试卷</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">化学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                <a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck" style="color:#888888;text-decoration:none;">点击跳转</a>
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>化学：完成第二单元试卷</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">化学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                略
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>化学：完成第三单元试卷</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">化学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                略
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>化学：复习教材知识</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">化学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                复习教材知识，第一学月检测考察到“元素”。
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>化学：制作化学模型</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">化学</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                制作化学模型。
-            </div>
-        </div>
-
-        <!-- 体育 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>体育：排球练习</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">体育</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                每天完整的过关排球练习2次；不能过关的完成总数200次垫球。
-            </div>
-        </div>
-
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>体育：跳绳训练</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">体育</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                每天跳绳150次×3组。
-            </div>
-        </div>
-
-        <!-- 注意事项 -->
-        <div class="task-card" onclick="this.classList.toggle('active')">
-            <div class="task-header">
-                <h3>注意事项</h3>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="subject-tag">注意事项</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-            <div class="task-content">
-                1.【第一学月检测】2026年10月09日起开始第一学月检测，考察科目有语文、数学、英语、物理、化学，请做好复习。<br>
-                2.【晚四安排】根据年级组安排，国庆放假回来部分学生(即周三读报课念到名字的学生)开始上晚自习(4)，下课时间为21:10。<br>
-                3.作业清单仅供参考，如有错误欢迎指出。
-            </div>
-        </div>
-
+  <div class="header">
+    <div class="header-top">
+      <h1>作业答案</h1>
+      <a href="index.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+        返回
+      </a>
     </div>
+    <div class="subtitle">参考答案 · 仅供核对</div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- ============ 语文 ============ -->
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>学法大视野<br>第一单元基础任务群</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <b>P2</b>
+      <p>1.驰　ráo<br>2.①　②<br>3.B<br>4.B<br>5.(1)须晴日　看红装素裹　分外妖娆<br>(2)江山如此多娇　引无数英雄竞折腰<br>(3)俱往矣　数风流人物　还看今朝</p>
+      <b>P5</b>
+      <p>1.穗<br>甸甸<br>zhā<br>2.A<br>3.D<br>4.D</p>
+      <b>P8</b>
+      <p>1.B<br>2.B<br>3.1936年他出版的第一本诗集《大堰河》，表达了他热爱祖国的深挚感情。<br>4.C</p>
+      <b>P11</b>
+      <p>1.D<br>2.A<br>3.B<br>4.C</p>
+      <b>P13</b>
+      <p>1.娉　冕　ní<br>2.B<br>3.将“书写”改成“诉说”。<br>4.C</p>
+      <b>P16</b>
+      <p>1.qī　勃<br>2.B<br>3.C<br>4.D</p>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>学法大视野 P20-22</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <p>1.呢　涌　qī<br>2.①　①<br>3.D<br>4.B<br>5.(示例)假如我是一种颜色，我愿是那一抹金黄。 就像行道树旁的那一盏街灯，点亮漆黑的小巷，让黑夜不再漫长。<br>6.①直挂云帆济沧海<br>②欲为圣明除弊事<br>③病树前头万木春<br>④(示例)人有悲欢离合/晴空一鹤排云上<br>⑤(示例)月有阴晴圆缺/便引诗情到碧霄<br>7.C<br>8.D<br>9.(1)(示例)江南古镇，黄昏时分<br>(2)(示例)枯藤缠绕的老树特写，昏鸦飞过<br>(3)(示例)一位旅人伫立在夕阳下，低头吟诵“夕阳西下，断肠人在天涯”，画面定格，镜头拉长<br>(4)(示例)文中强调短视频可通过视听演绎让诗词再现鲜活意象。本设计选取古镇黄昏实景，用镜头捕捉枯藤老树昏鸦等曲中意象，画面由近及远、由景及人，让观众沉浸于天涯游子的孤寂愁思之中，真切体会诗词的意境之美</p>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>学法大视野<br>醉翁亭记 P47-50</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <p><b>课前预习</b><br>1.chú　hè　láng yá　míng　liè　gōng<br>2.蔚　潺潺　辄　伛　蔌　翳<br>3.丝，弦乐器；竹，管乐器　丝，蚕丝；竹，竹子<br>4.(1)名词活用作状语，沿着山路<br>(2)名词活用作状语，像鸟张开翅膀<br>(3)名词活用作状语，在前面<br>(4)形容词的意动用法，以……为快乐<br>5.(1)秀丽　茂盛<br>(2)居高面下　靠近，这里是在……旁边的意思<br>(3)取名，命名　名字<br>(4)命名　为，是<br>(5)意趣，情趣　意志<br>(6)领会　实现<br>(7)散开　指天气放晴<br>(8)聚拢　回去<br>6.(1)助词，的　代词，指亭子　结构助词，用于主谓之间，取消句子独立性，无实义<br>(2)在　对，对于<br>(3)连词，表递进　连词，表修饰　连词，表并列　连词，表承接　连词，表转折<br><b>课后提升</b><br>1.C<br>2.D<br>3.D<br>4.D<br>5.(1)宋　欧阳修　永叔　醉翁　六一居士<br>(2)觥筹交错　起坐而喧哗者<br>(3)山水之乐　得之心而寓之酒也<br>6.(1)A<br>(2)①苍老的容颜，花白的头发，醉倒在众人中间，这是太守喝醉了。<br>②人们知道跟随太守游玩而感到快乐，却不知道太守以游人的快乐为快乐。<br>(3)C<br>(4)(示例)我赞成闲适说。文章描写了滁州一带朝暮、四季自然景物不同的美、滁州百姓和平宁静的生活以及作者在山林中与民一齐游赏宴饮的乐趣，表现了作者随遇而安、与民同乐的旷达情怀，充满了士大夫悠闲自适的情调。<br>7.B<br>8.D<br>9.这样一个偏远的小县，尚且如此，整个国家的情况就可想而知了。<br>10.①严谨处理政务：遇事不敢忽，反复查阅旧案，避免出现冤假错案。②施政宽简不扰民：宽简而不扰，不为苛急、繁碎，使民便之。③慎用刑罚：继承其父的为政理念，常求其生，避免滥杀无辜。<br>11.①家风家教的影响：其父为官时谨慎办案、力求求生的仁政思想，以及母亲常求其生的家训，使他自幼形成恤民、仁爱的为政理念。②为政经历的触动：贬官夷陵时见冤案众多，深感天下固可知，从而树立遇事不敢忽的责任意识，主张宽简为民、惠及百姓。③社会制度的反思：在北宋榷酒制度等弊政下，官吏享乐而农民困苦，促使他通过诗文揭露时弊，呼吁关注民生。</p>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>学法大视野<br>湖心亭看雪 P52-54</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <p><b>课前预习</b><br>1.zhēn　gēng　ná　cuì　hàng dàng　jiè<br>2.凇　毡<br>3.(1)我　剩下<br>(2)古人罚酒时用的酒杯　像霜或雪的颜色(跟黑相对)<br>4.名词活用作动词，客居<br>5.(1)全、皆　数目“一”<br>(2)古代夜间的计时单位　还<br>(3)这　表示肯定的判断<br>(4)消失　与外界隔绝<br><b>课后提升</b><br>1.D<br>2.C<br>3.B<br>4.B<br>5.(1)陶庵　《陶庵梦忆》<br>(2)湖上影子　惟长堤一痕　湖心亭一点　与余舟一芥　舟中人两三粒而已<br>(3)莫说相公痴　更有痴似相公者<br>6.(1)①裹、围。<br>②撑(船)。<br>③还。<br>④等到。<br>(2)①冰花周围弥漫着白汽，天与云与山与水，浑然一体，白茫茫一片。<br>②我尽力喝了三大杯酒，然后(和他们)道别。<br>(3)D<br>(4)(示例一)我支持小语的观点，张岱是惊喜的。张岱雪夜独往湖心亭赏雪，偶遇同有雅兴的金陵人，是知音相逢的喜悦，强饮三大白体现出他的尽兴，在孤寂中获得慰藉，因此是惊喜相遇。(示例二)我支持小文的观点，张岱是败兴的。张岱雪夜独游追求独处的清幽，金陵人的热闹打破了静谧，拉余同饮破坏了他独赏的心境，他们的痴并不相通，偶遇打扰了他的雅兴，因此是败兴而归。<br>7.(1)断绝、消失<br>(2)全、皆<br>(3)何况<br>(4)⑤<br>8.(1)我撑着一叶小舟，裹着裘皮衣服，围着火炉，独自前往湖心亭看雪。<br>(2)(我)躺在船里看月亮，小厮在船头唱曲，不知是醉里梦里。<br>9.B<br>10.①《庞公池》记录的是张岱年少读书时的经历，那时他因心中没有世事的纷扰，不知何为忧愁，与仆人乘船赏月，听曲饮酒，互相嬉戏，可见其随性、洒脱与率真。②《湖心亭看雪》则是张岱在经历国破家亡、家族衰变后所写。夜晚独往湖心亭看雪时，内心充满无人可解的孤独寂寞和淡淡的愁绪。<br>11.(示例)作者在自嘲中讽世，显示了自己的卓然独立之姿。</p>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>学法大视野<br>P56-58、P61-62</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <b>P56-58</b>
+      <p><b>课前预习</b><br>1.zūn　zhù　zhǎng<br>2.阙　绮　婵<br>3.羞，同“馐”，美味的食物；直，同“值”，价值。<br><b>课后提升</b><br>1.C<br>2.B<br>3.D<br>4.(1)停杯投箸不能食　拔剑四顾心茫然<br>(2)长风破浪会有时　直挂云帆济沧海<br>(3)巴山楚水凄凉地　二十三年弃置身<br>(4)怀旧空吟闻笛赋　到乡翻似烂柯人<br>(5)人有悲欢离合　月有阴晴圆缺<br>(6)但愿人长久　千里共婵娟<br>5.(1)D<br>(2)李白化用鲍照的诗句，并在诗句中加入了“停杯投箸”的动作细节和“四顾心茫然”的心理描写，更能生动地展现诗人苦闷的精神世界。<br>6.(1)C<br>(2)(示例一)选择设计一。刘禹锡以沉舟病树自比，为自己的寂寞、蹉跎而忧伤，表达了世事变迁、宦海浮沉的感慨，所以将沉舟病树居中突出。而千帆过和万木春指的是后来者仕途得意，不是诗人的心情，应画得邈远。<br>(示例二)选择设计二。沉舟病树固然使人感到惆怅，但沉舟侧畔有千帆竞发，病树前头正万木逢春，说明新事物必将取代旧事物的道理。这两句诗表现了诗人豁达的胸怀，因此应当用明亮的色彩渲染千帆过万木春的景象。<br>7.(1)D<br>(2)①词人的情感变化：先是思念亲人，辗转难眠(转朱阁，低绮户，照无眠)，继而仰首问月，感伤离别(不应有恨，何事长向别时圆)，最后由伤感转化为理性哲思，表达出对天下离人的真诚祝愿(人有悲欢离合，月有阴晴圆缺，此事古难全。但愿人长久，千里共婵娟)。<br>②(示例)我同意这种看法。词人没有沉浸在思念弟弟的伤感情绪中不能自拔，而是努力自我排解，进而表达出对天下经受离别之苦的人们的美好祝愿，表现出他乐观旷达的心胸和情怀。<br>8.(1)(示例)我认为风为微风，翻字应轻读。风翻蛛网开三面描绘的是微风轻拂，蛛网被吹开三面的景象，若为狂风，蛛网会被吹破，无法呈现开三面的画面。微风下的翻更显轻柔，体现出春日的平和，也契合诗人罢职后虽有失意却仍存闲适的心境。<br>(2)本诗情感基调是失意中透着豁达，与刘诗的昂扬进取不同。诗人罢职归家，生活清贫，虽有剩欲出门追语笑，却嫌归鬓逐尘沙的失意，但风翻蛛网开三面，雷动蜂窠趁两衙又展现出对自然生机的欣赏，只今容有未开花则暗含对未来的期许，整体在失意中不失豁达。<br>9.(1)D<br>(2)甲词体现了苏轼乐观旷达的人生态度，抒发了对天下离人的美好祝愿；乙词抒发了苏辙面对别离时的无奈、悲伤和难遣的愁绪。</p>
+      <b>P61-62</b>
+      <p>1.mì　漫<br>2.①  ①  ②<br>3.C<br>4.C<br>5.①安得广厦千万间<br>②长风破浪会有时<br>③直挂云帆济沧海<br>④报君黄金台上意<br>⑤提携玉龙为君死<br>6.这两句是词人情感由外放转为内收的转折点。“不须携酒登临”不是不想饮酒，而是难寻可共饮交心之人，饱含孤身登楼的寂寞惆怅。词人胸怀抗金复国壮志，在南宋苟安的时局下知音难遇、抱负无人理解，“何人共斟”抒发报国无门的悲愤，由个人孤独升华为对国事衰微、江山变迁的深切忧虑。<br>7.A<br>8.A<br>9.(1)如果没有这种人，我同谁一道呢？<br>(2)人虽很愚笨，责备别人却是很高明的；虽然十分聪明，但若原谅自己则导致昏蔽。<br>10.从范仲淹的精神倡导，到戴复古的文学抒发，再到范纯仁的躬身实践，三则材料层层递进，共同揭示了古代士人以天下为己任、忧国忧民、敢作敢为的家国情怀。这种情怀，既是面对历史兴替的深沉叹息，更是面对现实困境的挺身而出。</p>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>默写《沁园春·雪》<br>《我爱这土地》</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <b>《沁园春·雪》</b>
+      <br>毛泽东<br>
+      北国风光，千里冰封，万里雪飘。<br>
+      望长城内外，惟余莽莽；大河上下，顿失滔滔。<br>
+      山舞银蛇，原驰蜡象，欲与天公试比高。<br>
+      须晴日，看红装素裹，分外妖娆。<br>
+      <br>
+      江山如此多娇，引无数英雄竞折腰。<br>
+      惜秦皇汉武，略输文采；唐宗宋祖，稍逊风骚。<br>
+      一代天骄，成吉思汗，只识弯弓射大雕。<br>
+      俱往矣，数风流人物，还看今朝。<br>
+      <b>《我爱这土地》</b>
+      <br>艾青<br>
+      假如我是一只鸟，<br>
+      我也应该用嘶哑的喉咙歌唱：<br>
+      这被暴风雨所打击着的土地，<br>
+      这永远汹涌着我们的悲愤的河流，<br>
+      这无止息地吹刮着的激怒的风，<br>
+      和那来自林间的无比温柔的黎明……<br>
+      ——然后我死了，<br>
+      连羽毛也腐烂在土地里面。<br>
+      <br>
+      为什么我的眼里常含泪水？<br>
+      因为我对这土地爱得深沉……
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>默写《岳阳楼记》3-5段</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      　　若夫霪雨霏霏，连月不开，阴风怒号，浊浪排空，日星隐耀，山岳潜形，商旅不行，樯倾楫摧，薄暮冥冥，虎啸猿啼。登斯楼也，则有去国怀乡，忧谗畏讥，满目萧然，感极而悲者矣。<br>
+      　　至若春和景明，波澜不惊，上下天光，一碧万顷，沙鸥翔集，锦鳞游泳，岸芷汀兰，郁郁青青。而或长烟一空，皓月千里，浮光跃金，静影沉璧，渔歌互答，此乐何极！登斯楼也，则有心旷神怡，宠辱偕忘，把酒临风，其喜洋洋者矣。<br>
+      　　嗟夫！予尝求古仁人之心，或异二者之为，何哉？不以物喜，不以己悲，居庙堂之高则忧其民，处江湖之远则忧其君。是进亦忧，退亦忧。然则何时而乐耶？其必曰“先天下之忧而忧，后天下之乐而乐”乎！噫！微斯人，吾谁与归？<br>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>默写《醉翁亭记》1-2段</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      　　环滁皆山也。其西南诸峰，林壑尤美，望之蔚然而深秀者，琅琊也。山行六七里，渐闻水声潺潺，而泻出于两峰之间者，酿泉也。峰回路转，有亭翼然临于泉上者，醉翁亭也。作亭者谁？山之僧智仙也。名之者谁？太守自谓也。太守与客来饮于此，饮少辄醉，而年又最高，故自号曰醉翁也。醉翁之意不在酒，在乎山水之间也。山水之乐，得之心而寓之酒也。<br>
+      　　若夫日出而林霏开，云归而岩穴暝，晦明变化者，山间之朝暮也。野芳发而幽香，佳木秀而繁阴，风霜高洁，水落而石出者，山间之四时也。朝而往，暮而归，四时之景不同，而乐亦无穷也。<br>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>默写《诗词三首》</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <b>《行路难》（其一）</b>
+      <br>李白<br>
+      金樽清酒斗十千，玉盘珍羞直万钱。<br>
+      停杯投箸不能食，拔剑四顾心茫然。<br>
+      欲渡黄河冰塞川，将登太行雪满山。<br>
+      闲来垂钓碧溪上，忽复乘舟梦日边。<br>
+      行路难，行路难，多歧路，今安在？<br>
+      长风破浪会有时，直挂云帆济沧海。<br>
+      <b>《酬乐天扬州初逢席上见赠》</b>
+      <br>刘禹锡<br>
+      巴山楚水凄凉地，二十三年弃置身。<br>
+      怀旧空吟闻笛赋，到乡翻似烂柯人。<br>
+      沉舟侧畔千帆过，病树前头万木春。<br>
+      今日听君歌一曲，暂凭杯酒长精神。<br>
+      <b>《水调歌头》（明月几时有）</b>
+      <br>苏轼<br>
+      明月几时有？把酒问青天。<br>
+      不知天上宫阙，今夕是何年。<br>
+      我欲乘风归去，又恐琼楼玉宇，高处不胜寒。<br>
+      起舞弄清影，何似在人间。<br>
+      转朱阁，低绮户，照无眠。<br>
+      不应有恨，何事长向别时圆？<br>
+      人有悲欢离合，月有阴晴圆缺，此事古难全。<br>
+      但愿人长久，千里共婵娟。<br>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>作文《我眼中的祖国》</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      请豆包出山。
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>民族团结主题手抄报</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      请小红书出山。A3纸手绘，主题：石榴籽一家亲，铸牢中华民族共同体意识，10月9日前上交。
+    </div>
+  </div>
+
+  <!-- ============ 数学 ============ -->
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>学法大视野<br>专练5 P71</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div style="font-family:SimSun,serif;line-height:1.8;font-size:16px;">
+        <div>1.</div>
+        <div>解: <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>x<sup>2</sup>=2,</div>
+        <div>两边同时乘以2,得 x<sup>2</sup>=4,</div>
+        <div>根据平方根的意义,得 x=&plusmn;2,即 x<sub>1</sub>=2, x<sub>2</sub>=-2.</div>
+        <br>
+        <div>2.</div>
+        <div>解:移项得 (x&minus;1)<sup>2</sup>=9,</div>
+        <div>开平方得 x&minus;1=&plusmn;3,</div>
+        <div>当 x&minus;1=3时,x=4;当 x&minus;1=&minus;3时,x=&minus;2;</div>
+        <div>故方程的解为 x<sub>1</sub>=4, x<sub>2</sub>=-2.</div>
+        <br>
+        <div>3.</div>
+        <div>解:&because; (x&minus;2)<sup>2</sup> = (2x+3)<sup>2</sup>,</div>
+        <div>&there4; x&minus;2=2x+3 或 x&minus;2=&minus;(2x+3),</div>
+        <div>解得 x<sub>1</sub>=-5, x<sub>2</sub>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1</span><span style="border-top:1px solid #000;display:block;text-align:center;">3</span></span>.</div>
+        <br>
+        <div>4.</div>
+        <div>解:将二次项系数化为1,得 x<sup>2</sup>&minus;2x&minus;<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>=0,</div>
+        <div>配方,得 x<sup>2</sup>&minus;2x+1&minus;1&minus;<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>=0,</div>
+        <div>&there4; x<sup>2</sup>&minus;2x+1=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">3</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
+        <div>即 (x&minus;1)<sup>2</sup>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">3</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
+        <div>&there4; x&minus;1=&plusmn;<span style="display:inline-block;vertical-align:middle;">√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">6</span></span><span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;"></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span></span>,</div>
+        <div>解得 x<sub>1</sub>=1+<span style="display:inline-block;vertical-align:middle;">√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">6</span></span><span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;"></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span></span>, x<sub>2</sub>=1&minus;<span style="display:inline-block;vertical-align:middle;">√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">6</span></span><span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;"></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span></span>.</div>
+        <br>
+        <div>5.</div>
+        <div>解:去分母,得 2x<sup>2</sup>+x&minus;6=0.</div>
+        <div>将二次项系数化为1,得 x<sup>2</sup>+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>x&minus;3=0.</div>
+        <div>配方,得 x<sup>2</sup>+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>x+ (<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>)<sup>2</sup>&minus; (<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>)<sup>2</sup>&minus;3=0.</div>
+        <div>即 (x+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>)<sup>2</sup>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">49</span><span style="border-top:1px solid #000;display:block;text-align:center;">16</span></span>.</div>
+        <div>&there4; x+<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">1</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>=&plusmn;<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">7</span><span style="border-top:1px solid #000;display:block;text-align:center;">4</span></span>.</div>
+        <div>解得 x<sub>1</sub>=<span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">3</span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>, x<sub>2</sub>=-2.</div>
+        <br>
+        <div>6.</div>
+        <div>解: x<sup>2</sup>+x&minus;3=0,</div>
+        <div>a=1, b=1, c=-3,</div>
+        <div>b<sup>2</sup>&minus;4ac=1<sup>2</sup>&minus;4&times;1&times;(-3)=13,</div>
+        <div>x= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">13</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
+        <div>x<sub>1</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">13</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>, x<sub>2</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">&minus;1&minus;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">13</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>.</div>
+        <div>7.</div>
+        <div>解:方程化为一般形式为 4x<sup>2</sup>&minus;8x+1=0.</div>
+        <div>&because; a=4, b=-8, c=1,</div>
+        <div>&there4; b<sup>2</sup>&minus;4ac= (&minus;8)<sup>2</sup>&minus;4&times;4&times;1=48&gt;0,</div>
+        <div>&there4; x= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">8&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">48</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2&times;4</span></span>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">2&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">3</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>,</div>
+        <div>解得 x<sub>1</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">2&plusmn;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">3</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>, x<sub>2</sub>= <span style="display:inline-block;vertical-align:middle;"><span style="display:block;text-align:center;">2&minus;√<span style="display:inline-block;"><span style="border-top:1px solid #000;padding-left:2px;">3</span></span></span><span style="border-top:1px solid #000;display:block;text-align:center;">2</span></span>.</div>
+        <br>
+        <div>8.</div>
+        <div>解: x(x&minus;2)=x&minus;2,</div>
+        <div>x(x&minus;2)&minus;(x&minus;2)=0,</div>
+        <div>(x&minus;2)(x&minus;1)=0,</div>
+        <div>x&minus;2=0 或 x&minus;1=0,</div>
+        <div>x<sub>1</sub>=2, x<sub>2</sub>=1.</div>
+        <br>
+        <div>9.</div>
+        <div>解:&because; 2(x&minus;3)<sup>2</sup>=x<sup>2</sup>&minus;9,</div>
+        <div>&there4; 2(x&minus;3)<sup>2</sup>&minus;(x+3)(x&minus;3)=0,</div>
+        <div>则 (x&minus;3)(x&minus;9)=0,</div>
+        <div>&there4; x&minus;3=0 或 x&minus;9=0,</div>
+        <div>解得 x<sub>1</sub>=3, x<sub>2</sub>=9.</div>
+        <br>
+        <div>10.</div>
+        <div>解:原方程可化为 x<sup>2</sup>+2x&minus;15=0,</div>
+        <div>&there4; (x+5)(x&minus;3)=0,</div>
+        <div>&there4; x+5=0 或 x&minus;3=0,</div>
+        <div>解得 x<sub>1</sub>=-5, x<sub>2</sub>=3.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>学法大视野<br>专练6 P76</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div style="font-family: 'Microsoft YaHei', sans-serif; line-height: 1.8; font-size:16px;">
+        <p>1.</p>
+        <p>解:(1)∵方程有两个实数根,<br>
+        ∴Δ= (−6) <sup>2</sup>−4×1×(2m+1)≥0,<br>
+        即36−8m−4≥0,<br>
+        解得m≤4.</p>
+        <p>(2)∵x<sub>1</sub>与x<sub>2</sub>是该方程的两个实数根,<br>
+        ∴x<sub>1</sub>+x<sub>2</sub>=6, x<sub>1</sub>x<sub>2</sub>=2m+1.<br>
+        ∵x<sub>1</sub><sup>2</sup>+x<sub>2</sub><sup>2</sup>=22,<br>
+        ∴x<sub>1</sub><sup>2</sup>+x<sub>2</sub><sup>2</sup>= (x<sub>1</sub>+x<sub>2</sub>) <sup>2</sup>−2x<sub>1</sub>x<sub>2</sub>=36−2(2m+1)=22,<br>
+        解得m=3.</p>
+        <br>
+        <p>2.</p>
+        <p>解:(1)∵关于x的一元二次方程x<sup>2</sup>−3x−k=0有两个不相等的实数根,<br>
+        ∴Δ=9+4k>0,解得k&gt;-<span style="display:inline-block;vertical-align:middle;text-align:center;line-height:1;">−<span style="display:block;border-bottom:1px solid #000;">9</span><span style="display:block;">4</span></span>,<br>
+        即k的取值范围为k&gt;-<span style="display:inline-block;vertical-align:middle;text-align:center;line-height:1;">−<span style="display:block;border-bottom:1px solid #000;">9</span><span style="display:block;">4</span></span>.</p>
+        <p>(2)x<sub>1</sub>,x<sub>2</sub>是方程x<sup>2</sup>−3x−k=0的两个实数根,<br>
+        ∴x<sub>1</sub>+x<sub>2</sub>=3, x<sub>1</sub>x<sub>2</sub>=−k.<br>
+        ∵2x<sub>1</sub>+x<sub>1</sub>x<sub>2</sub>+2x<sub>2</sub>=2(x<sub>1</sub>+x<sub>2</sub>)+x<sub>1</sub>x<sub>2</sub>=10,<br>
+        ∴6−k=10,<br>
+        解得k=−4.<br>
+        ∵k&gt;-<span style="display:inline-block;vertical-align:middle;text-align:center;line-height:1;">−<span style="display:block;border-bottom:1px solid #000;">9</span><span style="display:block;">4</span></span>,<br>
+        ∴不存在k值使得2x<sub>1</sub>+x<sub>1</sub>x<sub>2</sub>+2x<sub>2</sub>=10.</p>
+        <br>
+        <p>3.</p>
+        <p>解:(1)由题意,得Δ= [−2(m+1)] <sup>2</sup>−4(m<sup>2</sup>+5)=8m−16≥0,<br>
+        解得m≥2.<br>
+        ∵x<sub>1</sub>+x<sub>2</sub>=2(m+1), x<sub>1</sub>x<sub>2</sub>=m<sup>2</sup>+5,<br>
+        ∴(x<sub>1</sub>−1)(x<sub>2</sub>−1)=x<sub>1</sub>x<sub>2</sub>−(x<sub>1</sub>+x<sub>2</sub>)+1=m<sup>2</sup>+5−2(m+1)+1=28,<br>
+        解得m<sub>1</sub>=6, m<sub>2</sub>=−4(不合题意,舍去).<br>
+        ∴m的值为6.</p>
+        <p>(2)①当7为底边时,此时方程x<sup>2</sup>−2(m+1)x+m<sup>2</sup>+5=0有两个相等的实数根,<br>
+        ∴Δ=8m−16=0,<br>
+        解得m=2,<br>
+        ∴原方程可化为x<sup>2</sup>−6x+9=0,<br>
+        解得x<sub>1</sub>=x<sub>2</sub>=3.<br>
+        ∵3+3&lt;7,<br>
+        ∴不能构成三角形.</p>
+        <p>②当7为腰时,设x<sub>1</sub>=7,<br>
+        代入方程,得49−14(m+1)+m<sup>2</sup>+5=0,<br>
+        解得m<sub>1</sub>=10, m<sub>2</sub>=4.<br>
+        当m=10时,原方程可化为x<sup>2</sup>−22x+105=0,<br>
+        解得x=7或x=15.<br>
+        ∵7+7&lt;15,<br>
+        ∴不能构成三角形.<br>
+        当m=4时,原方程可化为x<sup>2</sup>−10x+21=0,<br>
+        解得x=3或x=7.<br>
+        ∵3+7&gt;7,∴能构成三角形.<br>
+        此时三角形的周长为7+7+3=17.</p>
+        <p>综上所述,这个三角形的周长为17.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>学法大视野<br>专练7</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div style="font-family:system-ui;">
+        <div>1.</div>
+        <div>解:(1)设在该栽培模式下,每月产量的平均增长率为x.</div>
+        <div>根据题意,得200(1+x)<sup>2</sup>=242,</div>
+        <div>解得x<sub>1</sub>=0.1=10%, x<sub>2</sub>=-2.1(不合题意,舍去).</div>
+        <div>答:在该栽培模式下,每月产量的平均增长率为10%.</div>
+        <div>(2)242×(1+10%)=242×1.1=266.2(t).</div>
+        <div>答:预计四月初水稻采收的产量将达到266.2 t.</div>
+        <br>
+        <div>2.</div>
+        <div>解:(1)∵每盒礼盒每降低1元,平均每天可多售出10盒,</div>
+        <div>∴每盒礼盒降价4元时,平均每天可多售出<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">4</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">1</span></span>×10=40(盒),此时平均每天售出礼盒50+40=90(盒),</div>
+        <div>每天获利90×(15-4)=990(元).</div>
+        <div>答:每盒礼盒降价4元时,平均每天可售出90盒礼盒,此时每天销售获利990元.</div>
+        <div>(2)设每盒礼盒应降价x元,则平均每天可多售出10x盒,</div>
+        <div>根据题意,得(50+10x)(15-x)=1 000,</div>
+        <div>解得x<sub>1</sub>=x<sub>2</sub>=5,</div>
+        <div>当每盒礼盒降价5元时,每盒盈利15-5=10(元),10>5,符合题意.</div>
+        <div>答:每盒礼盒应降价5元.</div>
+        <br>
+        <div>3.</div>
+        <div>解:(1)设出发x s后,点P,D之间的距离是点P,Q之间距离的2倍,此时AP=2x cm,BP=(10-2x)cm,BQ=x cm.</div>
+        <div>∵四边形ABCD是矩形,</div>
+        <div>∴∠A=∠B=90°,</div>
+        <div>∴PD<sup>2</sup>=AP<sup>2</sup>+AD<sup>2</sup>,PQ<sup>2</sup>=BP<sup>2</sup>+BQ<sup>2</sup>.</div>
+        <div>∵PD=2PQ,即PD<sup>2</sup>=4PQ<sup>2</sup>,</div>
+        <div>∴(2x)<sup>2</sup>+8<sup>2</sup>=4[(10−2x)<sup>2</sup>+x<sup>2</sup>],</div>
+        <div>解得x<sub>1</sub>=3,x<sub>2</sub>=7.</div>
+        <div>当x=7时,10-2x<0,不合题意,舍去,</div>
+        <div>∴x=3.</div>
+        <div>答:出发3 s后,点P,D之间的距离是点P,Q之间距离的2倍.</div>
+        <div>(2)不存在.理由如下:</div>
+        <div>设出发y s后,△DPQ的面积是16 cm<sup>2</sup>.</div>
+        <div>∵S<sub>△DPQ</sub>=S<sub>矩形ABCD</sub>−S<sub>△ADP</sub>−S<sub>△BQP</sub>−S<sub>△DCQ</sub>,</div>
+        <div>∴<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>×8×2y + <span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>(10-2y)·y + <span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>(8-y)·10=80-16,</div>
+        <div>整理,得y<sup>2</sup>-8y+24=0.</div>
+        <div>∵Δ=(-8)<sup>2</sup>-4×24=-32<0,</div>
+        <div>∴该方程无实数解,</div>
+        <div>∴不存在某个时刻,使得△DPQ的面积是16 cm<sup>2</sup>.</div>
+        <br>
+        <div>4.</div>
+        <div>解:设每轮感染中平均1台电脑会感染x台电脑,</div>
+        <div>根据题意,得(1+x)<sup>2</sup>=25,</div>
+        <div>解得x<sub>1</sub>=4,x<sub>2</sub>=-6(不合题意,舍去).</div>
+        <div>答:每轮感染中平均1台电脑会感染4台电脑.</div>
+        <br>
+        <div>5.</div>
+        <div>解:设原来个位上的数字为x,则十位上的数字为(8-x).</div>
+        <div>根据题意,得</div>
+        <div>[10×(8-x)+x](10x+8-x)=1 855,</div>
+        <div>解得x<sub>1</sub>=3,x<sub>2</sub>=5.</div>
+        <div>∴原来十位上的数字为5或3.</div>
+        <div>答:这个两位数为53或35.</div>
+        <br>
+        <div>6.</div>
+        <div>解:(1)根据题意,得<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>×(x−1)=40,</div>
+        <div>∴x(x−1)=80,</div>
+        <div>解得x=<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">1±√321</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>,不为整数,</div>
+        <div>∴方程的解不符合实际,按这个赛制不应该是40场,</div>
+        <div>故淇淇的说法正确.</div>
+        <div>(2)∵有一人比赛了4场后退出比赛,</div>
+        <div>根据题意,得<span style="display:inline-block;text-align:center;vertical-align:middle;"><span style="display:block;">(x−1)(x−2)</span><hr style="margin:0;border:none;border-top:1px solid black;"><span style="display:block;">2</span></span>+4=40,</div>
+        <div>解得x<sub>1</sub>=10,x<sub>2</sub>=-7(不合题意,舍去),</div>
+        <div>∴x的值为10.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>假期数学素养训练（一）</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      老师发布答案或整理答案后可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看答案。
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>假期数学素养训练（二）</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      老师发布答案或整理答案后可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看答案。
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>少年智力开发报</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      完成第1期《少年智力开发报》3评、4评。
+      <br>
+      老师发布答案或整理答案后可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看答案。
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>复习教材</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      复习教材，第一学月检测考察到“相似三角形判定定理1”，包含七、八年级内容。
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>自主批改假期作业并更正</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      自主批改假期作业并更正错题。
+    </div>
+  </div>
+
+  <!-- ============ 英语 ============ -->
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>学法大视野 P1-44</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      答案由豆包生成，部分会出现多空，请注意修改。
+      <br>
+      <b>Unit 1 The Changing World</b><br><b>Section A (1a-2d)</b><br><b>课前预习</b><br>一、重点单词<br>1.rough  2.sandstorm  3.farmland  4.shortage  5.lack  6.bush  7.root  8.soil  9.sandy  10.government  11.support  12.corn<br>二、重点词组<br>13.bring about  14.be covered with<br>三、重点句型<br>15.took me  16.be covered with  17.support<br><b>课后提升</b><br>I.1.bushes  2.shrotage  3.sandy  4.supported  5.government<br>II.6.was covered with  7.It took; to work  8.Lack of  9.brought about  10.with; help of<br>III.11.C  12.B<br><b>Scetion A(3a-3d)</b><br><b>课前预习</b><br>一、重点单词<br>1.high-tech  2.greenhouse  3.highway  4.railway  5.attraction  6.product  7.greatly  8.socialist  9.electronic payment  10.housing<br>二、重点词组<br>11.used to do sth  12.tons of<br>三、重点句型<br>13.used to  14.tons of  15.local products<br><b>课后提升</b><br>I.1.attraction  2.product  3.greatly  4.socialist  5.housing<br>II.6.use to  7.plenty of  8.Over the past 20 years  9.local products  10.sell; products to<br>III.11.big  12.small  13.highway  14.attraction  15.all over China<br>IV.16.B  17.A  18.C  19.B<br>V.20.Ten years ago.  21.In the south of the town.  22.It is big and beautiful.  23.Great.（答案不唯一）  24.我的家乡变化如此之大，但它仍然给我家的感觉。<br><b>Section A(Grammar Focus)</b><br>综合训练<br>1.with  2.seen  3.take  4.well  5.watching  6.train  7.looks  8.fault  9.covered  10.difficult<br><b>Section B(1a-1f)</b><br><b>课前预习</b><br>一、重点单词<br>1.link  2.port  3.capital  4.convenient  5.business  6.ease  7.lorry  8.manager  9.conclusion<br>二、重点词组<br>10.be happy with  11.with ease<br>三、重点句型<br>12.benefited  13.taken place  14.am able to<br><b>课后提升</b><br>I.1.ports  2.business  3.convenient  4.manager  5.conclusion<br>II.6.benefit;from  7.satisfied with  8.with ease  9.take place  10.as a result  11.cut travel time  12.work hard to  13.Hundreds of<br>III.14.A  15.C  16.C  17.B  18.C  19.B  20.B  21.A  22.C  23.C<br>IV.24.hometown  25.perfect  26.includes  27.on  28.support  29.solve  30.success  31.thanks  32.wide  33.harder<br>V.34.They could only walk through the mountain roads.  35.They lived in low straw‑thatched cottages.  36.They would like to go to the park.  37.It has become better with many trees and flowers and a beautiful park.  38.十年前，它曾经是一个贫穷的村庄。<br><b>Section B(2a-3d)</b><br><b>课前预习</b><br>一、重点单词<br>1.narrow  2.villager  3.lead  4.man‑made  5.miracle  6.junior  7.flat  8.discussion  9.aspect<br>二、重点句型<br>10.made it; for; to  11.feed on  12.is known as<br><b>课后提升</b><br>I.1.villager  2.led  3.miracle  4.discussion  5.narrow<br>II.6.feed on  7.makes it;for;to  8.is known as  9.in aspects  10.in many aspects<br>III.11.C  12.B  13.C  14.A<br><b>单元复习课</b><br>II.21.A  22.C  23.B<br>III.24.B  25.D  26.E  27.C<br>IV.28.A  29.B  30.C  31.A  32.A  33.B  34.A  35.B  36.A  37.C<br>V.38.About thirty years ago.  39.They lived a hard and simple life.  40.Because the government carried out a new policy.  41.We should keep working hard.  42.但是随着科学技术的发展，我们的生活正变得越来越好。<br><b>Unit 2 Inspiring People</b><br><b>Scetion A(1a-2d)</b><br><b>课前预习</b><br>一、重点单词<br>1.inspiring  2.admire  3.historian  4.chemist  5.physicist  6.hunger  7.chemistry  8.calendar  9.discovery  10.century  11.wounded  12.British  13.airport  14.nation  15.spread  16.disease  17.pioneer  18.admirable<br>二、重点词组<br>19.even though/even if  20.drop out (of sth)<br>三、重点句型<br>21.carry out  22.dropped out of school<br><b>课后提升</b><br>I.1.inspiring  2.historian  3.hunger  4.discoveries  5.wounded  6.admirable  7.spread<br>II.8.dropping out of  9.doing research on  10.Even though<br>III.11.hunger  12.trained  13.research  14.of  15.scientist<br>16.writer  17.reviewing  18.discoveries  19.won  20.better<br><b>Section A(3a-3c)</b><br><b>课前预习</b><br>一、重点单词<br>1.pyramid  2.balance  3.courage  4.wisdom  5.inspiration  6.brave<br>二、重点词组<br>7.look up to<br>三、重点句型<br>8.you admire the most  9.of  10.to  11.look up to<br><b>课后提升</b><br>I.1.courage  2.inspiration  3.balance  4.Pyramid  5.brave  6.wisdom<br>II.7.look up to  8.the first Chinese woman to  9.very clever of her to  10.full of wisdom  11.to become; like<br>III.12.B  13.C  14.B  15.C<br>IV.16.In 2011.  17.She communicated with a doctor.  18.She pays attention to small things and practises moves many times.  19.We should be brave and keep training when facing difficulties.  20.这段经历使她更加勇敢、更加坚强。<br><b>Section A(Grammar Focus)</b><br>综合训练<br>1.the  2.learning  3.and  4.especially  5.make  6.of  7.richer  8.Through  9.to teach  10.art<br><b>Section B(1a-2f)</b><br><b>课前预习</b><br>一、重点单词<br>1.scientific  2.biologist  3.whole  4.bank  5.forever  6.radio  7.collection  8.exploration<br>二、重点词组<br>9.leave behind  10.live on<br>三、重点句型<br>11.biologist; researching  12.provided; with  13.left behind; a huge collection of  14.lives on<br><b>课后提升</b><br>I.1.scientific  2.biologist  3.banks  4.collection  5.exploration<br>II.6.Live life  7.Scientific exploration  8.provide; with  9.Leave behind  10.It; hard for; to<br>III.11.E  12.A  13.D  14.B  15.C<br>IV.16.Eastward Flows the River, Westward I come.  17.In 1922.  18.His hard work, practice and help from Professor Zhang Pengchun.  19.My teacher gives me useful advice and encourages me.  20.南开不仅给予他知识，也让他深深爱上戏剧。<br><b>Section B(2a-3d)</b><br><b>课前预习</b><br>一、重点单词<br>1.universe  2.socialism  3.hole  4.daughter  5.herself  6.flight  7.inventor  8.thinker  9.period  10.kindness<br>二、重点词组<br>11.above all<br>三、重点句型<br>12.Is said that  13.above all<br><b>课后提升</b><br>I.1.socialism  2.herself  3.flight  4.inventor  5.kindness<br>II.6.Above all  7.It is said that  8.made  9.avoid doing  10.treat; kindness to<br>III.11.B  12.A  13.B  14.A  15.C  16.B  17.A  18.C  19.A  20.C<br><b>单元复习课</b><br>II.21.C  22.A<br>III.23.A  24.D  25.C  26.E<br>IV.27.10 million yuan.  28.In 1933.  29.Because she thought if children kept studying, the country would be better.  30.We should be hard‑working and helpful. We should devote ourselves to our country.  31.她是年龄最大的女伞兵，并且拥有跳伞次数最多的纪录。<br><b>Unit 3 Smart Learning</b><br><b>Section A(1a-2d)</b><br><b>课前预习</b><br>一、重点单词<br>1.learner  2.flashcard  3.project  4.website  5.hands‑on  6.experiment  7.dictionary  8.aloud  9.dialogue/dialog  10.suit  11.general  12.speed  13.grammar<br>二、重点词组<br>14.look up/look over  15.in general/generally speaking<br>三、重点句型<br>16.How; by reviewing  17.aloud<br><b>课后提升</b><br>I.1.learner  2.dictionaries  3.aloud  4.suitable  5.speeded  6.grammar  7.website  8.experiments<br>II.9.look them up  10.In general  11.by asking<br>III.12.enjoy  13.something  14.remain  15.and  16.Connect  17.useful  18.spelling  19.by  20.museums  21.easy<br><b>Section A(3a-3e)</b><br><b>课前预习</b><br>一、重点单词<br>1.podcast  2.zero（或minimum）  3.actively  4.fun（或enjoyable）  5.strategy<br>二、重点短语<br>6.come across  7.step by step  8.build up<br>三、重点句型<br>9.step by step  10.puts off<br><b>课后提升</b><br>I.1.podcast  2.zero  3.strategy  4.enjoyable  5.actively<br>II.6.came across  7.step by step  8.build up  9.put off  10.start from zero<br>III.11.C  12.B  13.C  14.C<br>IV.15.B  16.C  17.A  18.C  19.B  20.A  21.B  22.C  23.C  24.B<br>V.25.At the age of 50.  26.Grammar.  27.By visiting England five times.  28.She is hard‑working and never gives up.  29.开始新事物，永远不会太晚，年龄再大也不算迟。<br><b>Section A(Grammar Focus)</b><br>对点训练<br>I.1.A  2.B  3.B  4.A  5.B<br>II.6.if/whether  7.whether  8.that<br>综合训练<br>1.achieve  2.making  3.harder  4.carefully  5.remember  6.on<br>7.that  8.improve  9.least  10.if<br><b>Section B(1a-1e)</b><br><b>课前预习</b><br>一、重点单词<br>1.grow/growth  2.mindset  3.material  4.guidance/guide  5.feedback  6.addition  7.resource  8.textbook  9.advantage  10.efficiently  11.valley<br>二、重点词组<br>12.in a way  13.in addition  14.made use of<br>三、重点句型<br>15.The more; the better  16.In addition  17.Take advantage of<br><b>课后提升</b><br>I.1.growth  2.guidance  3.addition  4.textbooks  5.efficiently<br>II.6.in some way  7.In addition  8.make full use of  9.The harder; the better  10.have difficulty learning; using<br>III.11.B  12.A  13.C  14.E  15.D<br>IV.16.us  17.difficult  18.ways  19.First  20.watch  21.with  22.make  23.better  24.everyone  25.learning<br>V.26.He reads different things like novels, poems and news.  27.Because it improved his ability to express himself and helped him understand his writing style.  28.Getting feedback from others.  29.Yes, I do. Because reading can open up my mind.(答案合理即可)  30.这让我的写作更加清晰有力。
+    </div>
+  </div>
+
+  <!-- ============ 道法 ============ -->
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3.4L4.2 7.6v8.8L12 20.6l7.8-4.2V7.6z"/>
+            <path d="M12 12l7.8-4.4"/>
+            <path d="M12 12v8.6"/>
+            <path d="M12 12L4.2 7.6"/>
+          </svg>
+        </div>
+        <h3>学法大视野1-4课<br>拓展提升材料题</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道法</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <b>P5　拓展提升　2.</b>
+      <br>①坚持党的全面领导。<br>②坚持改革开放。<br>③南泥湾人勇于创造，敢为人先，艰苦奋斗。
+      <br><b>P9　拓展提升　3.</b>
+      <br>①有利于激励全党全国各族人民攻坚克难、奋勇前行。<br>②有利于激励人们为实现中华民族伟大复兴而不懈奋斗。<br>③有利于增强民族凝聚力和向心力。<br>④有利于培育和践行社会主义核心价值观。
+      <br><b>P13　拓展提升　2.</b>
+      <br>①中国共产党是中国特色社会主义事业的领导核心，代表中国最广大人民的根本利益。<br>②中国共产党的初心使命是为中国人民谋幸福、为中华民族谋复兴。<br>③党的根本宗旨是全心全意为人民服务。<br>④党的最高理想和最终目标是实现共产主义。<br>⑤坚守初心使命，我们党才能在极端困境中发展壮大，在濒临绝境中突出重围，在困顿逆境中毅然奋起。
+      <br><b>P17　拓展提升　3.</b>
+      <br>(1)人民立场。<br>(2)①人民是历史的创造者，是决定党和国家前途命运的根本力量。<br>②这是由党的性质和根本宗旨决定的，党是人民的政党，必须始终为人民利益奋斗。<br>③只有站稳人民立场，才能赢得人民拥护，凝聚起实现民族复兴的磅礴力量。<br>(3)①认真学习党的理论知识，理解党坚守人民立场的重要意义，树立爱党爱国情怀。<br>②关注民生发展，积极宣传党的惠民政策，增强对党的认同和支持。<br>③努力学习科学文化知识，提升自身素质，将来投身国家建设，为人民幸福、民族复兴贡献力量。
+      <br><b>P23　拓展提升　2.</b>
+      <br>(1)①全心全意为人民服务。<br>②始终牢记为中国人民谋幸福、为中华民族谋复兴的初心使命。<br>③坚持以人民为中心。<br>④勤政为民、廉洁为民。<br>(2)①中国共产党是中国特色社会主义事业的坚强领导核心。<br>②党的领导是中国特色社会主义最本质的特征。<br>③党的领导是中国特色社会主义制度的最大优势。<br>④党的领导是实现社会主义现代化和中华民族伟大复兴的最根本保证。<br>⑤中国共产党是中国工人阶级的先锋队，同时是中国人民和中华民族的先锋队。
+      <br><b>P27　拓展提升　3.</b>
+      <br>(1)①确立和维护习近平同志党中央的核心、全党的核心地位，是全党全国各族人民的共同愿望，是党和国家事业沿着正确方向发展的根本保证。<br>②在新时代，坚决维护党中央权威和集中统一领导，最关键的是坚决维护习近平同志党中央的核心、全党的核心地位。<br>(2)①认真学习党的理论知识，了解党的路线方针政策，深刻领悟“两个确立”的决定性意义，树立正确的世界观、人生观、价值观，增强对党的认同感和归属感。<br>②刻苦学习、勤奋进取，提升自身综合素质，为将来投身社会主义建设、服务国家和人民打下坚实基础。<br>③自觉拥护党的决策部署，积极参与社会实践和志愿服务，将个人理想融入国家发展大局，主动承担时代责任，努力成长为德智体美劳全面发展的社会主义建设者和接班人。
+      <br><b>P36　拓展提升　3.</b>
+      <br>(1)示例：<br>选择A地。理由：离村民住宅区较近，方便村民参与。<br>选择B地。理由：离村民住宅区较远，不影响村民休息，满足村民安居环境的需要。<br>(2)①我国现阶段社会主要矛盾是人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾。<br>②我国农业、农村问题依然突出，城乡发展不平衡不协调，不利于解决我国社会主要矛盾。<br>(3)①坚持以经济建设为中心，大力发展生产力。<br>②改善当地基础设施，解决交通、网络问题，加强对外信息交流。<br>③培养和引进农业科技人才，改变落后农业生产方式，发展现代农业。
+      <br><b>P40　拓展提升　3.</b>
+      <br>小涛的观点是错误的，他对实现中国梦的长期性、艰巨性认识不足。<br>理由：<br>①改革开放以来，党领导全国各族人民不断取得建设中国特色社会主义的新成就，经过长期努力，中国特色社会主义进入新时代，这是我国发展新的历史方位。<br>②中国特色社会主义新时代是全体中华儿女勠力同心、奋力实现中华民族伟大复兴中国梦的时代。<br>③但是，当前我国还面临发展不平衡不充分、科技创新能力不够强、世界大变局还在不断发展演化等一系列现实挑战，中华民族伟大复兴的中国梦绝不是轻轻松松、敲锣打鼓就能实现的。
+    </div>
+  </div>
+
+  <!-- ============ 世界历史 ============ -->
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4v17.2"/>
+            <path d="M5.4 6.6c3.6 2.6 9.6 2.6 13.2 0"/>
+            <path d="M5.4 17.4c3.6-2.6 9.6-2.6 13.2 0"/>
+          </svg>
+        </div>
+        <h3>同步优学  金学典 <br>P105-116</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">历史</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <b>第一、二单元综合评价</b><br>
+      1.C &nbsp; 2.D &nbsp; 3.B &nbsp; 4.A &nbsp; 5.C &nbsp; 6.A &nbsp; 7.C<br>8.A &nbsp; 9.C &nbsp; 10.A &nbsp; 11.B &nbsp; 12.B<br>13.(1)用途：法老的陵墓。评价：是古代埃及劳动人民智慧和血汗的结晶，同时也给埃及人民带来无尽的苦难；古埃及文明的象征；等等。<br>(2)名称：《汉谟拉比法典》。地位：是迄今已知世界上第一部较为完备的成文法典。<br>(3)特点：等级森严、贵贱分明；等级、职业世代相袭；不同等级的人不得通婚。影响：致使印度社会矛盾激化，不利于印度的统一；对当今印度社会的影响依然存在，严重阻碍了社会的发展和进步；等等。<br>14.(1)原因：尼罗河是古埃及文明的发源地，孕育了古埃及文明。成就：罗马在法学、建筑等方面的成就。<br>(2)宗教：佛教。价值：《荷马史诗》是宝贵的文学遗产，也是了解早期希腊社会的主要文献。<br>(3)吸收借鉴希腊的优秀成果；各族各地匠师的贡献；政府的倡导；罗马皇帝注重挑选不同地区的优秀建筑师。<br>(4)(示例)文化遗产是人类在漫长的历史进程中创造并留存至今的文明成果与结晶；人类在漫长的演进历程中创造了辉煌璀璨的文化，留下了无数优秀的文化遗产；了解和认识文化遗产，有助于人类借鉴、继承和发扬世界各民族的文明成果，有利于保障和促进人类社会的可持续发展。(答出两点即可)<br>15.(示例)题目：多元格局，文明互鉴<br>论述：不同的自然地理环境，造就了不同的文明形态，因而古代文明呈现出多元发展格局。古希腊是欧洲文明的发祥地，古罗马以意大利半岛为中心，建立起地跨三洲的大帝国。作为海洋文明，古代欧洲文明以商品经济为主，实行民主制度，创造了灿烂的文明成就。不同地区的文明，在历史发展中不断交流，相互影响，亚历山大东征、罗马的征服与扩张、丝绸之路的开辟，促进了东西方文明的交流和互鉴。<br><b>第三、四单元综合评价</b><br>
+      1.B &nbsp; 2.C &nbsp; 3.D &nbsp; 4.D &nbsp; 5.B &nbsp; 6.B &nbsp; 7.C<br>8.C &nbsp; 9.C &nbsp; 10.C &nbsp; 11.A &nbsp; 12.C<br>13.(1)纽带：土地的封赐。特点：权利与义务交织；等级森严且具有契约性。<br>(2)相互利用、相互依存。<br>(3)原因：内部基础薄弱；封建割据势力强大；继承人争夺权力。结果：形成后来德意志、法兰西、意大利三个国家的雏形。<br>14.(1)作者如何看待：作者认为中世纪是一个充满变化的时代。合理性：中世纪大学的兴起为文艺复兴运动准备了条件(或者大学的兴起推动文化教育的发展)。<br>(2)特点：权利与义务相交织，具有一定的契约意义。“我”“应得”的：土地或封地。<br>(3)变化：土地私有制转变为土地国有制。影响：加强了中央集权，增加了财政收入，巩固了统治。<br>(4)如何影响：阿拉伯人将古代希腊罗马文化成果保存下来并传回欧洲，为文艺复兴运动提供了条件。作用：阿拉伯人成为东西方文明交流的使者、桥梁。<br>15.(示例)观点：改革创新促国家繁荣昌盛，狭隘保守使民族落后衰亡。<br>论述：日本是东亚的一个岛国。6世纪下半叶，国内出现统治危机。从646年开始，孝德天皇仿效唐朝的典章制度，针对日本的政治、经济进行了一系列的改革，使日本发展成为一个中央集权制的封建国家。阿拉伯人崇尚学习，在吸收、消化外来文化的基础上，创造了有自己特色的阿拉伯文化，并且担当了沟通东西方文化的角色，为世界文化的发展作出了卓越贡献。拜占庭帝国也曾创造出独具特色的拜占庭文化，在世界上产生过重大影响，但是他们陶醉于已有的辉煌成就，不屑于学习和吸纳其他文明的优点与长处，最终湮灭在历史的长河中。<br>综上所述，一个国家、一个民族是否善于借鉴和学习其他民族的先进文明成果，事关兴衰之命运。它们的史实证明了：改革创新促国家繁荣昌盛，狭隘保守使民族落后衰亡。<br><b>期中综合评价(第一~四单元)</b><br>
+      1.B &nbsp; 2.D &nbsp; 3.A &nbsp; 4.C &nbsp; 5.A &nbsp; 6.C &nbsp; 7.A<br>8.B &nbsp; 9.A &nbsp; 10.C &nbsp; 11.D &nbsp; 12.D<br>13.(1)材料一：大河文明；材料二：海洋文明。主要原因：不同的地理环境。<br>(2)材料三：君主专制；材料四：小国寡民，直接民主(或奴隶制民主政治)。<br>(3)相同点：都维护了统治阶级利益；内容都涉及社会生活方面；都对后世的法律制定产生了重要影响。史学价值：规范社会行为，为治国理政提供帮助；为后世的法律制定提供借鉴；都是研究当时政治法律的重要史料。<br>14.(1)层层分封，有严格的等级性，权利、义务交织在一起，有一定的契约意义。<br>(2)①自营地；②份地。庄园特点：庄园是一个独立的自给自足的经济和政治单位。<br>(3)城市的兴起；新兴的市民阶层对于文化知识的迫切需求。<br>(4)(示例)封建时代的欧洲。<br>15.(1)大化改新。<br>(2)(示例)观点：中古时期文化的互鉴与交流。<br>论述：古代印度人的数字符号系统经阿拉伯人向外传播；阿拉伯人修正古希腊人的天文计算方法，体现了对不同文明成果的传承与传播；在科学技术领域，中国的造纸术、指南针、火药等经阿拉伯人传入欧洲，阿拉伯人成为东西方科技交流的桥梁。<br>综上所述，中古时期文化交流在阿拉伯人的推动下，呈现出多元文明交融、传承发展的特点，促进了不同地区文化的传播与进步。
+    </div>
+  </div>
+
+  <!-- ============ 物理 ============ -->
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.2"/>
+            <path d="M12 3.4v3"/>
+            <path d="M12 17.6v3"/>
+            <path d="M3.4 12h3"/>
+            <path d="M17.6 12h3"/>
+            <path d="M5.9 5.9l2.1 2.1"/>
+            <path d="M16 16l2.1 2.1"/>
+            <path d="M18.1 5.9L16 8"/>
+            <path d="M8 16l-2.1 2.1"/>
+          </svg>
+        </div>
+        <h3>同步优学  金学典 <br>P93-110</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">物理</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div style="font-family:system-ui;line-height:1.8;">
+        <div style="text-align:center;font-size:1.6em;margin:12px 0;"><b>第十三章巩固练习</b></div>
+        <div>1.B &nbsp;2.C &nbsp;3.B &nbsp;4.B &nbsp;5.B &nbsp;6.C &nbsp;7.A</div>
+        <div>8.A &nbsp;9.D &nbsp;10.C &nbsp;11.C &nbsp;12.D</div>
+        <br>
+        <div>13.变大 &nbsp;引力</div>
+        <div>14.每1 kg水温度升高(或降低)1 ℃吸收(或放出)的热量是4.2×10<sup>3</sup> J &nbsp;改变</div>
+        <div>15.无规则运动 &nbsp;热传递</div>
+        <div>16.(1)80 &nbsp;(2)2.1×10<sup>4</sup> &nbsp;(3)A</div>
+        <div>17.如图所示</div>
+        <div><img src="1.png" alt="图1" style="width:220px;"></div>
+        <div>18.(1)(甲) &nbsp;(2)间隙 &nbsp;(3)引力</div>
+        <div>19.(1)升高 &nbsp;增大</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(2)D</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(3)瓶内出现白雾 &nbsp;减小</div>
+        <div>20.(1)控制水和煤油的质量相等</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(2)等于 &nbsp;小于</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(3)98 &nbsp;2.1×10<sup>3</sup></div>
+        <div>21.(1)增大 &nbsp;(2)4.2×10<sup>5</sup> J &nbsp;(3)100 ℃</div>
+        <div>22.(1)6.72×10<sup>5</sup> &nbsp;6.72×10<sup>5</sup> &nbsp;(2)2 kg</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(3)鱼汤升高的温度为</div>
+        <div>
+          Δt<sub>鱼汤</sub>=
+          <span style="display:inline-block;text-align:center;vertical-align:middle;">
+            <span style="display:block;">Q<sub>吸</sub></span>
+            <hr style="margin:0;border:none;border-top:1px solid #000;">
+            <span style="display:block;">c<sub>汤</sub> m<sub>鱼汤</sub></span>
+          </span>
+          =
+          <span style="display:inline-block;text-align:center;vertical-align:middle;">
+            <span style="display:block;">6.72×10<sup>5</sup> J</span>
+            <hr style="margin:0;border:none;border-top:1px solid #000;">
+            <span style="display:block;">4.2×10<sup>3</sup> J/(kg·℃)×4 kg</span>
+          </span>
+          =40 ℃。
+        </div>
+        <div>鱼汤的末温为 t = Δt<sub>鱼汤</sub> + t<sub>初</sub> = 40 ℃ + 30 ℃ =70 ℃＜100 ℃，</div>
+        <div>故鱼汤不能沸腾。</div>
+        <br>
+        <div style="text-align:center;font-size:1.6em;margin:12px 0;"><b>第十四章巩固练习</b></div>
+        <div>1.C &nbsp;2.C &nbsp;3.C &nbsp;4.A &nbsp;5.D &nbsp;6.C &nbsp;7.C</div>
+        <div>8.B &nbsp;9.B &nbsp;10.A &nbsp;11.B &nbsp;12.B</div>
+        <div>13.内能 &nbsp;机械能</div>
+        <div>14.小 &nbsp;不可能</div>
+        <div>15.扩散 &nbsp;不变</div>
+        <div>16.(1)热值 &nbsp;(2)1.4×10<sup>10</sup> &nbsp;(3)28%</div>
+        <div>17.如图所示</div>
+        <div><img src="2.png" alt="图2" style="width:180px;"></div>
+        <div>18.(1)质量 &nbsp;(2)水升高的温度 &nbsp;(3)酒精</div>
+        <div>19.(1)A &nbsp;(2)质量 &nbsp;温度计上升的示数</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(3)b</div>
+        <div>20.(1)(甲) &nbsp;(丙) &nbsp;加热时间 &nbsp;(2)2∶1</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(3)温度计示数的变化量 &nbsp;(4)偏小</div>
+        <div>21.(1)3.36×10<sup>5</sup> J &nbsp;(2)10%</div>
+        <div>22.(1)4.6×10<sup>6</sup> J &nbsp;(2)1.15×10<sup>7</sup> J</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(3)40%</div>
+        <br>
+        <div style="text-align:center;font-size:1.6em;margin:12px 0;"><b>第十五章巩固练习</b></div>
+        <div>1.D &nbsp;2.D &nbsp;3.C &nbsp;4.B &nbsp;5.C &nbsp;6.C &nbsp;7.D</div>
+        <div>8.B &nbsp;9.B &nbsp;10.C &nbsp;11.B &nbsp;12.C</div>
+        <div>13.5 &nbsp;3×10<sup>4</sup></div>
+        <div>14.摩擦起电 &nbsp;异种</div>
+        <div>15.用电器 &nbsp;导体</div>
+        <div>16.(1)S<sub>2</sub> &nbsp;(2)S<sub>1</sub>、S<sub>3</sub> &nbsp;(3)短路</div>
+        <div>17.(1)如图所示</div>
+        <div><img src="3.png" alt="图3" style="width:220px;"></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(2)如图所示</div>
+        <div><img src="4.png" alt="图4" style="width:260px;"></div>
+        <div>18.(1)未调零 &nbsp;(2)0.2 &nbsp;(3)错误</div>
+        <div>19.(1)异种</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(2)同种电荷相互排斥</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;(3)负 &nbsp;得到</div>
+        <div>20.(1)断开 &nbsp;(2)L<sub>1</sub> &nbsp;(3)不同 &nbsp;B &nbsp;(4)检查灯泡 L<sub>2</sub> 的接线柱是否连接好(或检查灯泡 L<sub>2</sub> 是否拧紧)</div>
+        <div>21.(1)0.2 &nbsp;(2)0.5 A &nbsp;(3)0.3 A</div>
+        <div>22.(1)45 Ω &nbsp;(2)4.5 V &nbsp;(3)0.45 A</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 化学 ============ -->
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>能力培养与测试<br>写到P45</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击跳转</a>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>完成卷② 第二单元<br>基础诊断卷（A卷）</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击跳转</a>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>完成第二单元试卷</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击跳转</a>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>完成第三单元试卷</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击跳转</a>
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>复习教材知识</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      复习教材知识，第一学月检测考察到“元素”。
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>制作化学模型</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      制作化学模型。
+    </div>
+  </div>
+
+  <!-- ============ 体育 ============ -->
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M12 3.4c2.4 2.2 3.2 5.8 0 8.6-3.2 2.8-2.4 6.4 0 8.6"/>
+            <path d="M3.6 12h16.8"/>
+          </svg>
+        </div>
+        <h3>排球练习</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">体育</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      每天完整的过关排球练习2次；不能过关的完成总数200次垫球。
+    </div>
+  </div>
+
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M12 3.4c2.4 2.2 3.2 5.8 0 8.6-3.2 2.8-2.4 6.4 0 8.6"/>
+            <path d="M3.6 12h16.8"/>
+          </svg>
+        </div>
+        <h3>跳绳训练</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">体育</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      每天跳绳150次×3组。
+    </div>
+  </div>
+
+  <!-- ============ 注意事项 ============ -->
+  <div class="task-card" onclick="this.classList.toggle('active')">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M12 8v5"/>
+            <circle cx="12" cy="16.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <h3>注意事项</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">注意事项</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      1.【第一学月检测】2026年10月09日起开始第一学月检测，考察科目有语文、数学、英语、物理、化学，请做好复习。<br>
+      2.【晚四安排】根据年级组安排，国庆放假回来部分学生(即周三读报课念到名字的学生)开始上晚自习(4)，下课时间为21:00。<br>
+      3.作业清单仅供参考，如有错误欢迎指出。
+    </div>
+  </div>
+
+  <div class="footer">孤鸿组 · 好好学习 天天向上</div>
+
+</div>
+
+<!-- ============ 大图查看器（原版逻辑） ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="图片预览">
+  <div class="glass-close-btn-wrap">
+    <div class="glass-close-btn" id="closeBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 6l12 12"/>
+        <path d="M18 6L6 18"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="lightbox-img-wrapper" id="imgWrapper">
+    <img src="" class="lightbox-img" id="fullImg" alt="预览图片">
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     1. 包裹内容（grid 平滑展开所需）
+     ============================================================ */
+  document.querySelectorAll('.task-content').forEach(function (el) {
+    var inner = document.createElement('div');
+    inner.className = 'task-content-inner';
+    while (el.firstChild) inner.appendChild(el.firstChild);
+    el.appendChild(inner);
+  });
+
+  /* ============================================================
+     2. 滚动方向跟踪
+     ============================================================ */
+  var scrollDir = 'down';
+  var lastScrollY = window.scrollY;
+
+  window.addEventListener('scroll', function () {
+    var current = window.scrollY;
+    if (Math.abs(current - lastScrollY) > 4) {
+      scrollDir = current > lastScrollY ? 'down' : 'up';
+      lastScrollY = current;
+    }
+  }, { passive: true });
+
+  /* ============================================================
+     3. 卡片双向滚动入场动画
+        - 向下滚动：卡片从下方滑入
+        - 向上滚动：卡片从上方滑入
+        - 离开视口时移除 reveal，下次进入重新播放
+     ============================================================ */
+  var cards = document.querySelectorAll('.task-card');
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var el = entry.target;
+
+        if (entry.isIntersecting) {
+          if (el.classList.contains('reveal')) return;
+          /* 根据滚动方向设置进入位置 */
+          if (scrollDir === 'up') {
+            el.classList.add('enter-from-top');
+          } else {
+            el.classList.remove('enter-from-top');
+          }
+          /* 强制回流，确保浏览器先把初始位移应用上去，再触发过渡 */
+          void el.offsetWidth;
+          el.classList.add('reveal');
+        } else {
+          /* 离开视口：移除 reveal 回到初始态，下次进入重新播放 */
+          el.classList.remove('reveal');
+        }
+      });
+    }, {
+      threshold: 0.05,
+      rootMargin: '0px 0px -30px 0px'
+    });
+
+    cards.forEach(function (card) { io.observe(card); });
+  } else {
+    cards.forEach(function (card) { card.classList.add('reveal'); });
+  }
+
+  /* ============================================================
+     4. 大图查看器（原版逻辑：玻璃按钮 + 缩放 + 拖动）
+     ============================================================ */
+  var lightbox = document.getElementById('lightbox');
+  var fullImg = document.getElementById('fullImg');
+  var closeBtn = document.getElementById('closeBtn');
+  var imgWrapper = document.getElementById('imgWrapper');
+
+  var scale = 1;
+  var panning = false;
+  var pointX = 0, pointY = 0, startX = 0, startY = 0;
+  var initialDistance = 0;
+  var initialScale = 1;
+
+  function updateTransform() {
+    fullImg.style.transform = 'translate(' + pointX + 'px, ' + pointY + 'px) scale(' + scale + ')';
+  }
+
+  function resetZoom() {
+    scale = 1;
+    pointX = 0;
+    pointY = 0;
+    updateTransform();
+  }
+
+  function openLightbox(src) {
+    fullImg.src = src;
+    resetZoom();
+    document.body.classList.add('lightbox-lock');
+    lightbox.classList.add('active');
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    setTimeout(function () {
+      document.body.classList.remove('lightbox-lock');
+      resetZoom();
+      fullImg.src = '';
+    }, 320);
+  }
+
+  /* 点击遮罩或图片容器关闭 */
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox || e.target === imgWrapper) closeLightbox();
+  });
+
+  /* 关闭按钮 */
+  closeBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    closeLightbox();
+  });
+
+  /* ESC 关闭 */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+  });
+
+  /* 双指缩放 */
+  fullImg.addEventListener('touchstart', function (e) {
+    if (e.touches.length === 2) {
+      initialDistance = Math.hypot(
+        e.touches[0].pageX - e.touches[1].pageX,
+        e.touches[0].pageY - e.touches[1].pageY
+      );
+      initialScale = scale;
+      e.preventDefault();
+    } else if (e.touches.length === 1 && scale > 1) {
+      panning = true;
+      startX = e.touches[0].clientX - pointX;
+      startY = e.touches[0].clientY - pointY;
+    }
+  }, { passive: false });
+
+  fullImg.addEventListener('touchmove', function (e) {
+    if (e.touches.length === 2) {
+      var d = Math.hypot(
+        e.touches[0].pageX - e.touches[1].pageX,
+        e.touches[0].pageY - e.touches[1].pageY
+      );
+      scale = Math.max(1, initialScale * (d / initialDistance));
+      updateTransform();
+      e.preventDefault();
+    } else if (panning && scale > 1) {
+      pointX = e.touches[0].clientX - startX;
+      pointY = e.touches[0].clientY - startY;
+      updateTransform();
+    }
+  }, { passive: false });
+
+  fullImg.addEventListener('touchend', function () {
+    panning = false;
+    if (scale <= 1) resetZoom();
+  });
+
+  /* 滚轮缩放（桌面端） */
+  fullImg.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    var delta = e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.max(1, scale * delta);
+    if (scale === 1) { pointX = 0; pointY = 0; }
+    updateTransform();
+  }, { passive: false });
+
+  /* ============================================================
+     5. 卡片点击处理
+     ============================================================ */
+  cards.forEach(function (card) {
+    card.removeAttribute('onclick');
+    card.addEventListener('click', function (e) {
+      /* 点击图片 → 打开大图，不触发展开 */
+      var img = e.target.closest('.task-content img');
+      if (img && img.src) {
+        openLightbox(img.src);
+        return;
+      }
+      /* 点击链接 → 正常跳转 */
+      if (e.target.closest('.task-content a')) return;
+      /* 切换展开 */
+      card.classList.toggle('active');
+    });
+  });
+
+})();
+</script>
 
 </body>
 </html>
