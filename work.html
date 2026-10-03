@@ -1030,6 +1030,30 @@
       <p>完成《学法大视野》第1-4课“拓展提升”板块的材料题。</p>
     </div>
   </div>
+  
+  <div class="task-card" data-subject="道法">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3.4L4.2 7.6v8.8L12 20.6l7.8-4.2V7.6z"/>
+            <path d="M12 12l7.8-4.4"/>
+            <path d="M12 12v8.6"/>
+            <path d="M12 12L4.2 7.6"/>
+          </svg>
+        </div>
+        <h3>09学习单</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道法</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <p>完成09学习单——第二单元  进入新时代  第五课  新时代的思想旗帜  第一课时  系统科学的理论体系。</p>
+    </div>
+  </div>
 
   <!-- ============ 世界历史 ============ -->
   <div class="task-card" data-subject="历史">
@@ -1355,7 +1379,7 @@
   /* ============================================================
      3. 卡片滚动入场动画
      ============================================================ */
-  var cards = document.querySelectorAll('.task-card');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
 
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
@@ -1385,12 +1409,24 @@
 
   /* ============================================================
      4. 数据层：任务卡片集合 + 完成状态持久化
+
+        注意：这里把"可勾选卡片"和"全部卡片"分开
+        - allCards   : 页面上所有卡片（含「注意事项」）→ 用于绑定手势
+        - checkCards : 可标记完成的卡片（排除 notice）→ 用于统计/存储
+        「注意事项」只展开、不参与完成勾选，也不计入统计。
      ============================================================ */
-  var allCards = Array.prototype.slice.call(cards).filter(function (c) {
-    return !c.classList.contains('notice-card');
+
+  /* 判断是否为不可勾选的说明卡 */
+  function isNotice(card) {
+    return card.classList.contains('notice-card');
+  }
+
+  var allCards = cards;                                     /* 全部卡片 */
+  var checkCards = allCards.filter(function (c) {            /* 可勾选卡片 */
+    return !isNotice(c);
   });
 
-  var total = allCards.length;
+  var total = checkCards.length;
   var STORE_KEY = 'guhong_work_checklist_v2';
 
   function loadDoneSet() {
@@ -1438,6 +1474,8 @@
 
   /* 切换并持久化，返回新状态 */
   function toggleDone(card) {
+    if (isNotice(card)) return false;      /* 说明卡不可勾选 */
+
     var id = cardId(card);
     var idx = doneSet.indexOf(id);
     var isDone;
@@ -1462,7 +1500,7 @@
   }
 
   /* 初始化：恢复已完成状态 */
-  allCards.forEach(function (card) {
+  checkCards.forEach(function (card) {
     if (doneSet.indexOf(cardId(card)) !== -1) applyDoneState(card, true);
   });
   renderStats();
@@ -1479,6 +1517,10 @@
         防系统干扰的关键在 CSS（见 <style> 顶部）：
         user-select:none + touch-callout:none + touch-action:pan-y
         把「长按选字/放大镜/右键菜单」全部关掉，长按才会干净地落到我们手里。
+
+        ⚠️ 修复点：手势绑定在 allCards（全部卡片）上，
+           但长按计时器只对 checkCards 启动。
+           这样「注意事项」可以正常短按展开，同时不会出现"长按无反应但又被吞掉点击"的问题。
      ============================================================ */
   var LONG_PRESS_MS = 450;      /* 长按阈值 */
   var MOVE_TOLERANCE = 10;      /* 位移容差(px)，超出即视为滚动 */
@@ -1492,6 +1534,8 @@
   });
 
   allCards.forEach(function (card) {
+    var checkable = !isNotice(card);   /* 本卡片是否支持长按勾选 */
+
     var pressTimer = null;
     var startX = 0;
     var startY = 0;
@@ -1528,6 +1572,9 @@
       /* 捕获指针：即使手指移出卡片，也能收到后续 up/cancel */
       try { card.setPointerCapture(e.pointerId); } catch (err) {}
 
+      /* 「注意事项」不支持勾选 → 不启动长按计时器，短按照常展开 */
+      if (!checkable) return;
+
       clearPress();
       pressTimer = setTimeout(function () {
         pressTimer = null;
@@ -1561,7 +1608,7 @@
 
       try { card.releasePointerCapture(e.pointerId); } catch (err) {}
       reset();
-      longPressFired = wasLong;
+      longPressFired = false;
 
       if (wasLong) {
         /* 长按已处理完成状态 —— 吞掉这一次点击，不展开 */
@@ -1569,7 +1616,6 @@
         /* 用一次性标志让随后的 click 失效，然后立刻复位 */
         suppressNextClick = true;
         setTimeout(function () { suppressNextClick = false; }, 60);
-        longPressFired = false;
         return;
       }
 
@@ -1577,7 +1623,6 @@
         /* 滑动过，不算点击 */
         suppressNextClick = true;
         setTimeout(function () { suppressNextClick = false; }, 60);
-        longPressFired = false;
       }
     });
 
