@@ -13,21 +13,16 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* ============ 关键：禁掉系统长按的文本选择/放大镜/上下文菜单 ============
-     移动端长按卡片时，浏览器默认会进入"选中文字 → 弹放大镜/复制菜单"状态，
-     一旦进入该状态就会派发 touchcancel / contextmenu，把我们的长按计时器掐断。
-     下面这几条把默认行为关掉，长按才是"干净"的。 */
   html, body {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    -webkit-touch-callout: none;   /* iOS Safari：禁长按弹菜单 */
+    -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;    /* 禁双击缩放，保留滚动与拖动 */
+    touch-action: manipulation;
   }
 
-  /* 卡片及其内部一律不可选中 */
   .task-card,
   .task-card * {
     -webkit-user-select: none;
@@ -37,8 +32,6 @@
     -webkit-touch-callout: none;
   }
 
-  /* 卡片区域交给 JS 自己处理手势：
-     pan-y 允许纵向滚动（页面能正常滑），但双击缩放/长按选择被禁用 */
   .task-card {
     touch-action: pan-y;
   }
@@ -58,7 +51,6 @@
     margin: 0 auto;
   }
 
-  /* ---------------- 顶部标题 ---------------- */
   .header {
     text-align: center;
     margin-bottom: 30px;
@@ -97,7 +89,6 @@
     margin: 14px auto 0;
   }
 
-  /* 返回按钮 */
   .back-btn {
     display: inline-flex;
     align-items: center;
@@ -129,7 +120,33 @@
     }
   }
 
-  /* ---------------- 统计条 ---------------- */
+  /* 筛选按钮组 */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+  }
+  .filter-btn {
+    flex: 1;
+    padding: 9px 0;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(16px);
+    font-size: 0.78rem;
+    color: #666;
+    transition: all 0.25s;
+  }
+  .filter-btn.active {
+    background: #1a1a1a;
+    color: #fff;
+  }
+  .filter-btn:active {
+    transform: scale(0.96);
+  }
+
   .stats-bar {
     display: flex;
     gap: 10px;
@@ -165,7 +182,6 @@
     letter-spacing: 1.2px;
   }
 
-  /* ---------------- 卡片 ---------------- */
   .task-card {
     position: relative;
     background: rgba(255, 255, 255, 0.65);
@@ -227,17 +243,12 @@
     color: #1a1a1a;
     line-height: 1.4;
     letter-spacing: 0.3px;
-  }
-
-  /* 标题最多两行，超出省略，保证卡片高度一致 */
-  .task-title h3 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
-  /* 科目图标 */
   .icon {
     flex-shrink: 0;
     width: 38px;
@@ -287,7 +298,6 @@
     color: #1a1a1a;
   }
 
-  /* ---------------- 内容区域（grid 平滑展开） ---------------- */
   .task-content {
     display: grid;
     grid-template-rows: 0fr;
@@ -324,7 +334,6 @@
                 border-color 0.42s ease;
   }
 
-  /* ---------------- 注意事项卡片 ---------------- */
   .task-card.notice-card .icon {
     background: #fff;
     color: #1a1a1a;
@@ -373,7 +382,6 @@
     font-weight: 700;
   }
 
-  /* ---------------- 已完成状态（新增） ---------------- */
   .task-card.done {
     opacity: 0.55;
     background: rgba(255, 255, 255, 0.42);
@@ -394,7 +402,6 @@
     color: #fff;
   }
 
-  /* 完成徽标 —— 贴在卡片左下方的图标角落，避开右上角的科目标签 */
   .check-badge {
     position: absolute;
     left: 20px;
@@ -422,13 +429,6 @@
     opacity: 1;
   }
 
-  /* 收起状态下徽标贴到图标上，展开时也跟着走 */
-  .task-card.done:not(.active) .check-badge {
-    left: 20px;
-    bottom: 18px;
-  }
-
-  /* 长按提示 */
   .hint-bar {
     text-align: center;
     font-size: 0.66rem;
@@ -439,7 +439,6 @@
     animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
   }
 
-  /* ---------------- 页脚 ---------------- */
   .footer {
     margin-top: 32px;
     text-align: center;
@@ -450,7 +449,6 @@
     animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
   }
 
-  /* ---------------- 动画 ---------------- */
   @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-14px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -461,7 +459,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ---------------- 桌面端悬停 ---------------- */
   @media (hover: hover) {
     .task-card:hover {
       transform: translateY(-2px) scale(1);
@@ -486,7 +483,6 @@
     transform: rotate(-6deg) scale(1.06);
   }
 
-  /* ---------------- 小屏适配 ---------------- */
   @media (max-width: 360px) {
     body { padding: 18px; }
 
@@ -533,7 +529,13 @@
     <div class="divider"></div>
   </div>
 
-  <!-- 统计条 -->
+  <!-- 筛选栏 -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="done">已完成</button>
+    <button class="filter-btn" data-filter="undone">未完成</button>
+  </div>
+
   <div class="stats-bar">
     <div class="stat-item">
       <div class="stat-num" id="statTotal">0</div>
@@ -800,9 +802,6 @@
 (function () {
   'use strict';
 
-  /* ============================================================
-     1. grid 平滑展开：包裹内容
-     ============================================================ */
   document.querySelectorAll('.task-content').forEach(function (el) {
     var inner = document.createElement('div');
     inner.className = 'task-content-inner';
@@ -810,7 +809,6 @@
     el.appendChild(inner);
   });
 
-  /* 为每张卡片插入完成徽标（CSS 控制显隐） */
   document.querySelectorAll('.task-card').forEach(function (card) {
     if (card.querySelector('.check-badge')) return;
     var badge = document.createElement('span');
@@ -819,12 +817,8 @@
     card.appendChild(badge);
   });
 
-  /* ============================================================
-     2. 滚动方向跟踪（用于入场动画方向）
-     ============================================================ */
   var scrollDir = 'down';
   var lastScrollY = window.scrollY;
-
   window.addEventListener('scroll', function () {
     var current = window.scrollY;
     if (Math.abs(current - lastScrollY) > 4) {
@@ -833,9 +827,6 @@
     }
   }, { passive: true });
 
-  /* ============================================================
-     3. 卡片滚动入场动画
-     ============================================================ */
   var cards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
 
   if ('IntersectionObserver' in window) {
@@ -864,48 +855,14 @@
     cards.forEach(function (card) { card.classList.add('reveal'); });
   }
 
-  /* ============================================================
-     4. 数据层：任务卡片集合 + 完成状态持久化
-
-        注意：这里把"可勾选卡片"和"全部卡片"分开
-        - allCards   : 页面上所有卡片（含「注意事项」）→ 用于绑定手势
-        - checkCards : 可标记完成的卡片（排除 notice）→ 用于统计/存储
-        「注意事项」只展开、不参与完成勾选，也不计入统计。
-     ============================================================ */
-
-  /* 判断是否为不可勾选的说明卡 */
   function isNotice(card) {
     return card.classList.contains('notice-card');
   }
-
-  var allCards = cards;                                     /* 全部卡片 */
-  var checkCards = allCards.filter(function (c) {            /* 可勾选卡片 */
+  var allCards = cards;
+  var checkCards = allCards.filter(function (c) {
     return !isNotice(c);
   });
 
-  var total = checkCards.length;
-  var STORE_KEY = 'guhong_work_checklist_v2';
-
-  function loadDoneSet() {
-    try {
-      var raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return [];
-      var arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveDoneSet() {
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(doneSet));
-    } catch (e) {}
-  }
-
-  var doneSet = loadDoneSet();
-
-  /* 稳定 ID：优先用 data-subject + 标题文本，避免索引漂移 */
   function cardId(card) {
     var subject = card.dataset.subject || '';
     var h3 = card.querySelector('.task-title h3');
@@ -913,26 +870,61 @@
     return subject + '::' + title;
   }
 
+  // 生成任务指纹，用来判断任务列表是否改动
+  function buildTaskHash() {
+    var ids = checkCards.map(cardId).sort();
+    return btoa(unescape(encodeURIComponent(ids.join('||'))));
+  }
+  var currentHash = buildTaskHash();
+
+  const STORE_KEY = 'guhong_work_v3';
+  function loadStorage() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) {
+      return null;
+    }
+  }
+  function saveStorage(data) {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  }
+
+  var stored = loadStorage();
+  var doneSet = [];
+  var currentFilter = 'all';
+
+  // 对比指纹：任务改动 → 清空旧数据
+  if (stored && stored.hash === currentHash) {
+    doneSet = Array.isArray(stored.done) ? stored.done : [];
+    currentFilter = stored.filter || 'all';
+  } else {
+    doneSet = [];
+    saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter });
+  }
+
   var statTotal = document.getElementById('statTotal');
   var statDone = document.getElementById('statDone');
   var statLeft = document.getElementById('statLeft');
 
   function renderStats() {
-    statTotal.textContent = total;
+    statTotal.textContent = checkCards.length;
     statDone.textContent = doneSet.length;
-    statLeft.textContent = Math.max(0, total - doneSet.length);
+    statLeft.textContent = Math.max(0, checkCards.length - doneSet.length);
   }
 
-  /* 状态应用（幂等：只切 class，不动态增删节点） */
   function applyDoneState(card, isDone) {
     card.classList.toggle('done', !!isDone);
     card.setAttribute('aria-checked', isDone ? 'true' : 'false');
   }
 
-  /* 切换并持久化，返回新状态 */
-  function toggleDone(card) {
-    if (isNotice(card)) return false;      /* 说明卡不可勾选 */
+  function saveData() {
+    saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter });
+  }
 
+  function toggleDone(card) {
+    if (isNotice(card)) return false;
     var id = cardId(card);
     var idx = doneSet.indexOf(id);
     var isDone;
@@ -944,10 +936,10 @@
       isDone = false;
     }
     applyDoneState(card, isDone);
-    saveDoneSet();
+    saveData();
     renderStats();
+    applyFilter();
     if (isDone) {
-      /* 完成后自动收起，视觉上"归档" */
       card.classList.remove('active');
     }
     if (navigator.vibrate) {
@@ -956,48 +948,53 @@
     return isDone;
   }
 
-  /* 初始化：恢复已完成状态 */
   checkCards.forEach(function (card) {
     if (doneSet.indexOf(cardId(card)) !== -1) applyDoneState(card, true);
   });
   renderStats();
 
-  /* ============================================================
-     5. 手势：短按 = 展开/收起；长按 = 标记完成 / 再长按取消
+  // 筛选逻辑
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  function setFilter(mode) {
+    currentFilter = mode;
+    filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === mode));
+    saveData();
+    applyFilter();
+  }
+  function applyFilter() {
+    allCards.forEach(card => {
+      if(isNotice(card)){
+        card.style.display = '';
+        return;
+      }
+      var id = cardId(card);
+      var isDone = doneSet.includes(id);
+      if(currentFilter === 'all'){
+        card.style.display = '';
+      }else if(currentFilter === 'done'){
+        card.style.display = isDone ? '' : 'none';
+      }else if(currentFilter === 'undone'){
+        card.style.display = !isDone ? '' : 'none';
+      }
+    })
+  }
+  filterBtns.forEach(btn=>{
+    btn.onclick = ()=> setFilter(btn.dataset.filter);
+  })
+  setFilter(currentFilter);
 
-        为什么用 Pointer Events 而不是 Touch Events：
-        - pointerdown/up/cancel 是统一模型，鼠标/触摸/触控笔都能用
-        - 配合 setPointerCapture，手指移出卡片也能收到 pointerup，
-          不会出现"按着滑动后回来，状态卡住"的问题
-        - 只需处理一套逻辑，不用 touch + mouse 双写
-
-        防系统干扰的关键在 CSS（见 <style> 顶部）：
-        user-select:none + touch-callout:none + touch-action:pan-y
-        把「长按选字/放大镜/右键菜单」全部关掉，长按才会干净地落到我们手里。
-
-        ⚠️ 修复点：手势绑定在 allCards（全部卡片）上，
-           但长按计时器只对 checkCards 启动。
-           这样「注意事项」可以正常短按展开，同时不会出现"长按无反应但又被吞掉点击"的问题。
-     ============================================================ */
-  var LONG_PRESS_MS = 450;      /* 长按阈值 */
-  var MOVE_TOLERANCE = 10;      /* 位移容差(px)，超出即视为滚动 */
-
-  /* 共享标志：吞掉长按/滑动后产生的那一次 click */
   var suppressNextClick = false;
-
-  /* 全局兜底：任何地方右键都不弹系统菜单（桌面端体验） */
   document.addEventListener('contextmenu', function (e) {
     e.preventDefault();
   });
 
   allCards.forEach(function (card) {
-    var checkable = !isNotice(card);   /* 本卡片是否支持长按勾选 */
-
+    var checkable = !isNotice(card);
     var pressTimer = null;
     var startX = 0;
     var startY = 0;
     var pointerId = null;
-    var longPressFired = false;   /* 本次按压是否已触发长按 */
+    var longPressFired = false;
     var moved = false;
 
     function clearPress() {
@@ -1006,30 +1003,23 @@
         pressTimer = null;
       }
     }
-
     function reset() {
       clearPress();
       pointerId = null;
       moved = false;
     }
 
-    /* ---- 按下 ---- */
     card.addEventListener('pointerdown', function (e) {
-      /* 只处理主键/主指针（忽略右键、多指） */
       if (!e.isPrimary) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
-      if (pointerId !== null) return;          /* 已在按压中 */
+      if (pointerId !== null) return;
 
       pointerId = e.pointerId;
       longPressFired = false;
       moved = false;
       startX = e.clientX;
       startY = e.clientY;
-
-      /* 捕获指针：即使手指移出卡片，也能收到后续 up/cancel */
       try { card.setPointerCapture(e.pointerId); } catch (err) {}
-
-      /* 「注意事项」不支持勾选 → 不启动长按计时器，短按照常展开 */
       if (!checkable) return;
 
       clearPress();
@@ -1037,53 +1027,42 @@
         pressTimer = null;
         longPressFired = true;
         toggleDone(card);
-        /* 长按成功后再补一次轻微反馈 */
         if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
-      }, LONG_PRESS_MS);
+      }, 450);
     });
 
-    /* ---- 移动：超过容差就取消长按（让页面正常滚动） ---- */
     card.addEventListener('pointermove', function (e) {
       if (e.pointerId !== pointerId) return;
       if (moved) return;
-
       var dx = Math.abs(e.clientX - startX);
       var dy = Math.abs(e.clientY - startY);
-      if (dx > MOVE_TOLERANCE || dy > MOVE_TOLERANCE) {
+      if (dx > 10 || dy > 10) {
         moved = true;
-        clearPress();          /* 只清计时器，不算结束，避免误触展开 */
+        clearPress();
       }
     });
 
-    /* ---- 抬起 ---- */
     card.addEventListener('pointerup', function (e) {
       if (e.pointerId !== pointerId) return;
-
       clearPress();
       var wasLong = longPressFired;
       var wasMoved = moved;
-
       try { card.releasePointerCapture(e.pointerId); } catch (err) {}
       reset();
       longPressFired = false;
 
       if (wasLong) {
-        /* 长按已处理完成状态 —— 吞掉这一次点击，不展开 */
         e.preventDefault();
-        /* 用一次性标志让随后的 click 失效，然后立刻复位 */
         suppressNextClick = true;
         setTimeout(function () { suppressNextClick = false; }, 60);
         return;
       }
-
       if (wasMoved) {
-        /* 滑动过，不算点击 */
         suppressNextClick = true;
         setTimeout(function () { suppressNextClick = false; }, 60);
       }
     });
 
-    /* ---- 被系统打断 ---- */
     card.addEventListener('pointercancel', function (e) {
       if (e.pointerId !== pointerId) return;
       clearPress();
@@ -1091,7 +1070,6 @@
       longPressFired = false;
     });
 
-    /* ---- 点击：仅当没长按、没滑动时才展开/收起 ---- */
     card.addEventListener('click', function () {
       if (suppressNextClick || longPressFired) return;
       card.classList.toggle('active');
