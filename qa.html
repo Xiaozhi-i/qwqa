@@ -5,508 +5,671 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>作业答案 · 孤鸿组</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
+/* ========== 自定义 woff2 字体，文件夹 Fonts（大写 F） ========== */
+@font-face {
+  font-family: "FZHei";
+  src: url("./Fonts/方正黑体简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZShuSong";
+  src: url("./Fonts/方正书宋简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZKai";
+  src: url("./Fonts/方正楷体简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZFangSong";
+  src: url("./Fonts/方正仿宋简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* 题序 / 英文加粗专用 */
+@font-face {
+  font-family: "XITS-Bold";
+  src: url("./Fonts/XITS-Bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* 英文字母（基本拉丁） */
+@font-face {
+  font-family: "XITS";
+  src: url("./Fonts/XITS.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00BF, U+00D7, U+00F7, U+2000-206F, U+2100-214F;
+  font-display: swap;
+}
+/* 带声调拼音字母 → GB PinyinOK-B（与 XITS 同名，靠 unicode-range 分流） */
+@font-face {
+  font-family: "XITS";
+  src: url("./Fonts/GB PinyinOK-B.woff2") format("woff2");
+  unicode-range: U+00C0-00D6, U+00D8-00F6, U+00F8-00FF, U+0100-024F, U+1E00-1EFF;
+  font-display: swap;
+}
+/* 拼音专用字体族：不设 unicode-range，让 JS 包裹后的整词统一使用 */
+@font-face {
+  font-family: "GBPinyin";
+  src: url("./Fonts/GB PinyinOK-B.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* 英文斜体 */
+@font-face {
+  font-family: "XITS-Italic";
+  src: url("./Fonts/XITS-Italic.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
-  body {
-    background: #f0f2f5;
-    min-height: 100vh;
-    padding: 24px;
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
-    background-attachment: fixed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'XITS', 'FZShuSong', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: normal;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  body.lightbox-lock {
-    overflow-y: hidden;
-  }
+html, body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
 
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
+.task-card,
+.task-card * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
 
-  /* ---------------- 顶部标题 ---------------- */
-  .header {
-    text-align: center;
-    margin-bottom: 30px;
-    opacity: 0;
-    animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
-  }
+.task-card {
+  touch-action: pan-y;
+}
 
-  .header-top {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 12px;
-  }
+body {
+  background: #f0f2f5;
+  min-height: 100vh;
+  padding: 24px;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
+  background-attachment: fixed;
+}
 
-  .header h1 {
-    font-size: 1.75rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    color: #1a1a1a;
-  }
+body.lightbox-lock {
+  overflow-y: hidden;
+}
 
-  .subtitle {
-    font-size: 0.72rem;
-    letter-spacing: 5px;
-    color: #9a9a9a;
-    text-indent: 5px;
-  }
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
 
-  .divider {
-    width: 32px;
-    height: 3px;
-    border-radius: 2px;
-    background: #1a1a1a;
-    opacity: 0.85;
-    margin: 14px auto 0;
-  }
+/* ---------------- 顶部标题 ---------------- */
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
+}
 
-  /* 返回按钮 */
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    color: #666;
-    font-size: 0.85rem;
-    padding: 8px 16px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+.header-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
 
-  .back-btn svg { width: 14px; height: 14px; }
+.header h1 {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 1.75rem;
+  font-weight: normal;
+  letter-spacing: 3px;
+  color: #1a1a1a;
+}
 
-  .back-btn:active {
-    transform: scale(0.95);
+.subtitle {
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 5px;
+  color: #9a9a9a;
+  text-indent: 5px;
+}
+
+.divider {
+  width: 32px;
+  height: 3px;
+  border-radius: 2px;
+  background: #1a1a1a;
+  opacity: 0.85;
+  margin: 14px auto 0;
+}
+
+/* 返回按钮 */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #666;
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-btn svg { width: 14px; height: 14px; }
+
+.back-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+@media (hover: hover) {
+  .back-btn:hover {
     background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
   }
+}
 
-  @media (hover: hover) {
-    .back-btn:hover {
-      background: rgba(255, 255, 255, 0.9);
-      transform: translateY(-1px);
-    }
+/* ---------------- 卡片 ---------------- */
+.task-card {
+  width: 100%;
+  max-width: 100%;
+
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 22px;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+
+  opacity: 0;
+  translate: 0 36px;
+
+  transition:
+    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    translate 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+}
+
+.task-card.enter-from-top {
+  translate: 0 -36px;
+}
+
+.task-card.reveal {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.task-card:active {
+  transform: scale(0.985);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* 头部：左文字组、右科目组，两端分布，整体垂直居中 */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 38px;
+}
+
+/* 左侧文字组：图标 + 标题，整体垂直居中 */
+.task-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title h3 {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.98rem;
+  font-weight: normal;
+  color: #1a1a1a;
+  line-height: 1.45;
+  letter-spacing: 0.4px;
+}
+
+/* 科目图标 */
+.icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  overflow: visible;
+}
+
+/* 右侧科目组：标签 + 箭头，整体垂直居中 */
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.subject-tag {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 7px;
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.68rem;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.arrow {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
+  color: #ccc;
+  font-size: 0.75rem;
+}
+
+.task-card.active .arrow {
+  transform: rotate(180deg);
+  color: #1a1a1a;
+}
+
+/* ---------------- 内容区域：grid-template-rows 平滑展开 ---------------- */
+.task-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  color: #555;
+  line-height: 1.7;
+  font-size: 0.9rem;
+  overflow: hidden;
+  transition:
+    grid-template-rows 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.task-card.active .task-content {
+  grid-template-rows: 1fr;
+  margin-top: 9px;
+}
+
+/* 收起时：内层不占 padding / border，确保卡片整体垂直居中 */
+.task-content-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 0;
+  border-top: 0 dashed transparent;
+  font-family: 'XITS', 'FZShuSong', 'PingFang SC', 'Microsoft YaHei', serif;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.24s ease,
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-top 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-top-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+
+/* 展开时：恢复 padding 与虚线分隔线 */
+.task-card.active .task-content-inner {
+  padding-top: 10px;
+  border-top-width: 1px;
+  border-top-color: rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.36s ease 0.06s,
+    transform 0.46s cubic-bezier(0.22, 1, 0.36, 1) 0.03s,
+    padding-top 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-top-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+
+/* 内容首尾元素不额外撑开间距 */
+.task-content-inner > :first-child { margin-top: 0; }
+.task-content-inner > :last-child { margin-bottom: 0; }
+
+/* 加粗：默认英文优先 XITS-Bold，中文自动回退 FZHei（JS 会再加 class 精确区分） */
+.task-content b,
+.task-content strong {
+  font-family: 'XITS-Bold', 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: normal;
+  color: #1a1a1a;
+}
+
+/* 含中文的加粗（包括其中的数字）→ 方正黑体简体 */
+.task-content b.bold-cn,
+.task-content strong.bold-cn {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 纯英文 / 纯数字加粗 → XITS-Bold */
+.task-content b.bold-en,
+.task-content strong.bold-en {
+  font-family: 'XITS-Bold', 'XITS', serif;
+}
+
+/* 英文斜体 → XITS-Italic */
+.task-content i,
+.task-content em {
+  font-family: 'XITS-Italic', 'FZShuSong', serif;
+  font-style: normal;
+}
+
+/* 题序（1. 2. …）→ XITS-Bold 浅蓝色 */
+.qno {
+  font-family: 'XITS-Bold', 'XITS', serif;
+  color: #5b9bd5;
+  font-weight: normal;
+  letter-spacing: 0.3px;
+}
+
+/* 拼音整词 → GB PinyinOK-B 统一字体 */
+.task-content .pinyin {
+  font-family: 'GBPinyin', 'XITS', serif;
+  font-weight: normal;
+}
+
+/* 诗歌作者名 → 方正楷体简体 */
+.task-content .poem-author {
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: #6b6b6b;
+  letter-spacing: 2px;
+}
+
+.task-content p {
+  line-height: 1.75;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.task-content img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  margin: 6px 0;
+  cursor: zoom-in;
+  transition: opacity 0.2s;
+}
+
+.task-content img:active { opacity: 0.85; }
+
+.task-content a {
+  color: #888;
+  text-decoration: none;
+  border-bottom: 1px dashed #ccc;
+  transition: all 0.2s;
+}
+
+.task-content a:active {
+  color: #1a1a1a;
+  border-bottom-color: #1a1a1a;
+}
+
+/* 表格 */
+.task-content table th {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: normal;
+}
+
+/* ---------------- 大图查看器 ---------------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.lightbox.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  transform-origin: center center;
+  transition: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.glass-close-btn-wrap {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 10001;
+}
+
+.glass-close-btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 2px -2px 1px -1px rgba(255, 255, 255, 0.55),
+    inset -2px 2px 1px -1px rgba(255, 255, 255, 0.55),
+    inset 0 0 2px rgba(0, 0, 0, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.32);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.25s ease;
+}
+
+.glass-close-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.glass-close-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+@media (hover: hover) {
+  .glass-close-btn:hover svg {
+    transform: rotate(90deg);
   }
+}
 
-  /* ---------------- 卡片 ---------------- */
-  .task-card {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 24px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-    cursor: pointer;
+/* ---------------- 页脚 ---------------- */
+.footer {
+  margin-top: 30px;
+  text-align: center;
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: #b5b5b5;
+  opacity: 0;
+  animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+}
 
-    /* 滚动入场基础态：向下 36px、透明 */
-    opacity: 0;
-    translate: 0 36px;
+/* ---------------- 动画 ---------------- */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-    transition:
-      opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      translate 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: scale(1);
-  }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  /* 向上滚动进场：从上方 -36px 进入 */
-  .task-card.enter-from-top {
-    translate: 0 -36px;
-  }
-
-  /* 已进入视口：归位并显现 */
-  .task-card.reveal {
-    opacity: 1;
-    translate: 0 0;
-  }
-
-  .task-card:active {
-    transform: scale(0.985);
+/* ---------------- 桌面端悬停 ---------------- */
+@media (hover: hover) {
+  .task-card:hover {
+    transform: translateY(-2px) scale(1);
     background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
   }
 
-  .task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
+  .task-card:hover .icon {
+    transform: rotate(-4deg) scale(1.06);
   }
 
-  .task-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
+  .task-card.active:hover .icon {
+    transform: rotate(-6deg) scale(1.06);
+  }
+}
+
+.task-card:active .icon {
+  transform: scale(0.9);
+}
+
+.task-card.active .icon {
+  transform: rotate(-6deg) scale(1.06);
+}
+
+/* ---------------- 小屏适配 ---------------- */
+@media (max-width: 360px) {
+  body { padding: 18px; }
+
+  .header h1 { font-size: 1.5rem; }
+
+  .task-card {
+    padding: 13px 17px;
   }
 
-  .task-title h3 {
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    line-height: 1.4;
-    letter-spacing: 0.3px;
-  }
+  .task-title h3 { font-size: 0.92rem; }
 
-  /* 科目图标 */
   .icon {
-    flex-shrink: 0;
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    background: #1a1a1a;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
   }
 
-  .icon svg {
-    width: 18px;
-    height: 18px;
-    display: block;
-    overflow: visible;
-  }
-
-  .task-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
+  .icon svg { width: 16px; height: 16px; }
 
   .subject-tag {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 3px 9px;
-    border-radius: 7px;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-  }
-
-  .arrow {
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
-    color: #ccc;
-    font-size: 0.75rem;
-  }
-
-  .task-card.active .arrow {
-    transform: rotate(180deg);
-    color: #1a1a1a;
-  }
-
-  /* ---------------- 内容区域（grid 平滑展开） ---------------- */
-  .task-content {
-    display: grid;
-    grid-template-rows: 0fr;
-    margin-top: 0;
-    color: #555;
-    line-height: 1.7;
-    font-size: 0.9rem;
-    transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                margin-top 0.42s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .task-card.active .task-content {
-    grid-template-rows: 1fr;
-    margin-top: 14px;
-  }
-
-  .task-content-inner {
-    overflow: hidden;
-    min-height: 0;
-    padding-top: 0;
-    border-top: 1px dashed transparent;
-    opacity: 0;
-    transition: opacity 0.25s ease,
-                padding-top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.42s ease;
-  }
-
-  .task-card.active .task-content-inner {
-    padding-top: 14px;
-    border-top-color: rgba(0, 0, 0, 0.08);
-    opacity: 1;
-    transition: opacity 0.4s ease 0.12s,
-                padding-top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.42s ease;
-  }
-
-  .task-content b {
-    color: #1a1a1a;
-    font-weight: 700;
-    display: inline-block;
-    margin-top: 6px;
-  }
-
-  .task-content p { margin-bottom: 6px; }
-
-  .task-content img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    border-radius: 8px;
-    margin: 6px 0;
-    cursor: zoom-in;
-    transition: opacity 0.2s;
-  }
-
-  .task-content img:active { opacity: 0.85; }
-
-  .task-content a {
-    color: #888;
-    text-decoration: none;
-    border-bottom: 1px dashed #ccc;
-    transition: all 0.2s;
-  }
-
-  .task-content a:active {
-    color: #1a1a1a;
-    border-bottom-color: #1a1a1a;
-  }
-
-  /* ---------------- 大图查看器（原版逻辑 + 玻璃按钮） ---------------- */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.32s ease;
-    overflow: hidden;
-    touch-action: none;
-  }
-
-  .lightbox.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .lightbox-img-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .lightbox-img {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    object-fit: contain;
-    transform-origin: center center;
-    transition: none;
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-
-  /* 玻璃关闭按钮 */
-  .glass-close-btn-wrap {
-    position: absolute;
-    top: 22px;
-    right: 22px;
-    z-index: 10001;
+    font-size: 0.62rem;
+    padding: 2px 7px;
   }
 
   .glass-close-btn {
-    position: relative;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow:
-      inset 2px -2px 1px -1px rgba(255, 255, 255, 0.55),
-      inset -2px 2px 1px -1px rgba(255, 255, 255, 0.55),
-      inset 0 0 2px rgba(0, 0, 0, 0.18),
-      0 4px 12px rgba(0, 0, 0, 0.32);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.12s ease, background 0.25s ease;
+    width: 42px;
+    height: 42px;
   }
-
-  .glass-close-btn:active {
-    transform: scale(0.9);
-    background: rgba(255, 255, 255, 0.24);
-  }
-
-  .glass-close-btn svg {
-    width: 18px;
-    height: 18px;
-    display: block;
-    transition: transform 0.35s ease;
-  }
-
-  @media (hover: hover) {
-    .glass-close-btn:hover svg {
-      transform: rotate(90deg);
-    }
-  }
-
-  /* ---------------- 页脚 ---------------- */
-  .footer {
-    margin-top: 32px;
-    text-align: center;
-    font-size: 0.68rem;
-    letter-spacing: 2px;
-    color: #b5b5b5;
-    opacity: 0;
-    animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
-  }
-
-  /* ---------------- 动画 ---------------- */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ---------------- 桌面端悬停 ---------------- */
-  @media (hover: hover) {
-    .task-card:hover {
-      transform: translateY(-2px) scale(1);
-      background: rgba(255, 255, 255, 0.85);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
-    }
-
-    .task-card:hover .icon {
-      transform: rotate(-4deg) scale(1.06);
-    }
-
-    .task-card.active:hover .icon {
-      transform: rotate(-6deg) scale(1.06);
-    }
-  }
-
-  /* 按下 / 展开 —— 图标状态 */
-  .task-card:active .icon {
-    transform: scale(0.9);
-  }
-
-  .task-card.active .icon {
-    transform: rotate(-6deg) scale(1.06);
-  }
-
-  /* ---------------- 小屏适配 ---------------- */
-  @media (max-width: 360px) {
-    body { padding: 18px; }
-
-    .header h1 { font-size: 1.5rem; }
-
-    .task-card { padding: 16px 17px; }
-
-    .task-title h3 { font-size: 0.92rem; }
-
-    .icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-    }
-
-    .icon svg { width: 16px; height: 16px; }
-
-    .subject-tag {
-      font-size: 0.62rem;
-      padding: 2px 7px;
-    }
-
-    .glass-close-btn {
-      width: 42px;
-      height: 42px;
-    }
-  }
-
-  /* ---------------- 注意事项卡片样式（和第一个页面一致） ---------------- */
-  .task-card.notice-card .icon {
-    background: #fff;
-    color: #1a1a1a;
-    border: 1.5px solid #1a1a1a;
-  }
-  .notice-content {
-    font-size: 0.88rem;
-    line-height: 1.75;
-    color: #555;
-  }
-  .notice-item {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    padding: 6px 0;
-  }
-  .notice-item + .notice-item {
-    border-top: 1px dashed rgba(0, 0, 0, 0.06);
-  }
-  .notice-dot {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.68rem;
-    font-weight: 700;
-    margin-top: 2px;
-  }
-  .notice-text {
-    flex: 1;
-    min-width: 0;
-  }
-  .notice-text strong {
-    color: #1a1a1a;
-    font-weight: 700;
-  }
-/* 英文内容溢出修复，单词自动换行 */
-.task-content p {
-  line-height:1.7;
-  font-size:0.9rem;
-  margin-bottom:6px;
-  word-break: break-word;
-  overflow-wrap: break-word;
 }
-.task-content p {
-  white-space: pre-wrap;
+
+/* ---------------- 注意事项卡片 ---------------- */
+.task-card.notice-card .icon {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1.5px solid #1a1a1a;
+}
+.notice-content {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: #555;
+}
+.notice-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 6px 0;
+}
+.notice-item + .notice-item {
+  border-top: 1px dashed rgba(0, 0, 0, 0.06);
+}
+.notice-dot {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'XITS-Bold', serif;
+  font-size: 0.68rem;
+  margin-top: 2px;
+}
+.notice-text {
+  flex: 1;
+  min-width: 0;
+}
+.notice-text strong {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: normal;
+  color: #1a1a1a;
 }
 </style>
 </head>
@@ -525,7 +688,7 @@
         返回
       </a>
     </div>
-    <div class="subtitle">参考答案 · 仅供核对</div>
+    <div class="subtitle">秋假安排 · 参考答案</div>
     <div class="divider"></div>
   </div>
 
@@ -540,7 +703,7 @@
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
         </div>
-        <h3>抄写《陈涉世家》<br>《出师表》全文翻译</h3>
+        <h3>秋假作业(二)：基础知识综合</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
@@ -548,31 +711,28 @@
       </div>
     </div>
     <div class="task-content">
-    <p>抄在单格本上；抄写、翻译写一行、空一行，不拥挤也可以不空行，以后语文抄写翻译作业统一写在这个单格本上。</p>
-<style>
-    h2 {text-align:center; font-size:26px; font-weight:bold; margin:24px 0 12px;}
-    p {line-height:1.7; font-size:16px; margin:8px 0; text-indent:2em;}
-</style>
-</head>
-<body>
-<h2>陈涉世家</h2>
-<p>陈胜，是阳城人，字涉。吴广，是阳夏人，字叔。陈胜年轻时，曾同别人一起被雇佣耕地，一天他停止耕作走到田埂高地上休息，惆怅怨恨了很久，说：“如果有谁富贵了，不要忘记大家呀。”一起耕作的同伴笑着回答说：“你一个受雇耕作的人，哪来的富贵呢？”陈胜长叹一声说：“唉，燕雀怎么能知道鸿鹄的志向呢！”</p>
-<p>秦二世元年七月，朝廷征发贫苦百姓去驻守渔阳，九百人驻扎在大泽乡。陈胜、吴广都被编入谪戍的队伍里面，担任屯长。恰巧遇到天下大雨，道路不通，估计已经误期。误了期限，按法律都应当斩首。陈胜、吴广于是商量说：“现在即使逃跑，被抓回来也是死；发动起义也是死，同样是死，为国事而死可以吗？”陈胜说：“天下百姓受秦朝统治、逼迫已经很久了。我听说秦二世是始皇帝的小儿子，不应立为皇帝，该立的是公子扶苏。扶苏因为屡次劝谏的缘故，皇上派他在外面带兵。现在有人听说他没什么罪，秦二世却杀了他。老百姓大都听说他很贤明，而不知道他死了。项燕是楚国的将领，曾多次立下战功，又爱护士兵，楚国人很爱戴他。有人认为他死了，有人认为他逃跑了。现在如果把我们的人假称是公子扶苏和项燕的队伍，向天下发出号召，应当会有很多响应的人。”吴广认为他讲得对。</p>
-<p>二人就去占卜。占卜的人了解了他们的意图，就说：“你们的大事都能成功，可以建立功业。然而你们把事情向鬼神卜问过吗？”陈胜、吴广很高兴，考虑卜鬼的事情，说：“这是教我们利用鬼神来威服众人罢了。”于是就用丹砂在绸子上写上“陈胜王”，放在别人所捕的鱼的肚子里。士兵们买鱼回来烹食，发现鱼肚子里面的帛书，本来已经对这事感到奇怪了。陈胜又暗地里派吴广到驻地旁边丛林里的神庙中，在夜间提着灯笼，作狐狸嗥叫的凄厉的声音大喊：“大楚将兴，陈胜为王。”士兵们整夜惊恐不安。第二天，士兵们中间议论纷纷，只是指指点点，互相以目示意看着陈胜。</p>
-<p>吴广向来爱护士兵，士兵大多愿意听他差遣。一天，押送戍卒的将尉喝醉了，吴广故意多次说想要逃跑，惹恼将尉，让他侮辱自己，以便激怒那些士兵们。将尉果真用竹板打吴广。将尉拔剑出鞘想杀吴广，吴广跳起来，夺过利剑杀了将尉。陈胜帮助他，一起杀了两个将尉。陈胜召集并号令部属的人说：“你们诸位遇上大雨，都已误了期限，误期是要杀头的。假使仅能免于斩刑，可是去守卫边塞死掉的本来也会有十分之六七。况且壮士不死便罢了，要死就该成就伟大的名声啊，王侯将相难道有天生的贵种吗？”部属的人都说：“愿意听从您的号令。”于是就假称是公子扶苏、项燕的队伍，顺从人民的愿望。个个露出右臂作为起义的标志，号称大楚。用土筑成高台并在台上宣誓，用两个将尉的头作祭品。陈胜自立为将军，吴广任都尉。他们攻打大泽乡，收编大泽乡的义军之后攻打蕲县。攻下蕲以后，就派符离人葛婴率军攻占蕲县以东的地方，陈胜则攻打铚、酂、苦、柘、谯等地，都攻占下来。行军中沿路收纳兵员。等到到达陈县，已有战车六七百辆，骑兵一千多，士兵好几万。攻陈县时，那里的郡守和县令都不在，只有守城的门丞在城门洞里同起义军作战，守不住，战死了，大军就进驻陈县。</p>
-<p>过了几天，陈胜传令召集当地管教化的乡官和有声望的人一起来集会议事。乡官和有声望的人都说：“将军亲身披着战甲，拿着锐利的武器，讨伐无道的暴君，推翻残暴的秦朝，重建楚国的江山，论功劳应当称王。”陈胜于是被拥立为王，对外宣称要张大楚国。在这时，各郡县中吃尽秦朝官吏苦头的百姓，都起来惩罚当地郡县长官，杀死他们来响应陈胜。</p>
-
-<h2>出师表</h2>
-<p>先帝开创统一天下的大业还没有完成一半，就中途去世了。如今天下分成三国，我们蜀汉国力困乏，这实在是危急存亡的时候啊。但是宫廷里侍奉守卫的臣子，不敢稍有懈怠；疆场上忠诚有志的将士，舍身忘死地作战，都是追念先帝对他们的特殊恩遇，想要报答给陛下。陛下实在应该广泛听取意见，发扬光大先帝留下的美德，激励志士们的志气；不应该随便看轻自己，说话不恰当，从而堵塞忠臣进谏劝告的道路。</p>
-<p>皇宫和丞相府中，本都是一个整体，晋升、处罚，赞扬、批评，不应该有所不同。如果有做奸邪事情、触犯科条法令，或是尽忠行善的人，应当交给主管的官员，判定他们受罚或者受赏，来显示陛下公正严明的治理，而不应当有偏袒和私心，使宫内和朝廷奖罚方法不同。</p>
-<p>侍中、侍郎郭攸之、费祎、董允等人，这些都是善良诚实的人，他们的志向和心思忠诚无二，因此先帝把他们选拔出来留给陛下。我认为宫中的事情，无论大小，都拿来跟他们商量，然后再去施行，一定能够弥补缺点和疏漏之处，可以获得很多的好处。</p>
-<p>将军向宠，性格品行善良平正，通晓军事，在从前任用的时候，先帝称赞他能干，所以大家商议推举他做中部督。我认为军营里的事情，都拿来跟他商讨，就一定能使军队团结和睦，好的差的各得其所。</p>
-<p>亲近贤臣，疏远小人，这是西汉之所以兴盛的原因；亲近小人，疏远贤臣，这是东汉之所以衰败的原因。先帝在世的时候，每逢跟我谈论这些事情，没有一次不对桓、灵二帝的做法感到痛心遗憾的。侍中、尚书、长史、参军，这些人都是忠贞诚实、能够以死报国的忠臣，希望陛下亲近他们，信任他们，那么汉朝的复兴就指日可待了。</p>
-<p>我本来是平民，在南阳务农亲耕，只想在乱世中保全性命，不奢求在诸侯之中出名。先帝不因为我身份卑微、见识短浅，降低身份委屈自己，三次到草庐中来拜访我，拿当今世上的大事来询问我，我因此十分感动，就答应为先帝奔走效劳。后来遇到兵败，在战事失败的时候我接受了任命，在危机患难期间我受到委任，从那时到现在已经二十一年了。</p>
-<p>先帝知道我做事小心谨慎，所以临终时把国家大事托付给我。接受遗命以来，我日夜忧虑叹息，担心托付给我的事情不能完成，以致损伤先帝的知人之明；所以我五月渡过泸水，深入到荒凉的地方作战。现在南方已经平定，兵器装备已经充足，应当激励、率领全军将士向北方进军，平定中原，希望用尽我平庸的才能，铲除奸邪凶恶的敌人，恢复汉朝的基业，回到旧日的国都。这就是我用来报答先帝，并且尽忠陛下的职责本分。至于处理事务，斟酌情理，有所兴革，毫无保留地进献忠诚的建议，那就是郭攸之、费祎、董允他们的责任了。</p>
-<p>希望陛下能够把讨伐曹魏、兴复汉室的任务托付给我，如果没有成功，就惩治我的罪过，用来告慰先帝的在天之灵。如果没有振兴圣德的建议，就责罚郭攸之、费祎、董允等人的怠慢，来揭示他们的过失；陛下也应自行谋划，征求、询问治国的好道理，采纳正确的言论，深切追念先帝临终留下的教诲。我感激不尽。</p>
-<p>今天我将要告别陛下远行了，面对这份奏表，禁不住流下眼泪，不知道说了些什么。</p>
-          </div>
+      <div class="task-content-inner">
+        <p>1.(1)C &nbsp;&nbsp;&nbsp;&nbsp; (2)A &nbsp;&nbsp;&nbsp;&nbsp; (3)B</p>
+        <p>2.(1)C &nbsp;&nbsp;&nbsp;&nbsp; B &nbsp;&nbsp;&nbsp;&nbsp; (2)假设 &nbsp;&nbsp;&nbsp;&nbsp; (3)Q &nbsp;&nbsp;&nbsp;&nbsp; qī &nbsp;&nbsp;&nbsp;&nbsp; ④ &nbsp;&nbsp;&nbsp;&nbsp; (4)赛龙舟、吃粽子 &nbsp;&nbsp;&nbsp;&nbsp; 千里共婵娟</p>
+        <p>3.(1)①汲 &nbsp;&nbsp;&nbsp;&nbsp; ②轮 &nbsp;&nbsp;&nbsp;&nbsp; ③璧 &nbsp;&nbsp;&nbsp;&nbsp; (2)B &nbsp;&nbsp;&nbsp;&nbsp; (3)这不仅是对优秀传统建筑资源的保护和挖掘，更是对优秀传统文化的激活和开发。</p>
+        <p>4.(1)yì &nbsp;&nbsp;&nbsp;&nbsp; (2)箴 &nbsp;&nbsp;&nbsp;&nbsp; 彰 &nbsp;&nbsp;&nbsp;&nbsp; (3)A</p>
+        <p>5.(1)谧 &nbsp;&nbsp;&nbsp;&nbsp; 勃 &nbsp;&nbsp;&nbsp;&nbsp; (2)浸润 &nbsp;&nbsp;&nbsp;&nbsp; 呼应 &nbsp;&nbsp;&nbsp;&nbsp; (3)她总是抚慰着每一个擦肩而过的倒影，耐心地去修复每一具“跑动的灵魂”。 &nbsp;&nbsp;&nbsp;&nbsp; (4)D</p>
+        <p>6.(1)腻 &nbsp;&nbsp;&nbsp;&nbsp; pàn &nbsp;&nbsp;&nbsp;&nbsp; (2)A &nbsp;&nbsp;&nbsp;&nbsp; (3)D &nbsp;&nbsp;&nbsp;&nbsp; (4)难怪中国古代文人无论桀骜还是恬淡，无论身归山野还是向往庙堂，在诗句中总会提及炊烟，悄悄地织构美好。</p>
+        <p>7.(1)青年人要锻炼才干，增强本领。 &nbsp;&nbsp;&nbsp;&nbsp; (2)转折 &nbsp;&nbsp;&nbsp;&nbsp; (3)，</p>
+        <p>8.(1)①B &nbsp;&nbsp;&nbsp;&nbsp; ②A &nbsp;&nbsp;&nbsp;&nbsp; ③B &nbsp;&nbsp;&nbsp;&nbsp; (2)C &nbsp;&nbsp;&nbsp;&nbsp; (3)B</p>
+        <p>9.(1)①匪 &nbsp;&nbsp;&nbsp;&nbsp; ②装 &nbsp;&nbsp;&nbsp;&nbsp; ③嘶 &nbsp;&nbsp;&nbsp;&nbsp; (2)C &nbsp;&nbsp;&nbsp;&nbsp; (3)D</p>
+        <p>10.(1)①仰望 &nbsp;&nbsp;&nbsp;&nbsp; ②shǎn shuò &nbsp;&nbsp;&nbsp;&nbsp; (2)形态各异(答案不唯一) &nbsp;&nbsp;&nbsp;&nbsp; (3)彡 &nbsp;&nbsp;&nbsp;&nbsp; 11</p>
+        <p>11.(1)C &nbsp;&nbsp;&nbsp;&nbsp; (2)①将“心理素质”和“品格意志”互换位置。 &nbsp;&nbsp;&nbsp;&nbsp; ②在“短暂的人生”后面加上“变得更加精彩”。 &nbsp;&nbsp;&nbsp;&nbsp; ③将双引号改为书名号 &nbsp;&nbsp;&nbsp;&nbsp; (3)示例：我选甲。甲字体是隶书。方劲古拙，蚕头雁尾，形态舒展超逸，神采飞动秀美，暗示自己要保持青少年昂扬的精神。</p>
+        <p>12.(1)濡 &nbsp;&nbsp;&nbsp;&nbsp; xié &nbsp;&nbsp;&nbsp;&nbsp; 麾 &nbsp;&nbsp;&nbsp;&nbsp; (2)汶 &nbsp;&nbsp;&nbsp;&nbsp; 纹 &nbsp;&nbsp;&nbsp;&nbsp; (3)诗经 &nbsp;&nbsp;&nbsp;&nbsp; 离骚 &nbsp;&nbsp;&nbsp;&nbsp; (4)D</p>
+        <p>13.(1)①聒 &nbsp;&nbsp;&nbsp;&nbsp; ②箴 &nbsp;&nbsp;&nbsp;&nbsp; ③骛 &nbsp;&nbsp;&nbsp;&nbsp; (2)B &nbsp;&nbsp;&nbsp;&nbsp; (3)C</p>
+        <p>14.(1)骄 &nbsp;&nbsp;&nbsp;&nbsp; jí &nbsp;&nbsp;&nbsp;&nbsp; (2)A &nbsp;&nbsp;&nbsp;&nbsp; (3)C</p>
+        <p>15.(1)①嬉闹 &nbsp;&nbsp;&nbsp;&nbsp; ②温顺 &nbsp;&nbsp;&nbsp;&nbsp; (2)①chuī yān &nbsp;&nbsp;&nbsp;&nbsp; ②guǎng mào &nbsp;&nbsp;&nbsp;&nbsp; (3)灬 &nbsp;&nbsp;&nbsp;&nbsp; 12 &nbsp;&nbsp;&nbsp;&nbsp; (4)①</p>
+        <p>16.C &nbsp;&nbsp;&nbsp;&nbsp; 17.A</p>
+        <p>18.(1)游弋 &nbsp;&nbsp;&nbsp;&nbsp; (2)赞誉 &nbsp;&nbsp;&nbsp;&nbsp; (3)相得益彰 &nbsp;&nbsp;&nbsp;&nbsp; 19.C &nbsp;&nbsp;&nbsp;&nbsp; 20.B</p>
+        <p>21.(1)摇曳 &nbsp;&nbsp;&nbsp;&nbsp; (2)qì &nbsp;&nbsp;&nbsp;&nbsp; 22.示例：变幻无穷、银装素裹、筚路蓝缕。 &nbsp;&nbsp;&nbsp;&nbsp; 23.(1)比喻户外的雪景素洁美丽。&nbsp;&nbsp;&nbsp;&nbsp; (2)过分严格，极其刻薄。 &nbsp;&nbsp;&nbsp;&nbsp; 24.④② &nbsp;&nbsp;&nbsp;&nbsp; ①③ 25.C</p>
+        <p>26.(1)pīng &nbsp;&nbsp;&nbsp;&nbsp; (2)漫 &nbsp;&nbsp;&nbsp;&nbsp; 27.示例：(任选三个即可)包罗万象、生机勃勃、身临其境、薪火相传。 &nbsp;&nbsp;&nbsp;&nbsp; 28.(1)养育，培养。 &nbsp;&nbsp;&nbsp;&nbsp; (2)亲自到了哪个境地。 &nbsp;&nbsp;&nbsp;&nbsp; 29.(1)③鹤发银丝映日月 &nbsp;&nbsp;&nbsp;&nbsp; ⑧丹心热血沃新花</p>
+      </div>
+    </div>
   </div>
 
   <div class="task-card">
@@ -585,7 +745,7 @@
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
         </div>
-        <h3>背诵并默写《诗词曲五首》</h3>
+        <h3>秋假作业(三)：文言文对比阅读</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
@@ -593,40 +753,242 @@
       </div>
     </div>
     <div class="task-content">
-      <p><strong>十五从军征</strong></p>
-<p>十五从军征，八十始得归。</p>
-<p>道逢乡里人：“家中有阿谁？”</p>
-<p>“遥看是君家，松柏冢累累。”</p>
-<p>兔从狗窦入，雉从梁上飞。</p>
-<p>中庭生旅谷，井上生旅葵。</p>
-<p>舂谷持作饭，采葵持作羹。</p>
-<p>羹饭一时熟，不知饴阿谁。</p>
-<p>出门东向看，泪落沾我衣。</p>
+      <div class="task-content-inner">
+        <p>下列答案由豆包提供。</p>
+        <p>1.（1）完备 （2）于是，就 （3）坚决 （4）又，再</p>
+<p>2.C</p>
+<p>3.B</p>
+<p>4.（1）它连接着远山，吞吐长江的江水，水波浩荡，宽阔无边。</p>
+<p>（2）推心置腹对待他们，毫不猜疑，所以敌人也不敢轻易侵犯他所管辖的边境。</p>
+<p>5.①安抚善待士兵，以诚待人；②不贪恋高官，主动请求去边防；③边境守将失职，他主张宽容，不轻易惩处。</p>
+<p>6.C</p>
+<p>7.B</p>
+<p>8.（1）不因外物和自己处境的变化而喜悲。</p>
+<p>（2）使者到了，（百姓）没有亏欠官府的东西。</p>
+<p>9.示例：“衔远山，吞长江”，对偶句式整齐，“衔”“吞”二字拟人化，生动写出洞庭湖吞吐山水的壮阔气势；“浮光跃金，静影沉璧”，对仗工整，描绘出月夜湖面一动一静的美景，音韵和谐，画面感强。</p>
+<p>10.范纯仁践行“先天下之忧而忧，后天下之乐而乐”：在庆州任职时，开仓放粮赈济灾民，保全百姓；面对朝廷核查，不惧问责，一心为民，把百姓安危放在前面。</p>
+<p>11.（1）完备 （2）全，都 （3）说出 （4）是</p>
+<p>12.D</p>
+<p>13.清澈的溪流冲击着岩石，水花激荡飞溅；美好的树木与奇异的竹子，枝叶投下的阴影互相掩映。</p>
+<p>14.D</p>
+<p>15.同：都以描写为主，写景细腻；异：甲文写景之后侧重议论抒情，抒发忧国忧民的情怀；乙文侧重记叙、描写，借小溪无人赏识抒发怀才不遇的落寞。</p>
+<p>16.（1）弯腰曲背，这里指老人 （2）陈列，摆开 （3）修建 （4）以……为乐</p>
+<p>17.C</p>
+<p>18.（1）喝醉了能够和大家一起欢乐，醒来能够用文章记述这乐事的人，是太守。</p>
+<p>（2）百姓富足安康，都是陛下恭谨辛劳所带来的。</p>
+<p>19.至道元年正月望上观灯/乾元楼/召昉赐坐于侧</p>
+<p>20.不相同。甲文欧阳修的乐，是与民同乐，欣赏山水、宴饮，和百姓共享欢乐；乙文中宋太宗的乐，是把百姓安宁富足当作快乐，以民生安定为乐，是君主忧民爱民之乐。</p>
+<p>21.（1）回环，曲折 （2）建造 （3）平坦 （4）山洞</p>
+<p>22.道士争缘为市/几以山为垄断矣/宁复知有云壑乎</p>
+<p>23.（1）欣赏山水的乐趣，领会于心间，寄托在酒上。</p>
+<p>（2）就像一群龙捧起明珠，这就是金地藏塔。</p>
+<p>24.甲文：表达欧阳修寄情山水、与民同乐的情怀；乙文：赞美山水奇丽，感慨清幽之地被俗世商业化破坏，暗含惋惜。</p>
+<p>25.B</p>
+<p>26.湖中/焉得更有此人</p>
+<p>27.D</p>
+<p>28.（1）裹着裘皮衣服，围着火炉，独自前往湖心亭看雪。</p>
+<p>（2）随意翻看几卷书，也很有乐趣。</p>
+<p>29.甲文：雪夜独自乘船去湖心亭赏雪景；偶遇知己，痛快饮酒。乙文：下雪之夜，听雪敲竹；随性翻书，自得其乐。</p>
+<p>30.C</p>
+<p>31.D</p>
+<p>32.（1）我尽力饮了三大杯酒，然后和他们道别。</p>
+<p>（2）粗略地观赏了景色，没有来得及细细游览。</p>
+<p>33.从武林门而西/望保叔塔突兀层崖中/则已心飞湖上也</p>
+<p>34.B</p>
+<p>35.（1）快步走 （2）等待 （3）平民百姓 （4）只</p>
+<p>36.（1）我站在他旁边，提出疑难，询问道理，弯下身子，侧着耳朵请教。</p>
+<p>（2）孔子不以向地位、学问不如自己的人请教为耻，因此君子认为他贤能。</p>
+<p>37.古人以问为美德/而并不见其有可耻也/后之君子反争以问为耻</p>
+<p>38.虚心恭敬；议论；唯道之所成而已矣</p>
+<p>39.A：主持，主管 &nbsp;&nbsp; B：只 &nbsp;&nbsp; C：救助，接济</p>
+<p>40.A</p>
+<p>41.（1）不因外物和自己处境的变化而喜悲。</p>
+<p>（2）君子因为志同道合结为朋友，小人因为利益相同结为朋党，这是自然的道理。</p>
+<p>42.（1）余靖、尹洙上书为范仲淹争辩；欧阳修写信指责高若讷，为范仲淹鸣不平。</p>
+<p>（2）君子以道义为朋，坚守道义，患难相助。范仲淹遭贬，余靖、尹洙、欧阳修不顾自身安危，仗义发声，坚守道义，是君子之朋。</p>
+<p>43.范仲淹心怀天下，有“先忧后乐”的远大抱负；为人刚直敢言，坚守道义；待人宽厚，体恤士兵百姓，是心怀家国、正直仁厚的贤臣。</p>
+      </div>
+    </div>
+  </div>
 
-<p><strong>白雪歌送武判官归京</strong> 岑参</p>
-<p>北风卷地白草折，胡天八月即飞雪。</p>
-<p>忽如一夜春风来，千树万树梨花开。</p>
-<p>散入珠帘湿罗幕，狐裘不暖锦衾薄。</p>
-<p>将军角弓不得控，都护铁衣冷难着。</p>
-<p>瀚海阑干百丈冰，愁云惨淡万里凝。</p>
-<p>中军置酒饮归客，胡琴琵琶与羌笛。</p>
-<p>纷纷暮雪下辕门，风掣红旗冻不翻。</p>
-<p>轮台东门送君去，去时雪满天山路。</p>
-<p>山回路转不见君，雪上空留马行处。</p>
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>完成《学法大视野》订正</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>请自行根据发下来的参考答案进行订正。</p>
+      </div>
+    </div>
+  </div>
 
-<p><strong>南乡子·登京口北固亭有怀</strong> 辛弃疾</p>
-<p>何处望神州？满眼风光北固楼。千古兴亡多少事？悠悠。不尽长江滚滚流。</p>
-<p>年少万兜鍪，坐断东南战未休。天下英雄谁敌手？曹刘。生子当如孙仲谋。</p>
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>默写第三、六单元课内课外古诗词，自批自改</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p align="center"><strong>行路难（其一）</strong></p>
+<p align="center">李白</p>
+<p align="center">金樽清酒斗十千，玉盘珍羞直万钱。</p>
+<p align="center">停杯投箸不能食，拔剑四顾心茫然。</p>
+<p align="center">欲渡黄河冰塞川，将登太行雪满山。</p>
+<p align="center">闲来垂钓碧溪上，忽复乘舟梦日边。</p>
+<p align="center">行路难，行路难，多歧路，今安在？</p>
+<p align="center">长风破浪会有时，直挂云帆济沧海。</p>
 
-<p><strong>过零丁洋</strong> 文天祥</p>
-<p>辛苦遭逢起一经，干戈寥落四周星。</p>
-<p>山河破碎风飘絮，身世浮沉雨打萍。</p>
-<p>惶恐滩头说惶恐，零丁洋里叹零丁。</p>
-<p>人生自古谁无死？留取丹心照汗青。</p>
+<p align="center"><strong>酬乐天扬州初逢席上见赠</strong></p>
+<p align="center">刘禹锡</p>
+<p align="center">巴山楚水凄凉地，二十三年弃置身。</p>
+<p align="center">怀旧空吟闻笛赋，到乡翻似烂柯人。</p>
+<p align="center">沉舟侧畔千帆过，病树前头万木春。</p>
+<p align="center">今日听君歌一曲，暂凭杯酒长精神。</p>
 
-<p><strong>山坡羊·潼关怀古</strong> 张养浩</p>
-<p>峰峦如聚，波涛如怒，山河表里潼关路。望西都，意踌躇。</p>
-<p>伤心秦汉经行处，宫阙万间都做了土。兴，百姓苦；亡，百姓苦。</p>
+<p align="center"><strong>水调歌头</strong></p>
+<p align="center">苏轼</p>
+<p align="center">明月几时有？把酒问青天。不知天上宫阙，今夕是何年。我欲乘风归去，又恐琼楼玉宇，高处不胜寒。起舞弄清影，何似在人间。</p>
+<p align="center">转朱阁，低绮户，照无眠。不应有恨，何事长向别时圆？人有悲欢离合，月有阴晴圆缺，此事古难全。但愿人长久，千里共婵娟。</p>
+
+<p align="center"><strong>月夜忆舍弟</strong></p>
+<p align="center">杜甫</p>
+<p align="center">戍鼓断人行，边秋一雁声。</p>
+<p align="center">露从今夜白，月是故乡明。</p>
+<p align="center">有弟皆分散，无家问死生。</p>
+<p align="center">寄书长不达，况乃未休兵。</p>
+
+<p align="center"><strong>长沙过贾谊宅</strong></p>
+<p align="center">刘长卿</p>
+<p align="center">三年谪宦此栖迟，万古惟留楚客悲。</p>
+<p align="center">秋草独寻人去后，寒林空见日斜时。</p>
+<p align="center">汉文有道恩犹薄，湘水无情吊岂知。</p>
+<p align="center">寂寂江山摇落处，怜君何事到天涯。</p>
+
+<p align="center"><strong>左迁至蓝关示侄孙湘</strong></p>
+<p align="center">韩愈</p>
+<p align="center">一封朝奏九重天，夕贬潮州路八千。</p>
+<p align="center">欲为圣明除弊事，肯将衰朽惜残年！</p>
+<p align="center">云横秦岭家何在？雪拥蓝关马不前。</p>
+<p align="center">知汝远来应有意，好收吾骨瘴江边。</p>
+
+<p align="center"><strong>商山早行</strong></p>
+<p align="center">温庭筠</p>
+<p align="center">晨起动征铎，客行悲故乡。</p>
+<p align="center">鸡声茅店月，人迹板桥霜。</p>
+<p align="center">槲叶落山路，枳花明驿墙。</p>
+<p align="center">因思杜陵梦，凫雁满回塘。</p>
+
+<p align="center"><strong>十五从军征</strong></p>
+<p align="center">十五从军征，八十始得归。</p>
+<p align="center">道逢乡里人，家中有阿谁？</p>
+<p align="center">遥看是君家，松柏冢累累。</p>
+<p align="center">兔从狗窦入，雉从梁上飞。</p>
+<p align="center">中庭生旅谷，井上生旅葵。</p>
+<p align="center">舂谷持作饭，采葵持作羹。</p>
+<p align="center">羹饭一时熟，不知饴阿谁。</p>
+<p align="center">出门东向看，泪落沾我衣。</p>
+
+<p align="center"><strong>白雪歌送武判官归京</strong></p>
+<p align="center">岑参</p>
+<p align="center">北风卷地白草折，胡天八月即飞雪。</p>
+<p align="center">忽如一夜春风来，千树万树梨花开。</p>
+<p align="center">散入珠帘湿罗幕，狐裘不暖锦衾薄。</p>
+<p align="center">将军角弓不得控，都护铁衣冷难着。</p>
+<p align="center">瀚海阑干百丈冰，愁云惨淡万里凝。</p>
+<p align="center">中军置酒饮归客，胡琴琵琶与羌笛。</p>
+<p align="center">纷纷暮雪下辕门，风掣红旗冻不翻。</p>
+<p align="center">轮台东门送君去，去时雪满天山路。</p>
+<p align="center">山回路转不见君，雪上空留马行处。</p>
+
+<p align="center"><strong>南乡子·登京口北固亭有怀</strong></p>
+<p align="center">辛弃疾</p>
+<p align="center">何处望神州？满眼风光北固楼。千古兴亡多少事？悠悠。不尽长江滚滚流。</p>
+<p align="center">年少万兜鍪，坐断东南战未休。天下英雄谁敌手？曹刘。生子当如孙仲谋。</p>
+
+<p align="center"><strong>过零丁洋</strong></p>
+<p align="center">文天祥</p>
+<p align="center">辛苦遭逢起一经，干戈寥落四周星。</p>
+<p align="center">山河破碎风飘絮，身世浮沉雨打萍。</p>
+<p align="center">惶恐滩头说惶恐，零丁洋里叹零丁。</p>
+<p align="center">人生自古谁无死？留取丹心照汗青。</p>
+
+<p align="center"><strong>山坡羊·潼关怀古</strong></p>
+<p align="center">张养浩</p>
+<p align="center">峰峦如聚，波涛如怒，山河表里潼关路。望西都，意踌躇。伤心秦汉经行处，宫阙万间都做了土。兴，百姓苦；亡，百姓苦。</p>
+
+<p align="center"><strong>咸阳城东楼</strong></p>
+<p align="center">许浑</p>
+<p align="center">一上高城万里愁，蒹葭杨柳似汀洲。</p>
+<p align="center">溪云初起日沉阁，山雨欲来风满楼。</p>
+<p align="center">鸟下绿芜秦苑夕，蝉鸣黄叶汉宫秋。</p>
+<p align="center">行人莫问当年事，故国东来渭水流。</p>
+
+<p align="center"><strong>无题</strong></p>
+<p align="center">李商隐</p>
+<p align="center">相见时难别亦难，东风无力百花残。</p>
+<p align="center">春蚕到死丝方尽，蜡炬成灰泪始干。</p>
+<p align="center">晓镜但愁云鬓改，夜吟应觉月光寒。</p>
+<p align="center">蓬山此去无多路，青鸟殷勤为探看。</p>
+
+<p align="center"><strong>浣溪沙</strong></p>
+<p align="center">秦观</p>
+<p align="center">漠漠轻寒上小楼，晓阴无赖似穷秋，淡烟流水画屏幽。</p>
+<p align="center">自在飞花轻似梦，无边丝雨细如愁，宝帘闲挂小银钩。</p>
+
+<p align="center"><strong>丑奴儿·书博山道中壁</strong></p>
+<p align="center">辛弃疾</p>
+<p align="center">少年不识愁滋味，爱上层楼。爱上层楼，为赋新词强说愁。</p>
+<p align="center">而今识尽愁滋味，欲说还休。欲说还休，却道“天凉好个秋”！</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>【选做】秋假作业(一)</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>略。</p>
+      </div>
     </div>
   </div>
 
@@ -642,7 +1004,7 @@
             <path d="M8.4 17.4h7.2"/>
           </svg>
         </div>
-        <h3>学法大视野 P53 专练4</h3>
+        <h3>第6期周报</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">数学</span>
@@ -650,7 +1012,9 @@
       </div>
     </div>
     <div class="task-content">
-      孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
     </div>
   </div>
 
@@ -665,7 +1029,7 @@
             <path d="M8.4 17.4h7.2"/>
           </svg>
         </div>
-        <h3>学法大视野 P54-56 <br>第2章复习总结</h3>
+        <h3>秋假数学素养训练(一)</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">数学</span>
@@ -673,7 +1037,34 @@
       </div>
     </div>
     <div class="task-content">
-      孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>秋假素养训练(二)</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
     </div>
   </div>
 
@@ -690,7 +1081,7 @@
             <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
           </svg>
         </div>
-        <h3>学法大视野 P1-69</h3>
+        <h3>《学法大视野》P1-85[Unit6 Section A(1a-2d)]</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">英语</span>
@@ -698,27 +1089,212 @@
       </div>
     </div>
     <div class="task-content">
-      <b>P61</b>
-      <b>课前预习</b>
-      <p>1. increase&nbsp;&nbsp;2. blood&nbsp;&nbsp;3. wound&nbsp;&nbsp;4. mall&nbsp;&nbsp;5. notebook&nbsp;&nbsp;6. squirrel&nbsp;&nbsp;7. nut&nbsp;&nbsp;8. dolphin&nbsp;&nbsp;9. wild&nbsp;&nbsp;10. recognize(=recognise)&nbsp;&nbsp;11. outline&nbsp;&nbsp;12. fully&nbsp;&nbsp;13. divide</p>
-      <p>14. divide sth into</p>
-      <p>15. increase &nbsp;&nbsp; 16. find out &nbsp;&nbsp; 17. divide; into</p>
-      <b>P62</b>
-      <p>1. wounds&nbsp;&nbsp;2. Recognizing&nbsp;&nbsp;3. has increased&nbsp;&nbsp;4. wild&nbsp;&nbsp;5. dolphin</p>
-      <p>6. divide; into &nbsp;&nbsp; 7. increase by &nbsp;&nbsp; 8. find out &nbsp;&nbsp; 9. go through &nbsp;&nbsp; 10. memorizing; English speech</p>
-      <p>11. B &nbsp;&nbsp; 12. B &nbsp;&nbsp; 13. A</p>
-      <b>P66</b>
-      <p>21. A &nbsp;&nbsp; 22. B &nbsp;&nbsp; 23. C &nbsp;&nbsp; 24. A</p>
-      <b>P67</b>
-      <p>25. D &nbsp;&nbsp; 26. B</p>
-      <p>27.Elizabeth Loftus(a science professor at the University of California).&nbsp;&nbsp;28.In two ways.&nbsp;&nbsp;29.We can have someone else take the photos,pay more attention to the details,and look at our photos from time to time.&nbsp;&nbsp;30.Because they want to record beautiful and important moments in life and share happiness with others.(主观题,言之有理即可)&nbsp;&nbsp;31.照片只有在我们花时间翻看时,才是保存记忆的有用工具。</p>
-      <b>P68</b>
-      <b>课前预习</b>
-      <p>1.invention&nbsp;&nbsp;2.camera&nbsp;&nbsp;3.laptop&nbsp;&nbsp;4.super&nbsp;&nbsp;5.sunglasses&nbsp;&nbsp;6.itself&nbsp;&nbsp;7.button&nbsp;&nbsp;8.produce&nbsp;&nbsp;9.file&nbsp;&nbsp;10.plastic&nbsp;&nbsp;11.printer</p>
-      <p>12.high-speed train&nbsp;&nbsp;13.hundreds (of...)</p>
-      <p>14.a pair of &nbsp;&nbsp; 15.Hundreds of &nbsp;&nbsp; 16.invention; like the most</p>
-      <b>P69</b>
-      <p>1.invention&nbsp;&nbsp;2.sunglasses&nbsp;&nbsp;3.itself&nbsp;&nbsp;4.produce&nbsp;&nbsp;5.printer&nbsp;&nbsp;6.camera&nbsp;&nbsp;7.buttons&nbsp;&nbsp;8.plastic&nbsp;&nbsp;9.Taking;high-speed train&nbsp;&nbsp;10.Hundreds of&nbsp;&nbsp;11.is connected to&nbsp;&nbsp;12.is made by&nbsp;&nbsp;13.useful inventions&nbsp;&nbsp;14.important&nbsp;&nbsp;15.invention&nbsp;&nbsp;16.mistake&nbsp;&nbsp;17.than&nbsp;&nbsp;18.better&nbsp;&nbsp;19.factories&nbsp;&nbsp;20.thinking&nbsp;&nbsp;21.draw&nbsp;&nbsp;22.Perhaps&nbsp;&nbsp;23.they</p>
+      <div class="task-content-inner">
+      <b>P82</b>
+        <p>Ⅱ.21.B&nbsp;&nbsp;22.C</p>
+<p>Ⅲ.23.B</p>
+<b>P83</b>
+<p>24.E&nbsp;&nbsp;25.A&nbsp;&nbsp;26.D</p>
+<p>Ⅳ.27.It is small and light.</p>
+<p>28.He sets a timer to control his using time.</p>
+<p>29.Because she fell when she was running.</p>
+<p>30.I want the E-reader/the Online Study Apps/the Smart Watch most, because it’s small and light to carry, and it can hold lots of books for reading/they can help me learn better anytime/it can keep me safe and remind me to stay healthy.(主观题，言之有理即可)</p>
+<p>31.它可以存储成百上千本书，所以我永远不缺故事可读。</p>
+<b>P84</b>
+<p align="center"><strong>Unit 6 Beyond Earth</strong></p>
+<p align="center">Section A (1a-2e)</p>
+<p>课前预习</p>
+<p>一、1.beyond&nbsp;&nbsp;2.mission&nbsp;&nbsp;3.telescope&nbsp;&nbsp;4.rover</p>
+<p>5.manned&nbsp;&nbsp;6.launch&nbsp;&nbsp;7.weightless</p>
+<p>8.movement&nbsp;&nbsp;9.asleep&nbsp;&nbsp;10.tie</p>
+<p>二、11.make public&nbsp;&nbsp;12.manned mission</p>
+<p>13.in space&nbsp;&nbsp;14.fall asleep</p>
+<p>三、15.for the&nbsp;&nbsp;16.made public&nbsp;&nbsp;17.has been used</p>
+<p>课后提升</p>
+<p>Ⅰ.1.weightless&nbsp;&nbsp;2.movements</p>
+<b>P85</b>
+<p>3.asleep&nbsp;&nbsp;4.tying</p>
+<p>5.maintain&nbsp;&nbsp;6.launched&nbsp;&nbsp;7.telescopes</p>
+<p>Ⅱ.8.manned space mission&nbsp;&nbsp;9.beyond Earth</p>
+<p>10.known for&nbsp;&nbsp;11.in space&nbsp;&nbsp;12.make;public</p>
+<p>Ⅲ.13.since&nbsp;&nbsp;14.still&nbsp;&nbsp;15.about&nbsp;&nbsp;16.interest</p>
+<p>17.excited&nbsp;&nbsp;18.encourages&nbsp;&nbsp;19.travelling</p>
+<p>20.must&nbsp;&nbsp;21.easily&nbsp;&nbsp;22.sorry</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>第8期(Unit 5)灰色周报第2、3版</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <b>第2版</b>
+        <p align="center"><strong>Section A</strong></p>
+        <p>Ⅰ.1.camera &nbsp;&nbsp;&nbsp;&nbsp; 2.produces &nbsp;&nbsp;&nbsp;&nbsp; 3.plastic &nbsp;&nbsp;&nbsp;&nbsp; 4.Inventions &nbsp;&nbsp;&nbsp;&nbsp; 5.printer</p>
+        <p>Ⅱ.1.has an effect on &nbsp;&nbsp;&nbsp;&nbsp; 2.hundreds of &nbsp;&nbsp;&nbsp;&nbsp; 3.high-speed trians &nbsp;&nbsp;&nbsp;&nbsp; 4.helps with &nbsp;&nbsp;&nbsp;&nbsp; 5.is used for</p>
+        <p>Ⅲ.(1)useful &nbsp;&nbsp;&nbsp;&nbsp; (2)Italian &nbsp;&nbsp;&nbsp;&nbsp; (3)the Atlantic Ocean &nbsp;&nbsp;&nbsp;&nbsp; (4)television &nbsp;&nbsp;&nbsp;&nbsp; (5)music</p>
+        <p align="center"><strong>Section B</strong></p>
+        <p>Ⅰ.(1)none &nbsp;&nbsp;&nbsp;&nbsp; (2)stone &nbsp;&nbsp;&nbsp;&nbsp; (3)suitable &nbsp;&nbsp;&nbsp;&nbsp; (4)afford &nbsp;&nbsp;&nbsp;&nbsp; (5)ideal &nbsp;&nbsp;&nbsp;&nbsp; (6)sticky &nbsp;&nbsp;&nbsp;&nbsp; (7)birth &nbsp;&nbsp;&nbsp;&nbsp; (8)rapid &nbsp;&nbsp;&nbsp;&nbsp; (9)shape &nbsp;&nbsp;&nbsp;&nbsp; (10)reality</p>
+        <p>Ⅱ.(1)speed up &nbsp;&nbsp;&nbsp;&nbsp; (2)Later on &nbsp;&nbsp;&nbsp;&nbsp; (3)result in &nbsp;&nbsp;&nbsp;&nbsp; (4)responsible for</p>
+        <p align="center"><strong>Grammar Focus</strong></p>
+        <p>Ⅰ.1.wasn’t blown &nbsp;&nbsp;&nbsp;&nbsp; 2.is served &nbsp;&nbsp;&nbsp;&nbsp; 3.be followed &nbsp;&nbsp;&nbsp;&nbsp; 4.writes</p>
+        <p>Ⅱ.5.Is Irene often heard to sing in the next room by them?</p>
+        <p>6.The poor man was offered some help by the chariy. &nbsp; / &nbsp; Some help was offered to the poor man by the charity.</p>
+        <p align="center"><strong>Self-assessment</strong></p>
+        <p>(1)was written &nbsp;&nbsp;&nbsp;&nbsp; (2)introduces &nbsp;&nbsp;&nbsp;&nbsp; (3)and &nbsp;&nbsp;&nbsp;&nbsp; (4)to help &nbsp;&nbsp;&nbsp;&nbsp; (5)skills &nbsp;&nbsp;&nbsp;&nbsp; (6)of &nbsp;&nbsp;&nbsp;&nbsp; (7)creativity &nbsp;&nbsp;&nbsp;&nbsp; (8)best &nbsp;&nbsp;&nbsp;&nbsp; (9)widely &nbsp;&nbsp;&nbsp;&nbsp; (10)the</p>
+        <b>第3版</b>
+        <p align="center"><strong>A</strong></p>
+        <p>1.A &nbsp;&nbsp;&nbsp;&nbsp; 2.B &nbsp;&nbsp;&nbsp;&nbsp; 3.C &nbsp;&nbsp;&nbsp;&nbsp; 4.B &nbsp;&nbsp;&nbsp;&nbsp; 5.A</p>
+        <p align="center"><strong>B</strong></p>
+        <p>(1)F &nbsp;&nbsp;&nbsp;&nbsp; (2)E &nbsp;&nbsp;&nbsp;&nbsp; (3)C &nbsp;&nbsp;&nbsp;&nbsp; (4)B</p>
+        <p align="center"><strong>C</strong></p>
+        <p>1.The elderly. &nbsp; / &nbsp; The old.</p>
+        <p>2.To help the elderly. &nbsp; / &nbsp; To help the old.</p>
+        <p>3.By using AI.</p>
+        <p>4.The advantages of FallGuard.</p>
+        <p>5.He developed a computer app.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>第6期(Units 3-4)能力提升小白卷</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <b>第1-2页</b>
+        <p>咱还是返校的时候认真听听力吧，测试一下自己的真实水平。</p>
+        <b>第3页</b>
+        <p align="center"><strong>A</strong></p>
+        <p>21.C &nbsp;&nbsp;&nbsp;&nbsp; 22.B &nbsp;&nbsp;&nbsp;&nbsp; 23.A</p>
+        <b>第4页</b>
+        <p align="center"><strong>B</strong></p>
+        <p>24.B &nbsp;&nbsp;&nbsp;&nbsp; 25.A &nbsp;&nbsp;&nbsp;&nbsp; 26.C &nbsp;&nbsp;&nbsp;&nbsp; 27.B</p>
+        <b>第5页</b>
+        <p align="center"><strong>C</strong></p>
+        <p>28.A &nbsp;&nbsp;&nbsp;&nbsp; 29.B &nbsp;&nbsp;&nbsp;&nbsp; 30.C &nbsp;&nbsp;&nbsp;&nbsp; 31.B</p>
+        <p>(32)C &nbsp;&nbsp;&nbsp;&nbsp; (33)B &nbsp;&nbsp;&nbsp;&nbsp; (34)A &nbsp;&nbsp;&nbsp;&nbsp; (35)E</p>
+        <b>第6页</b>
+        <p>36.C &nbsp;&nbsp;&nbsp;&nbsp; 37.A &nbsp;&nbsp;&nbsp;&nbsp; 38.B &nbsp;&nbsp;&nbsp;&nbsp; 39.B &nbsp;&nbsp;&nbsp;&nbsp; 40.A &nbsp;&nbsp;&nbsp;&nbsp; 41.C &nbsp;&nbsp;&nbsp;&nbsp; 42.C &nbsp;&nbsp;&nbsp;&nbsp; 43.B &nbsp;&nbsp;&nbsp;&nbsp; 44.C &nbsp;&nbsp;&nbsp;&nbsp; 45.A</p>
+        <p>(46)my &nbsp;&nbsp;&nbsp;&nbsp; (47)closer &nbsp;&nbsp;&nbsp;&nbsp; (48)under &nbsp;&nbsp;&nbsp;&nbsp; (49)grandsons</p>
+        <b>第7页</b>
+        <p>(50)recognized &nbsp;&nbsp;&nbsp;&nbsp; (51)warmly &nbsp;&nbsp;&nbsp;&nbsp; (52)recall &nbsp;&nbsp;&nbsp;&nbsp; (53)enjoyable &nbsp;&nbsp;&nbsp;&nbsp; (54)what &nbsp;&nbsp;&nbsp;&nbsp; (55)Growth</p>
+        <p>56.In her childhood.</p>
+        <p>57.In <i>Shibadong</i> village.</p>
+        <p>58.Soft lines, bright colours and a lively expression.</p>
+        <p>59.(答案不唯一)Yes, I would. Because it is beautiful and traditional. &nbsp; / &nbsp; No, I wouldn’t. Because I think it is too dificult for me.</p>
+        <p>60.我相信我们可以帮助保护和发扬这项传统技艺。</p>
+        <b>第8页</b>
+        <p>61.略，可借助AI生成。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>第8期(Unit 5)能力提升小白卷</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <b>第1-2页</b>
+        <p>此为听力部分。</p>
+        <b>第3页</b>
+        <p align="center"><strong>A</strong></p>
+        <p>21.B &nbsp;&nbsp;&nbsp;&nbsp; 22.A &nbsp;&nbsp;&nbsp;&nbsp; 23.C</p>
+        <b>第4页</b>
+        <p align="center"><strong>B</strong></p>
+        <p>24.C &nbsp;&nbsp;&nbsp;&nbsp; 25.B &nbsp;&nbsp;&nbsp;&nbsp; 26.B &nbsp;&nbsp;&nbsp;&nbsp; 27.C</p>
+        <b>第5页</b>
+        <p align="center"><strong>C</strong></p>
+        <p>28.B &nbsp;&nbsp;&nbsp;&nbsp; 29.B &nbsp;&nbsp;&nbsp;&nbsp; 30.A &nbsp;&nbsp;&nbsp;&nbsp; 31.C</p>
+        <p>(32)B &nbsp;&nbsp;&nbsp;&nbsp; (33)A &nbsp;&nbsp;&nbsp;&nbsp; (34)D &nbsp;&nbsp;&nbsp;&nbsp; (35)E</p>
+        <b>第6页</b>
+        <p>36.C &nbsp;&nbsp;&nbsp;&nbsp; 37.A &nbsp;&nbsp;&nbsp;&nbsp; 38.B &nbsp;&nbsp;&nbsp;&nbsp; 39.A &nbsp;&nbsp;&nbsp;&nbsp; 40.C &nbsp;&nbsp;&nbsp;&nbsp; 41.C &nbsp;&nbsp;&nbsp;&nbsp; 42.B &nbsp;&nbsp;&nbsp;&nbsp; 43.B &nbsp;&nbsp;&nbsp;&nbsp; 44.B &nbsp;&nbsp;&nbsp;&nbsp; 45.A</p>
+        <p>(46)news &nbsp;&nbsp;&nbsp;&nbsp; (47)lead &nbsp;&nbsp;&nbsp;&nbsp; (48)expensive &nbsp;&nbsp;&nbsp;&nbsp; (49)replaced</p>
+        <b>第7页</b>
+        <p>(50)and &nbsp;&nbsp;&nbsp;&nbsp; (51)itself &nbsp;&nbsp;&nbsp;&nbsp; (52)invention &nbsp;&nbsp;&nbsp;&nbsp; (53)by &nbsp;&nbsp;&nbsp;&nbsp; (54)suitable &nbsp;&nbsp;&nbsp;&nbsp; (55)widely</p>
+        <p>56.A Chinese research team.</p>
+        <p>57.Less than three minutes. &nbsp; / &nbsp; Less than 3 minutes.</p>
+        <p>58.It plans to record “digital <i>fingerprints</i>” for over 1,000 cultural <i>relics</i>.</p>
+        <p>59.(答案不唯一)I think it is very useful. Because it can help us protect cultural <i>relics</i> safely.</p>
+        <p>60.有了这个系统，我们的文化珍宝就能得到更好的保护。</p>
+        <b>第8页</b>
+        <p>61.可借助AI生成。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>准备一篇“我最敬佩的人”作文</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>可借助AI生成。</p>
+      </div>
     </div>
   </div>
 
@@ -736,7 +1312,7 @@
             <path d="M5.4 17.4c3.6-2.6 9.6-2.6 13.2 0"/>
           </svg>
         </div>
-        <h3>同步优学 金学典 P129-134</h3>
+        <h3>《同步优学 金学典》P129-134</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">历史</span>
@@ -744,16 +1320,305 @@
       </div>
     </div>
     <div class="task-content">
-      <p>1.A&nbsp;&nbsp;2.A&nbsp;&nbsp;3.B&nbsp;&nbsp;4.D&nbsp;&nbsp;5.B&nbsp;&nbsp;6.D&nbsp;&nbsp;7.D&nbsp;&nbsp;8.A&nbsp;&nbsp;9.C&nbsp;&nbsp;10.A&nbsp;&nbsp;11.D&nbsp;&nbsp;12.D</p>
+      <div class="task-content-inner">
+      <p>温馨提示：考试题目按期末综合评价(一)(二)这两套试卷出。</p>
+      <b>P129</b>
+        <p align="center"><strong>期末综合评价(一)</strong></p>
+<p>1.A &nbsp;&nbsp;&nbsp;&nbsp; 2.A &nbsp;&nbsp;&nbsp;&nbsp; 3.B &nbsp;&nbsp;&nbsp;&nbsp; 4.D</p>
+<b>P130</b>
+<p>5.B &nbsp;&nbsp;&nbsp;&nbsp; 6.D &nbsp;&nbsp;&nbsp;&nbsp; 7.D</p>
+<p>8.A &nbsp;&nbsp;&nbsp;&nbsp; 9.C</p>
+<b>P131</b>
+<p>10.A &nbsp;&nbsp;&nbsp;&nbsp; 11.D &nbsp;&nbsp;&nbsp;&nbsp; 12.D</p>
 <p>13.(1)特殊区位，便于知识交流；气候和坡地适宜葡萄种植；海上交通发达，促进贸易发展。</p>
-<p>13.(2)自给自足。</p>
-<p>13.(3)变化：从阿拉伯半岛扩展到欧洲、印尼、南美洲等地。作用：传播咖啡，促进东西方文化交流。</p>
-<p>13.(4)新航路开辟。</p>
+<b>P132</b>
+<p>(2)自给自足。</p>
+<p>(3)变化：从阿拉伯半岛扩展到欧洲、印尼、南美洲等地。作用：传播咖啡，促进东西方文化交流。</p>
+<p>(4)新航路开辟。</p>
+<b>P133</b>
 <p>14.(1)劳动者身份：从依附领主的农奴变为自由雇工；生产方式：从领主自营、农奴义务劳动变为租地农场主雇佣生产；产品目的：从自给自足转向面向市场的商品生产；地租形式：从劳役、实物地租变为货币地租，资本主义生产关系开始萌芽。</p>
-<p>14.(2)核心思想：人文主义。进步之处：反对中世纪以神为中心的观念，强调人的价值与平等，促进了人的思想觉醒。</p>
-<p>14.(3)具体表现：连接新旧大陆，加强了全球地域联系；推动物种在全球范围交流；促进人口跨区域迁移（包括黑奴贸易）。因素：资本主义生产关系萌芽、人文主义思想传播、新航路开辟。</p>
+<p>(2)核心思想：人文主义。进步之处：反对中世纪以神为中心的观念，强调人的价值与平等，促进了人的思想觉醒。</p>
+<p>(3)具体表现：连接新旧大陆，加强了全球地域联系；推动物种在全球范围交流；促进人口跨区域迁移（包括黑奴贸易）。因素：资本主义生产关系萌芽、人文主义思想传播、新航路开辟。</p>
+<b>P134</b>
 <p>15.(1)材料一中的“政治体制”是君主立宪制。材料二中美国1787年宪法体现的原则是三权分立原则(或分权与制衡原则)。</p>
-<p>15.(2)(示例)观点:制度创新是推动国家发展的重要动力。论述:英国通过资产阶级革命，颁布《权利法案》，逐渐确立君主立宪制，这一制度创新使英国政治稳定，为经济发展提供保障，促进了英国资本主义的发展，率先开始工业革命，成为世界强国。美国独立后，制定1787年宪法，实行三权分立的联邦共和制，这种创新的制度既保证了中央权威，又调动了地方积极性，推动美国在政治、经济等方面不断发展。综上所述，制度创新能为国家发展创造有利条件，不同国家根据自身国情进行制度创新，推动国家不断向前发展，所以制度创新是推动国家发展的重要动力。</p>
+<p>(2)(示例)观点：制度创新是推动国家发展的重要动力。</p>
+<p>论述：英国通过资产阶级革命，颁布《权利法案》，逐渐确立君主立宪制，这一制度创新使英国政治稳定，为经济发展提供保障，促进了英国资本主义的发展，率先开始工业革命，成为世界强国。美国独立后，制定1787年宪法，实行三权分立的联邦共和制，这种创新的制度既保证了中央权威，又调动了地方积极性，推动美国在政治、经济等方面不断发展。</p>
+<p>综上所述，制度创新能为国家发展创造有利条件，不同国家根据自身国情进行制度创新，推动国家不断向前发展，所以制度创新是推动国家发展的重要动力。</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4v17.2"/>
+            <path d="M5.4 6.6c3.6 2.6 9.6 2.6 13.2 0"/>
+            <path d="M5.4 17.4c3.6-2.6 9.6-2.6 13.2 0"/>
+          </svg>
+        </div>
+        <h3>《同步优学 金学典》P135-140</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">历史</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+      <p>温馨提示：考试题目按期末综合评价(一)(二)这两套试卷出。</p>
+      <b>P135</b>
+<p align="center"><strong>期末综合评价(二)</strong></p>
+<p>1.A &nbsp;&nbsp;&nbsp;&nbsp; 2.D &nbsp;&nbsp;&nbsp;&nbsp; 3.D &nbsp;&nbsp;&nbsp;&nbsp; 4.A &nbsp;&nbsp;&nbsp;&nbsp; 5.A</p>
+<b>P136</b>
+<p>6.D &nbsp;&nbsp;&nbsp;&nbsp; 7.B &nbsp;&nbsp;&nbsp;&nbsp; 8.B &nbsp;&nbsp;&nbsp;&nbsp; 9.D &nbsp;&nbsp;&nbsp;&nbsp; 10.B</p>
+<b>P137</b>
+<p>11.A &nbsp;&nbsp;&nbsp;&nbsp; 12.D</p>
+<p>13.(1)典型成果：金字塔、甲骨文。历史价值：(示例)金字塔是古埃及文明的象征，反映了古埃及社会经济发展的程度，是古埃及人智慧的结晶。</p>
+<b>P138</b>
+<p>(2)历史事件：新航路的开辟。发明：指南针。</p>
+<p>(3)(示例)文明因多样而交流，因交流而互鉴，因互鉴而发展。</p>
+<p>14.(1)历史事件：英国资产阶级革命。影响：它使英国最终确立了代表新贵族和资产阶级利益的政治制度，走上了发展资本主义的道路，并率先开始了工业革命。</p>
+<b>P139</b>
+<p>(2)议会。</p>
+<p>(3)事件：工业革命。影响：火车、轮船等交通工具的发明迅速扩大了人类活动范围，同时也带来了交通拥挤、住房紧张、环境恶化等问题。</p>
+<p>(4)英国资产阶级革命的胜利，为资本主义经济发展扫清了障碍；英国最早进行了工业革命；殖民掠夺的原始积累。</p>
+<b>P140</b>
+<p>15.(1)政体：英国是君主立宪制；美国是总统共和制。事件：英国通过《权利法案》；美国制定1787年宪法。</p>
+<p>(2)思想解放；技术创新(或科技革命)。</p>
+<p>(3)(示例)观点：思想解放促进社会发展。</p>
+<p>论述：文艺复兴推动了欧洲文化思想领域的繁荣，为欧洲资本主义社会的产生和发展奠定了思想文化基础；启蒙运动是一场伟大的思想解放运动，为法国大革命作了重要的理论准备。</p>
+<p>综上所述，思想解放有利于推动社会变革，促进社会发展。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 道法 ============ -->
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
+          </svg>
+        </div>
+        <h3>《学法大视野》P29-32</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道德与法治</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+      <b>P29</b>
+        <p align="center"><strong>第一单元复习整合</strong></p>
+<p>【链热点·提素养】</p>
+<p>(1)①中国共产党是中国工人阶级的先锋队，同时是中国人民和中华民族的先锋队，代表中国先进生产力的发展要求，代表中国先进文化的前进方向，代表中国最广大人民的根本利益。②中国共产党是中国特色社会主义事业的坚强领导核心。③党的领导是中国特色社会主义最本质的特征。④党的领导是中国特色社会主义制度的最大优势。⑤党的领导是实现社会主义现代化和中华民族伟大复兴的根本保证。⑥党的领导是全面的、系统的、整体的，起到把方向、谋大局、定政策、促改革的决定性作用。⑦只有坚持党的领导，才能凝聚全国各族人民的力量，为推进中国式现代化而共同奋斗等。</p>
+<p>(2)①坚决维护党中央权威和集中统一领导。②坚决维护习近平同志党中央的核心、全党的核心地位。③必须落实在实际行动中等。</p>
+<b>P30</b>
+<p>(3)①党的初心使命是为中国人民谋幸福、为中华民族谋复兴。②党的根本宗旨是全心全意为人民服务。③人民立场是中国共产党的根本立场。④人民是历史的创造者，是决定党和国家前途命运的根本力量等。</p>
+<p>(4)①有利于坚持以人民为中心，增强人民群众的获得感、安全感和幸福感。②有利于践行党的初心使命，为中国人民谋幸福。③有利于站稳人民立场，维护人民的利益。④有利于补齐民生短板，维护社会公平正义。⑤有利于应对人口老龄化挑战，构建良好的养老社会环境等。</p>
+<p>(5)①始终同人民在一起，为人民利益而奋斗，在任何时候都把人民利益放在第一位。②践行党的根本宗旨，坚持全心全意为人民服务。③自觉贯彻党的群众路线，坚持一切为了群众，一切依靠群众，从群众中来，到群众中去等。</p>
+<b>P31</b>
+<p>(6)①热爱中国共产党，拥护党的领导。②积极宣传党的方针政策，增强对党的认同。③认真学习党史，立志报效祖国。④刻苦学习，努力争取加入中国共青团，成为党的事业的接班人等。</p>
+<p>【练真题·知考向】</p>
+<p>1.B &nbsp;&nbsp;&nbsp;&nbsp; 2.D</p>
+<b>P32</b>
+<p>3.C &nbsp;&nbsp;&nbsp;&nbsp; 4.A &nbsp;&nbsp;&nbsp;&nbsp; 5.A</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
+          </svg>
+        </div>
+        <h3>《学法大视野》P73-75</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道德与法治</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <b>P74</b>
+<p align="center"><strong>第二单元复习整合</strong></p>
+<p>【链热点·提素养】</p>
+<p>(1)①我国经济持续健康发展，综合实力大幅提升。②我国科技创新能力不断提升，一些前沿领域开始进入并跑、领跑阶段。③我国生态环境质量持续改善，绿色发展取得显著成效。</p>
+<p>(2)①坚持党的正确领导。②坚持以经济建设为中心，坚持改革开放，不断解放和发展社会生产力。③坚持实施创新驱动发展战略，强化企业科技创新主体地位，走中国特色自主创新道路。④坚持绿水青山就是金山银山的理念，协同推进降碳、减污、扩绿、增长。</p>
+<p>(3)①有利于缓解我国社会主要矛盾，满足人民日益增长的美好生活需要。②有利于实现共同富裕，促进社会公平正义。③有利于优化经济结构，提高我国的综合国力和国际影响力。④有利于推动创新发展，建设创新强国。⑤有利于建设生态文明，推进美丽中国建设。</p>
+<b>P75</b>
+<p>(4)①树立远大理想，发扬艰苦奋斗精神。②努力学习科学文化知识，提高自身素质。③培养创新精神，提高创新能力。④把个人梦与中国梦结合起来，将个人梦融入中国梦之中，在实现中国梦的奋斗中奉献自己的青春。⑤积极承担社会责任，服务社会奉献社会。⑥弘扬民族精神，践行社会主义核心价值观。</p>
+<p>【练真题·知考向】</p>
+<p>1.C &nbsp;&nbsp;&nbsp;&nbsp; 2.B &nbsp;&nbsp;&nbsp;&nbsp; 3.B &nbsp;&nbsp;&nbsp;&nbsp; 4.D &nbsp;&nbsp;&nbsp;&nbsp; 5.D</p>
+      </div>
+    </div>
+  </div>
+
+<div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
+          </svg>
+        </div>
+        <h3>背诵九上1-2单元复习清单</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道德与法治</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p align="center"><strong>九上1-2单元复习清单</strong></p>
+<p><strong>1. 党团结带领人民奋斗历史的成就及其意义</strong></p>
+<table style="width:100%;border-collapse:separate;border-spacing:0;border:1px solid #ccc;border-radius:8px;overflow:hidden;">
+  <tr>
+    <th style="background-color:#427bcc;color:#ffffff;padding:10px;border-right:1px solid #ccc;">时期</th>
+    <th style="background-color:#427bcc;color:#ffffff;padding:10px;border-right:1px solid #ccc;">标志性事件</th>
+    <th style="background-color:#427bcc;color:#ffffff;padding:10px;border-right:1px solid #ccc;">成就</th>
+    <th style="background-color:#427bcc;color:#ffffff;padding:10px;">意义</th>
+  </tr>
+  <tr>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">新民主主义革命时期（1919-1949年）</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">五四运动</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">根本社会条件</td>
+    <td style="padding:10px;border-top:1px solid #ccc;">站起来</td>
+  </tr>
+  <tr>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">社会主义革命和建设时期（1949年-1978年）</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">新中国成立</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">根本政治前提和制度基础</td>
+    <td style="padding:10px;border-top:1px solid #ccc;"></td>
+  </tr>
+  <tr>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">改革开放和社会主义现代化建设时期（1978年-2012年）</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">改革开放</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">体制保证和物质条件</td>
+    <td style="padding:10px;border-top:1px solid #ccc;">富起来</td>
+  </tr>
+  <tr>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">中国特色社会主义新时代（2012年至今）</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">党的十八大</td>
+    <td style="padding:10px;border-right:1px solid #ccc;border-top:1px solid #ccc;">更为完善的制度保证、更为坚实的物质基础、更为主动的精神力量</td>
+    <td style="padding:10px;border-top:1px solid #ccc;">迎来了强起来</td>
+  </tr>
+</table>
+
+<p><strong>2. 伟大建党精神的内涵</strong></p>
+<p>内涵总述：伟大建党精神是坚持真理、坚守理想，践行初心、担当使命，不怕牺牲、英勇斗争，对党忠诚、不负人民。</p>
+
+<p><strong>3. 伟大建党精神的地位/重要性</strong></p>
+<p>①建党精神是中国共产党的精神之源。</p>
+<p>②伟大建党精神已深深融入党、国家、民族、人民的血脉和灵魂，成为激励全党全国各族人民攻坚克难、奋勇前行的强大精神动力。</p>
+
+<p><strong>4. 中国共产党的初心使命</strong></p>
+<p>为中国人民谋幸福，为中华民族谋复兴。</p>
+
+<p><strong>5. 党的性质、根本宗旨、最高理想和最终目标</strong></p>
+<p>(1) 性质：中国共产党是中国工人阶级的先锋队，同时是中国人民和中华民族的先锋队。</p>
+<p>(2) 根本宗旨：党的根本宗旨是全心全意为人民服务。</p>
+<p>(3) 最高理想和最终目标：党的最高理想和最终目标是实现共产主义。</p>
+
+<p><strong>6. 为什么要站稳人民立场</strong></p>
+<p>①人民立场是中国共产党的根本立场。</p>
+<p>②人民是历史的创造者，是决定党和国家前途命运的根本力量。</p>
+<p>③作为马克思主义政党，中国共产党始终同人民在一起，为人民利益而奋斗，在任何时候都把人民利益放在第一位，努力为人民创造更美好、更幸福的生活。</p>
+
+<p><strong>7. 怎么样站稳人民立场</strong></p>
+<p>①我们党始终站稳人民立场，践行党的根本宗旨，坚持全心全意为人民服务，把人民拥护不拥护、赞成不赞成、高兴不高兴、答应不答应作为衡量一切工作得失的根本标准。</p>
+<p>②我们党始终站稳人民立场，自觉贯彻党的群众路线。</p>
+
+<p><strong>8. 为什么要坚持党的领导</strong></p>
+<p>①(历史和现实都告诉我们，没有中国共产党，就没有新中国，就没有中国特色社会主义，就没有中华民族伟大复兴。口诀：4个没有) ★中国共产党是中国特色社会主义事业的坚强领导核心。</p>
+<p>②党的领导是中国特色社会主义最本质的特征。</p>
+<p>③党的领导是中国特色社会主义制度的最大优势。</p>
+<p>④党的领导是实现社会主义现代化和民族复兴的最根本保证。</p>
+<p>⑤党政军民学，东西南北中，党是领导一切的。</p>
+<p>⑥办好中国的事情，关键在党。</p>
+<p>⑦坚持党对一切工作的领导，是党和国家的根本所在、命脉所在，是全国各族人民的利益所在、幸福所在。</p>
+
+<p><strong>9. 经济实力大幅跃升表现（成就）</strong></p>
+<p>①社会主义基本经济制度不断完善，经济发展的制度基础更加坚实。</p>
+<p>②经济持续健康发展，综合实力大幅提升。</p>
+<p>③创新活力不断激发，科技实力实现跨越式发展。</p>
+<p>④经济结构不断优化，经济发展质量明显提升。</p>
+
+<p><strong>10. 经济实力大幅跃升的原因</strong></p>
+<p>①发展是党执政兴国的第一要务，是解决我国一切问题的基础和关键。</p>
+<p>②习近平新时代中国特色社会主义思想、习近平经济思想指引。</p>
+<p>③社会主义基本经济制度保障；发挥社会主义制度优越性，集中力量办大事；调动各方面积极性。</p>
+<p>④党的领导下，坚持以经济建设为中心。</p>
+<p>⑤坚持创新驱动发展战略、制造强国战略、新型城镇化战略、乡村振兴战略、区域协调发展战略</p>
+<p>⑥全体人民辛勤劳动、创新创业。</p>
+<p>易错提醒：进入创新型国家行列，不是“前列”，不是创新强国。改革开放是决定当代中国命运的关键一招。</p>
+
+<p><strong>11. 民主政治不断发展的表现</strong></p>
+<p>①人民当家作主制度体系不断完善。（一根三基）</p>
+<p>②协商民主广泛深入发展。（有事好商量，众人的事情众人商量是人民民主的真谛，协商民主是社会主义民主政治的特有形式和独特优势）</p>
+<p>③基层民主活力增强。（村委会、居委会≠国家机关）</p>
+<p>④法治中国建设迈出坚实步伐。（确立习近平法治思想在全面依法治国工作中的指导地位）</p>
+
+<p><strong>12. 民主政治不断发展的原因</strong></p>
+<p>①全过程人民民主重大理念、习近平法治思想的指引。</p>
+<p>②人民民主是社会主义的生命，是全面建设社会主义现代化国家的应有之义。</p>
+<p>③人民当家作主制度体系保障</p>
+<p>④坚持党的领导、人民当家作主、依法治国有机统一。</p>
+<p>⑤党的领导下，走中国特色社会主义政治发展道路。</p>
+
+<p><strong>13. 文化自信日益增强的表现</strong></p>
+<p>①意识形态建设成效卓著。</p>
+<p>②社会主义核心价值观深入人心。</p>
+<p>③中华优秀传统文化焕发勃勃生机。</p>
+<p>④文艺事业展现时代新貌。</p>
+
+<p><strong>14. 文化自信日益增强的原因</strong></p>
+<p>①文化自信是更基础、更广泛、更深厚的自信，是一个国家、一个民族发展中最基本、最深沉、最持久的力量。</p>
+<p>②习近平文化思想的指引，党把文化建设摆在全局工作的重要位置，在新的起点上推动文化繁荣，建设文化强国。</p>
+<p>③坚持实施中华优秀传统文化传承发展工程，推动中华优秀传统文化创造性转化，创新性发展。</p>
+<p>④增强全社会文物保护意识，加大文化遗产保护力度，提高中华优秀传统文化影响力、感召力。</p>
+
+<p><strong>15. 民生福祉持续增进的表现</strong></p>
+<p>①完成脱贫攻坚，全面建成小康社会的历史任务。</p>
+<p>②教育普及水平实现历史性跨越。</p>
+<p>③社会保障系统不断完善。</p>
+<p>④平安中国建设迈向更高水平。</p>
+
+<p><strong>16. 民生福祉持续增进的原因</strong></p>
+<p>①党和政府坚持以人民为中心的发展思想，人民对美好生活的向往就是党的奋斗目标。</p>
+<p>②发展的根本目的是增进民生福祉，党重视保障和改善民生。</p>
+<p>③中国共产党全心全意为人民服务，坚持为人民谋幸福。</p>
+<p>④国家致力于让全体人民共享发展成果，推动共同富裕。</p>
+
+<p><strong>17. 美丽中国加快建设的表现</strong></p>
+<p>①生态文明制度体系更加健全。</p>
+<p>②污染防治攻坚向纵深推进。</p>
+<p>③绿色、循环、低碳发展迈出坚实步伐，简约适度、绿色低碳的生活方式日益深入人心。</p>
+
+<p><strong>18. 美丽中国加快建设的原因</strong></p>
+<p>①保护自然就是保护人类，建设生态文明就是造福人类。</p>
+<p>②习近平生态文明思想指引下，党坚持绿水青山就是金山银山的理念。</p>
+<p>③坚持绿色低碳生活理念，坚持保护环境和节约资源的基本国策。</p>
+<p>④坚持人与自然和谐共生。</p>
+
+<p><strong>19.青少年怎么做类型的问题</strong></p>
+<p>①青少年……怎么做模板；②青少年如何弘扬伟大建党精神(P7)；③爱国爱党不是一句口号，而是要体现在日常生活中。作为中学生，我们能做些什么(P26)；④作为中学生，我们应该如何学习习近平新时代中国特色社会主义思想(P45)；⑤青少年可以为推进美丽中国建设做些什么(P63)。</p>
+      </div>
     </div>
   </div>
 
@@ -775,7 +1640,7 @@
             <path d="M8 16l-2.1 2.1"/>
           </svg>
         </div>
-        <h3>同步优学 金学典 写到P66</h3>
+        <h3>《同步优学 金学典》写到P73</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">物理</span>
@@ -783,7 +1648,102 @@
       </div>
     </div>
     <div class="task-content">
-      孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.2"/>
+            <path d="M12 3.4v3"/>
+            <path d="M12 17.6v3"/>
+            <path d="M3.4 12h3"/>
+            <path d="M17.6 12h3"/>
+            <path d="M5.9 5.9l2.1 2.1"/>
+            <path d="M16 16l2.1 2.1"/>
+            <path d="M18.1 5.9L16 8"/>
+            <path d="M8 16l-2.1 2.1"/>
+          </svg>
+        </div>
+        <h3>《同步优学 金学典》写到P128</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">物理</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.2"/>
+            <path d="M12 3.4v3"/>
+            <path d="M12 17.6v3"/>
+            <path d="M3.4 12h3"/>
+            <path d="M17.6 12h3"/>
+            <path d="M5.9 5.9l2.1 2.1"/>
+            <path d="M16 16l2.1 2.1"/>
+            <path d="M18.1 5.9L16 8"/>
+            <path d="M8 16l-2.1 2.1"/>
+          </svg>
+        </div>
+        <h3>卷⑨ 第十七章基础诊断卷(A卷)</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">物理</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.2"/>
+            <path d="M12 3.4v3"/>
+            <path d="M12 17.6v3"/>
+            <path d="M3.4 12h3"/>
+            <path d="M17.6 12h3"/>
+            <path d="M5.9 5.9l2.1 2.1"/>
+            <path d="M16 16l2.1 2.1"/>
+            <path d="M18.1 5.9L16 8"/>
+            <path d="M8 16l-2.1 2.1"/>
+          </svg>
+        </div>
+        <h3>假期至少看一遍物理书</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">物理</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>自主阅读课本，梳理知识点。</p>
+      </div>
     </div>
   </div>
 
@@ -799,7 +1759,7 @@
             <path d="M7.6 13.4h8.8"/>
           </svg>
         </div>
-        <h3>能力培养与测试 写到P70</h3>
+        <h3>《能力培养与测试(精编版)》P1-84</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">化学</span>
@@ -807,7 +1767,59 @@
       </div>
     </div>
     <div class="task-content">
-      孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>卷⑨ 第五单元基础诊断卷(A卷)</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>孤鸿组已整理答案，可<a href="https://qr61.cn/ogppJI/qJEOO4k?lid=ptelsahjelotm6gck&rlid=ptelsahjelotm6gck">点击链接</a>查看。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>自主复习</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>自主复习化学前面内容。</p>
+      </div>
     </div>
   </div>
 
@@ -831,32 +1843,26 @@
       </div>
     </div>
     <div class="task-content">
-      <div class="notice-content">
-        <div class="notice-item">
-          <div class="notice-dot">1</div>
-          <div class="notice-text"><strong>【期中知识竞赛】</strong> 2026年11月19日左右开始第一学月检测，考察科目有语文、数学、英语、道德与法治、世界历史、物理、化学、体育与健康，请复习。</div>
-        </div>
-        <div class="notice-item">
-          <div class="notice-dot">2</div>
-          <div class="notice-text"><strong>【研学】</strong> 研学活动定于2026年11月02日-04日，研学地点为广州，研学景点有云门山景区、广东省博物馆、长隆欢乐世界、黄埔军校旧址、广州大学。</div>
-        </div>
-        <div class="notice-item">
-          <div class="notice-dot">3</div>
-          <div class="notice-text"><strong>【研学物品准备】</strong> ①衣服(校服、外套)；②鞋；③毛巾(建议使用一次性的)；④袜子(2双，必须一日一换)；⑤裤子(1条)；⑥牙杯(用矿泉水瓶，矿泉水有发)；⑦牙刷；晕车的人备好晕车要用的；⑧零食；⑨手机、电话手表(电话手表不限，但需上报)、相机、MP3；⑩现金；其余可带物品，如桌游卡牌等。</div>
-        </div>
-        <div class="notice-item">
-          <div class="notice-dot">4</div>
-          <div class="notice-text">作业清单仅供参考，如有错误欢迎指出。</div>
+      <div class="task-content-inner">
+        <div class="notice-content">
+          <div class="notice-item">
+            <div class="notice-dot">1</div>
+            <div class="notice-text"><strong>【期中综合素养测试】</strong> 2026年11月19日开始期中综合素养测试，考察科目有语文、数学、英语、道德与法治、世界历史、物理、化学、体育与健康，请复习。</div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-dot">2</div>
+            <div class="notice-text">作业清单仅供参考，如有错误望指出。</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="footer">孤鸿组 · 好好学习 天天向上</div>
+  <div class="footer">孤鸿组 · 秋假作业答案</div>
 
 </div>
 
-<!-- ============ 大图查看器（原版逻辑） ============ -->
+<!-- ============ 大图查看器 ============ -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="图片预览">
   <div class="glass-close-btn-wrap">
     <div class="glass-close-btn" id="closeBtn">
@@ -877,22 +1883,165 @@
 (function () {
   'use strict';
 
-  /* ============================================================
-     1. 包裹内容（grid 平滑展开所需）
-     ============================================================ */
-  document.querySelectorAll('.task-content').forEach(function (el) {
-    var inner = document.createElement('div');
-    inner.className = 'task-content-inner';
-    while (el.firstChild) inner.appendChild(el.firstChild);
-    el.appendChild(inner);
-  });
+  /* ---------- 1. 加粗字体分类：纯英文/数字 → XITS-Bold，含中文 → FZHei ---------- */
+  var CJK_RE = /[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u3000-\u303F\uFF00-\uFFEF]/;
 
-  /* ============================================================
-     2. 滚动方向跟踪
-     ============================================================ */
+  function markBoldLanguage() {
+    var list = document.querySelectorAll('.task-content b, .task-content strong');
+    Array.prototype.forEach.call(list, function (el) {
+      if (el.classList.contains('bold-cn') || el.classList.contains('bold-en')) return;
+      if (CJK_RE.test(el.textContent)) {
+        el.classList.add('bold-cn');
+      } else {
+        el.classList.add('bold-en');
+      }
+    });
+  }
+
+  /* ---------- 2. 题序着色：把 "1." "2." 这类包成 XITS-Bold 浅蓝 ---------- */
+  var QNO_SOURCE = '(^|[^0-9A-Za-z])(\\d{1,2})\\.(?=[(（A-Za-z\\u4e00-\\u9fa5])';
+
+  function decorateTextNode(node) {
+    var text = node.nodeValue;
+    if (!text || text.indexOf('.') === -1) return;
+
+    var re = new RegExp(QNO_SOURCE, 'g');
+    var m, last = 0, matched = false;
+    var frag = document.createDocumentFragment();
+
+    while ((m = re.exec(text))) {
+      matched = true;
+      var start = m.index + m[1].length;
+      if (start > last) {
+        frag.appendChild(document.createTextNode(text.slice(last, start)));
+      }
+      var span = document.createElement('span');
+      span.className = 'qno';
+      span.textContent = m[2] + '.';
+      frag.appendChild(span);
+      last = start + m[2].length + 1;
+    }
+
+    if (!matched) return;
+    if (last < text.length) {
+      frag.appendChild(document.createTextNode(text.slice(last)));
+    }
+    node.parentNode.replaceChild(frag, node);
+  }
+
+  function decorateQuestionNumbers() {
+    var root = document.querySelector('.container');
+    if (!root || !document.createTreeWalker) return;
+
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!n.nodeValue) return NodeFilter.FILTER_REJECT;
+        if (!/\d/.test(n.nodeValue)) return NodeFilter.FILTER_REJECT;
+        if (n.parentNode && n.parentNode.classList &&
+            n.parentNode.classList.contains('qno')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var list = [];
+    var n;
+    while ((n = walker.nextNode())) list.push(n);
+    list.forEach(decorateTextNode);
+  }
+
+  /* ---------- 3. 拼音整词包裹：让 "qī" 里的 q 和 ī 用同一字体 ---------- */
+  var PINYIN_WORD_RE = /[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]+/g;
+  var PINYIN_TONE_RE = /[\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]/;
+  var PINYIN_ANY_RE = /[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]/;
+
+  function wrapPinyinTextNode(node) {
+    var text = node.nodeValue;
+    if (!text || !PINYIN_ANY_RE.test(text)) return;
+
+    var matches = [];
+    var m;
+    PINYIN_WORD_RE.lastIndex = 0;
+    while ((m = PINYIN_WORD_RE.exec(text))) {
+      if (PINYIN_TONE_RE.test(m[0])) {
+        matches.push({ start: m.index, end: m.index + m[0].length });
+      }
+    }
+    if (!matches.length) return;
+
+    var merged = [matches[0]];
+    for (var i = 1; i < matches.length; i++) {
+      var prev = merged[merged.length - 1];
+      var cur = matches[i];
+      var between = text.slice(prev.end, cur.start);
+      if (/^\s+$/.test(between)) {
+        prev.end = cur.end;
+      } else {
+        merged.push(cur);
+      }
+    }
+
+    var frag = document.createDocumentFragment();
+    var last = 0;
+    merged.forEach(function (seg) {
+      if (seg.start > last) {
+        frag.appendChild(document.createTextNode(text.slice(last, seg.start)));
+      }
+      var span = document.createElement('span');
+      span.className = 'pinyin';
+      span.textContent = text.slice(seg.start, seg.end);
+      frag.appendChild(span);
+      last = seg.end;
+    });
+    if (last < text.length) {
+      frag.appendChild(document.createTextNode(text.slice(last)));
+    }
+    node.parentNode.replaceChild(frag, node);
+  }
+
+  function wrapPinyin(root) {
+    if (!root || !document.createTreeWalker) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!n.nodeValue) return NodeFilter.FILTER_REJECT;
+        if (n.parentNode && n.parentNode.classList &&
+            n.parentNode.classList.contains('pinyin')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var list = [];
+    var n;
+    while ((n = walker.nextNode())) list.push(n);
+    list.forEach(wrapPinyinTextNode);
+  }
+
+  /* ---------- 4. 诗歌作者名 → 方正楷体简体 ---------- */
+  function markPoemAuthors() {
+    var ps = document.querySelectorAll('.task-content-inner p[align="center"]');
+    Array.prototype.forEach.call(ps, function (p) {
+      if (p.querySelector('strong')) return;
+      if (/[A-Za-z]/.test(p.textContent)) return;
+      var prev = p.previousElementSibling;
+      if (!prev || prev.tagName !== 'P') return;
+      if (prev.getAttribute('align') !== 'center') return;
+      if (!prev.querySelector('strong')) return;
+      p.classList.add('poem-author');
+    });
+  }
+
+  markBoldLanguage();
+  decorateQuestionNumbers();
+  document.querySelectorAll('.task-content-inner').forEach(function (root) {
+    wrapPinyin(root);
+  });
+  markPoemAuthors();
+
+  /* ---------- 5. 滚动方向感知 ---------- */
   var scrollDir = 'down';
   var lastScrollY = window.scrollY;
-
   window.addEventListener('scroll', function () {
     var current = window.scrollY;
     if (Math.abs(current - lastScrollY) > 4) {
@@ -901,32 +2050,23 @@
     }
   }, { passive: true });
 
-  /* ============================================================
-     3. 卡片双向滚动入场动画
-        - 向下滚动：卡片从下方滑入
-        - 向上滚动：卡片从上方滑入
-        - 离开视口时移除 reveal，下次进入重新播放
-     ============================================================ */
-  var cards = document.querySelectorAll('.task-card');
+  /* ---------- 6. 卡片入场 ---------- */
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
 
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var el = entry.target;
-
         if (entry.isIntersecting) {
           if (el.classList.contains('reveal')) return;
-          /* 根据滚动方向设置进入位置 */
           if (scrollDir === 'up') {
             el.classList.add('enter-from-top');
           } else {
             el.classList.remove('enter-from-top');
           }
-          /* 强制回流，确保浏览器先把初始位移应用上去，再触发过渡 */
           void el.offsetWidth;
           el.classList.add('reveal');
         } else {
-          /* 离开视口：移除 reveal 回到初始态，下次进入重新播放 */
           el.classList.remove('reveal');
         }
       });
@@ -934,15 +2074,12 @@
       threshold: 0.05,
       rootMargin: '0px 0px -30px 0px'
     });
-
     cards.forEach(function (card) { io.observe(card); });
   } else {
     cards.forEach(function (card) { card.classList.add('reveal'); });
   }
 
-  /* ============================================================
-     4. 大图查看器（原版逻辑：玻璃按钮 + 缩放 + 拖动）
-     ============================================================ */
+  /* ---------- 7. 大图查看器 ---------- */
   var lightbox = document.getElementById('lightbox');
   var fullImg = document.getElementById('fullImg');
   var closeBtn = document.getElementById('closeBtn');
@@ -981,23 +2118,19 @@
     }, 320);
   }
 
-  /* 点击遮罩或图片容器关闭 */
   lightbox.addEventListener('click', function (e) {
     if (e.target === lightbox || e.target === imgWrapper) closeLightbox();
   });
 
-  /* 关闭按钮 */
   closeBtn.addEventListener('click', function (e) {
     e.stopPropagation();
     closeLightbox();
   });
 
-  /* ESC 关闭 */
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
   });
 
-  /* 双指缩放 */
   fullImg.addEventListener('touchstart', function (e) {
     if (e.touches.length === 2) {
       initialDistance = Math.hypot(
@@ -1034,7 +2167,6 @@
     if (scale <= 1) resetZoom();
   });
 
-  /* 滚轮缩放（桌面端） */
   fullImg.addEventListener('wheel', function (e) {
     e.preventDefault();
     var delta = e.deltaY > 0 ? 0.9 : 1.1;
@@ -1043,21 +2175,15 @@
     updateTransform();
   }, { passive: false });
 
-  /* ============================================================
-     5. 卡片点击处理
-     ============================================================ */
+  /* ---------- 8. 卡片展开 / 收起 ---------- */
   cards.forEach(function (card) {
-    card.removeAttribute('onclick');
     card.addEventListener('click', function (e) {
-      /* 点击图片 → 打开大图，不触发展开 */
       var img = e.target.closest('.task-content img');
       if (img && img.src) {
         openLightbox(img.src);
         return;
       }
-      /* 点击链接 → 正常跳转 */
       if (e.target.closest('.task-content a')) return;
-      /* 切换展开 */
       card.classList.toggle('active');
     });
   });

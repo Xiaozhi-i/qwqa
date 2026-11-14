@@ -5,509 +5,639 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>作业清单 · 孤鸿组</title>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
+/* ========== 字体系统（与「作业答案」页保持一致，Fonts 文件夹首字母大写） ========== */
+@font-face {
+  font-family: "FZHei";
+  src: url("./Fonts/方正黑体简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZShuSong";
+  src: url("./Fonts/方正书宋简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZKai";
+  src: url("./Fonts/方正楷体简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* 题序 / 数字 / 英文加粗专用 */
+@font-face {
+  font-family: "XITS-Bold";
+  src: url("./Fonts/XITS-Bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* 英文字母（基本拉丁） */
+@font-face {
+  font-family: "XITS";
+  src: url("./Fonts/XITS.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00BF, U+00D7, U+00F7, U+2000-206F, U+2100-214F;
+  font-display: swap;
+}
 
-  html, body {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'XITS', 'FZShuSong', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: normal;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  .task-card,
-  .task-card * {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-  }
+html, body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
 
-  .task-card {
-    touch-action: pan-y;
-  }
+.task-card,
+.task-card * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
 
-  body {
-    background: #f0f2f5;
-    min-height: 100vh;
-    padding: 24px;
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
-    background-attachment: fixed;
-  }
+.task-card {
+  touch-action: pan-y;
+}
 
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
+body {
+  background: #f0f2f5;
+  min-height: 100vh;
+  padding: 24px;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
+  background-attachment: fixed;
+}
 
-  .header {
-    text-align: center;
-    margin-bottom: 30px;
-    opacity: 0;
-    animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
-  }
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
 
-  .header-top {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 12px;
-  }
+/* ---------------- 顶部标题 ---------------- */
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
+}
 
-  .header h1 {
-    font-size: 1.75rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    color: #1a1a1a;
-  }
+.header-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
 
-  .subtitle {
-    font-size: 0.72rem;
-    letter-spacing: 5px;
-    color: #9a9a9a;
-    text-indent: 5px;
-  }
+.header h1 {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 1.75rem;
+  letter-spacing: 3px;
+  color: #1a1a1a;
+}
 
-  .divider {
-    width: 32px;
-    height: 3px;
-    border-radius: 2px;
-    background: #1a1a1a;
-    opacity: 0.85;
-    margin: 14px auto 0;
-  }
+.subtitle {
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 5px;
+  color: #9a9a9a;
+  text-indent: 5px;
+}
 
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    color: #666;
-    font-size: 0.85rem;
-    padding: 8px 16px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+.divider {
+  width: 32px;
+  height: 3px;
+  border-radius: 2px;
+  background: #1a1a1a;
+  opacity: 0.85;
+  margin: 14px auto 0;
+}
 
-  .back-btn svg { width: 14px; height: 14px; }
+/* 返回按钮 */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #666;
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  .back-btn:active {
-    transform: scale(0.95);
+.back-btn svg { width: 14px; height: 14px; }
+
+.back-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+@media (hover: hover) {
+  .back-btn:hover {
     background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
   }
+}
 
-  @media (hover: hover) {
-    .back-btn:hover {
-      background: rgba(255, 255, 255, 0.9);
-      transform: translateY(-1px);
-    }
-  }
+/* ---------------- 筛选按钮组 ---------------- */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+}
 
-  /* 筛选按钮组 */
-  .filter-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    opacity: 0;
-    animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
-  }
-  .filter-btn {
-    flex: 1;
-    padding: 9px 0;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.8);
-    background: rgba(255,255,255,0.65);
-    backdrop-filter: blur(16px);
-    font-size: 0.78rem;
-    color: #666;
-    transition: all 0.25s;
-  }
-  .filter-btn.active {
-    background: #1a1a1a;
-    color: #fff;
-  }
-  .filter-btn:active {
-    transform: scale(0.96);
-  }
+.filter-btn {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  .stats-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 18px;
-    opacity: 0;
-    animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards;
-  }
+.filter-btn.active {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
 
-  .stat-item {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 18px;
-    padding: 12px 14px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+.filter-btn:active {
+  transform: scale(0.96);
+}
 
-  .stat-num {
-    font-size: 1.35rem;
-    font-weight: 900;
-    color: #1a1a1a;
-    line-height: 1.1;
-    font-variant-numeric: tabular-nums;
-  }
+/* ---------------- 统计条 ---------------- */
+.stats-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards;
+}
 
-  .stat-label {
-    margin-top: 4px;
-    font-size: 0.66rem;
-    color: #9a9a9a;
-    letter-spacing: 1.2px;
-  }
+.stat-item {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+}
 
-  .task-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 24px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-    cursor: pointer;
-    overflow: hidden;
+/* 统计数字：XITS-Bold + 浅蓝 */
+.stat-num {
+  font-family: 'XITS-Bold', 'XITS', serif;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: #5b9bd5;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+}
 
-    opacity: 0;
-    translate: 0 36px;
+.stat-label {
+  margin-top: 4px;
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.66rem;
+  color: #9a9a9a;
+  letter-spacing: 1.2px;
+}
 
-    transition:
-      opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      translate 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: scale(1);
-  }
+/* ---------------- 卡片 ---------------- */
+.task-card {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
 
-  .task-card.enter-from-top {
-    translate: 0 -36px;
-  }
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 22px;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
 
-  .task-card.reveal {
-    opacity: 1;
-    translate: 0 0;
-  }
+  opacity: 0;
+  translate: 0 36px;
 
-  .task-card:active {
-    transform: scale(0.985);
+  transition:
+    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    translate 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+}
+
+.task-card.enter-from-top {
+  translate: 0 -36px;
+}
+
+.task-card.reveal {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.task-card:active {
+  transform: scale(0.985);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* 头部：左文字组、右科目组，两端分布，整体垂直居中 */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 38px;
+}
+
+.task-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title h3 {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.98rem;
+  color: #1a1a1a;
+  line-height: 1.45;
+  letter-spacing: 0.4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 科目图标 */
+.icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.3s ease;
+}
+
+.icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  overflow: visible;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.subject-tag {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 7px;
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  transition: background 0.3s ease;
+}
+
+.arrow {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
+  color: #ccc;
+  font-size: 0.75rem;
+}
+
+.task-card.active .arrow {
+  transform: rotate(180deg);
+  color: #1a1a1a;
+}
+
+/* ---------------- 内容区域：grid-template-rows 平滑展开（不受内容高度限制） ---------------- */
+.task-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  color: #555;
+  line-height: 1.7;
+  font-size: 0.9rem;
+  overflow: hidden;
+  transition:
+    grid-template-rows 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.task-card.active .task-content {
+  grid-template-rows: 1fr;
+  margin-top: 9px;
+}
+
+/* 收起时：内层不占 padding / border，确保卡片整体垂直居中 */
+.task-content-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 0;
+  border-top: 0 dashed transparent;
+  font-family: 'XITS', 'FZShuSong', 'PingFang SC', 'Microsoft YaHei', serif;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.24s ease,
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    padding-top 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-top-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+
+/* 展开时：恢复 padding 与虚线分隔线 */
+.task-card.active .task-content-inner {
+  padding-top: 10px;
+  border-top-width: 1px;
+  border-top-color: rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.36s ease 0.06s,
+    transform 0.46s cubic-bezier(0.22, 1, 0.36, 1) 0.03s,
+    padding-top 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-top-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+
+.task-content-inner > :first-child { margin-top: 0; }
+.task-content-inner > :last-child { margin-bottom: 0; }
+
+.task-content p {
+  line-height: 1.75;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.task-content strong,
+.task-content b {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: #1a1a1a;
+}
+
+/* ---------------- 完成态 ---------------- */
+.task-card.done {
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.task-card.done .task-title h3 {
+  color: #9a9a9a;
+  text-decoration: line-through;
+  text-decoration-color: rgba(26, 26, 26, 0.35);
+  text-decoration-thickness: 1.5px;
+}
+
+.task-card.done .subject-tag {
+  background: #c4c4c4;
+}
+
+.task-card.done .icon {
+  background: #d8d8d8;
+}
+
+.task-card.done .arrow {
+  color: #ddd;
+}
+
+/* 完成徽标：贴在科目图标右上角 */
+.check-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  color: #1a1a1a;
+  border: 1.2px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'XITS-Bold', serif;
+  font-size: 11px;
+  line-height: 1;
+  z-index: 3;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.task-card.done .check-badge {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ---------------- 注意事项卡片 ---------------- */
+.task-card.notice-card .icon {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1.5px solid #1a1a1a;
+}
+
+.notice-content {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: #555;
+}
+
+.notice-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 6px 0;
+}
+
+.notice-item + .notice-item {
+  border-top: 1px dashed rgba(0, 0, 0, 0.06);
+}
+
+.notice-dot {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'XITS-Bold', serif;
+  font-size: 0.68rem;
+  margin-top: 2px;
+}
+
+.notice-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.notice-text strong {
+  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: #1a1a1a;
+}
+
+/* ---------------- 提示条 / 页脚 ---------------- */
+.hint-bar {
+  text-align: center;
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.66rem;
+  color: #b5b5b5;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  opacity: 0;
+  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
+}
+
+.footer {
+  margin-top: 30px;
+  text-align: center;
+  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: #b5b5b5;
+  opacity: 0;
+  animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
+}
+
+/* ---------------- 动画 ---------------- */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------- 桌面端悬停 ---------------- */
+@media (hover: hover) {
+  .task-card:hover {
+    transform: translateY(-2px) scale(1);
     background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
   }
 
-  .task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    min-height: 38px;
+  .task-card:hover .icon {
+    transform: rotate(-4deg) scale(1.06);
   }
 
-  .task-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .task-title h3 {
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    line-height: 1.4;
-    letter-spacing: 0.3px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .icon {
-    flex-shrink: 0;
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    background: #1a1a1a;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .icon svg {
-    width: 18px;
-    height: 18px;
-    display: block;
-    overflow: visible;
-  }
-
-  .task-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .subject-tag {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 3px 9px;
-    border-radius: 7px;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-  }
-
-  .arrow {
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
-    color: #ccc;
-    font-size: 0.75rem;
-  }
-
-  .task-card.active .arrow {
-    transform: rotate(180deg);
-    color: #1a1a1a;
-  }
-
-  .task-content {
-    display: grid;
-    grid-template-rows: 0fr;
-    margin-top: 0;
-    color: #555;
-    line-height: 1.7;
-    font-size: 0.9rem;
-    transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                margin-top 0.42s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .task-card.active .task-content {
-    grid-template-rows: 1fr;
-    margin-top: 14px;
-  }
-
-  .task-content-inner {
-    overflow: hidden;
-    min-height: 0;
-    padding-top: 0;
-    border-top: 1px dashed transparent;
-    opacity: 0;
-    transition: opacity 0.25s ease,
-                padding-top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.42s ease;
-  }
-
-  .task-card.active .task-content-inner {
-    padding-top: 14px;
-    border-top-color: rgba(0, 0, 0, 0.08);
-    opacity: 1;
-    transition: opacity 0.4s ease 0.12s,
-                padding-top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.42s ease;
-  }
-
-  .task-card.notice-card .icon {
-    background: #fff;
-    color: #1a1a1a;
-    border: 1.5px solid #1a1a1a;
-  }
-
-  .notice-content {
-    font-size: 0.88rem;
-    line-height: 1.75;
-    color: #555;
-  }
-
-  .notice-item {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    padding: 6px 0;
-  }
-
-  .notice-item + .notice-item {
-    border-top: 1px dashed rgba(0, 0, 0, 0.06);
-  }
-
-  .notice-dot {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.68rem;
-    font-weight: 700;
-    margin-top: 2px;
-  }
-
-  .notice-text {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .notice-text strong {
-    color: #1a1a1a;
-    font-weight: 700;
-  }
-
-  .task-card.done {
-    opacity: 0.55;
-    background: rgba(255, 255, 255, 0.42);
-  }
-
-  .task-card.done .task-title h3 {
-    text-decoration: line-through;
-    text-decoration-color: rgba(26, 26, 26, 0.45);
-    text-decoration-thickness: 1.5px;
-  }
-
-  .task-card.done .subject-tag {
-    background: #9a9a9a;
-  }
-
-  .task-card.done .icon {
-    background: #d4d4d4;
-    color: #fff;
-  }
-
-  .check-badge {
-    position: absolute;
-    left: 20px;
-    bottom: 18px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    z-index: 3;
-    transform: scale(0);
-    opacity: 0;
-    transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
-                opacity 0.2s ease;
-    pointer-events: none;
-  }
-
-  .task-card.done .check-badge {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  .hint-bar {
-    text-align: center;
-    font-size: 0.66rem;
-    color: #b5b5b5;
-    letter-spacing: 1px;
-    margin-bottom: 14px;
-    opacity: 0;
-    animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
-  }
-
-  .footer {
-    margin-top: 32px;
-    text-align: center;
-    font-size: 0.68rem;
-    letter-spacing: 2px;
-    color: #b5b5b5;
-    opacity: 0;
-    animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
-  }
-
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (hover: hover) {
-    .task-card:hover {
-      transform: translateY(-2px) scale(1);
-      background: rgba(255, 255, 255, 0.85);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
-    }
-
-    .task-card:hover .icon {
-      transform: rotate(-4deg) scale(1.06);
-    }
-
-    .task-card.active:hover .icon {
-      transform: rotate(-6deg) scale(1.06);
-    }
-  }
-
-  .task-card:active .icon {
-    transform: scale(0.9);
-  }
-
-  .task-card.active .icon {
+  .task-card.active:hover .icon {
     transform: rotate(-6deg) scale(1.06);
   }
 
-  @media (max-width: 360px) {
-    body { padding: 18px; }
-
-    .header h1 { font-size: 1.5rem; }
-
-    .task-card { padding: 16px 17px; }
-
-    .task-title h3 { font-size: 0.92rem; }
-
-    .icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-    }
-
-    .icon svg { width: 16px; height: 16px; }
-
-    .subject-tag {
-      font-size: 0.62rem;
-      padding: 2px 7px;
-    }
-
-    .stat-num { font-size: 1.15rem; }
-    .stat-label { font-size: 0.6rem; }
+  .filter-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
   }
+
+  .filter-btn.active:hover {
+    background: #1a1a1a;
+  }
+
+  /* 已完成卡片悬停时保持淡雅，不被通用 hover 提亮 */
+  .task-card.done:hover {
+    background: rgba(255, 255, 255, 0.55);
+  }
+}
+
+.task-card:active .icon {
+  transform: scale(0.9);
+}
+
+.task-card.active .icon {
+  transform: rotate(-6deg) scale(1.06);
+}
+
+/* ---------------- 小屏适配 ---------------- */
+@media (max-width: 360px) {
+  body { padding: 18px; }
+
+  .header h1 { font-size: 1.5rem; letter-spacing: 2px; }
+
+  .task-card { padding: 13px 17px; }
+
+  .task-title h3 { font-size: 0.92rem; }
+
+  .icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .icon svg { width: 16px; height: 16px; }
+
+  .subject-tag {
+    font-size: 0.62rem;
+    padding: 2px 7px;
+  }
+
+  .stat-num { font-size: 1.25rem; }
+  .stat-label { font-size: 0.6rem; }
+
+  .check-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    top: -5px;
+    right: -5px;
+  }
+}
 </style>
 </head>
 <body>
@@ -525,7 +655,7 @@
         返回
       </a>
     </div>
-    <div class="subtitle">各科安排 · 逐项核对</div>
+    <div class="subtitle">秋假安排 · 逐项核对</div>
     <div class="divider"></div>
   </div>
 
@@ -554,7 +684,6 @@
   <div class="hint-bar">轻触展开详情 · 长按标记完成 / 再长按取消</div>
 
   <!-- ============ 语文 ============ -->
-
   <div class="task-card" data-subject="语文">
     <div class="task-header">
       <div class="task-title">
@@ -565,7 +694,7 @@
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
         </div>
-        <h3>抄写《陈涉世家》<br>《出师表》全文翻译</h3>
+        <h3>秋假作业(二)：基础知识综合</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
@@ -573,7 +702,9 @@
       </div>
     </div>
     <div class="task-content">
-      <p>抄在单格本上；抄写、翻译写一行、空一行，不拥挤也可以不空行，以后语文抄写翻译作业统一写在这个单格本上。</p>
+      <div class="task-content-inner">
+        <p>完成秋假作业（二）基础知识综合。</p>
+      </div>
     </div>
   </div>
 
@@ -587,7 +718,7 @@
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
         </div>
-        <h3>背诵并默写《诗词曲五首》</h3>
+        <h3>秋假作业(三)：文言文对比阅读</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
@@ -595,12 +726,85 @@
       </div>
     </div>
     <div class="task-content">
-      <p>背诵并默写《诗词曲五首》。</p>
+      <div class="task-content-inner">
+        <p>完成秋假作业（三）文言文对比阅读。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="语文">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>完成《学法大视野》订正</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>订正《学法大视野》。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="语文">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>默写第三、六单元课内课外古诗词，自批自改</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>默写一遍第三单元、第六单元课内课外古诗词，写完自批自改。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="语文">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
+        <h3>【选做】秋假作业(一)</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">语文</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>选做秋假作业（一），自愿完成。</p>
+      </div>
     </div>
   </div>
 
   <!-- ============ 数学 ============ -->
-
   <div class="task-card" data-subject="数学">
     <div class="task-header">
       <div class="task-title">
@@ -612,7 +816,7 @@
             <path d="M8.4 17.4h7.2"/>
           </svg>
         </div>
-        <h3>学法大视野 P53 专练4</h3>
+        <h3>第6期周报</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">数学</span>
@@ -620,7 +824,9 @@
       </div>
     </div>
     <div class="task-content">
-      <p>完成《学法大视野》P53 专练4 解直角三角形应用常见的模型。</p>
+      <div class="task-content-inner">
+        <p>完成数学第6期周报。</p>
+      </div>
     </div>
   </div>
 
@@ -635,7 +841,7 @@
             <path d="M8.4 17.4h7.2"/>
           </svg>
         </div>
-        <h3>学法大视野 P54-56 <br>第2章复习总结</h3>
+        <h3>秋假数学素养训练(一)</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">数学</span>
@@ -643,7 +849,34 @@
       </div>
     </div>
     <div class="task-content">
-      <p>完成《学法大视野》P54-56 第2章复习总结。</p>
+      <div class="task-content-inner">
+        <p>完成秋假数学素养训练（一）。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="数学">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
+            <path d="M8.4 17.4h7.2"/>
+          </svg>
+        </div>
+        <h3>秋假素养训练(二)</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">数学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>完成秋假素养训练（二）。</p>
+      </div>
     </div>
   </div>
 
@@ -660,7 +893,7 @@
             <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
           </svg>
         </div>
-        <h3>学法大视野 P1-69</h3>
+        <h3>《学法大视野》P1-85[Unit6 Section A(1a-2d)]</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">英语</span>
@@ -668,7 +901,113 @@
       </div>
     </div>
     <div class="task-content">
-      <p>完成《学法大视野》P1-69 Unit 5 Section A(1a-2d)。</p>
+      <div class="task-content-inner">
+        <p>完成《学法大视野》P1-85[Unit6 Section A(1a-2d)]。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="英语">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>第8期(Unit 5)灰色周报第2、3版</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>完成第8期(Unit 5)灰色周报第2、3版。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="英语">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>第6期(Units 3-4)能力提升小白卷</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>完成第6期(Units 3-4)能力提升小白卷。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="英语">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>第8期(Unit 5)能力提升小白卷</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>完成第8期(Unit 5)能力提升小白卷。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="英语">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
+            <path d="M12 3.4c-2.4 2.7-2.4 14.5 0 17.2"/>
+          </svg>
+        </div>
+        <h3>准备一篇“我最敬佩的人”作文</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">英语</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>准备一篇题为“我最敬佩的人”英语作文。</p>
+      </div>
     </div>
   </div>
 
@@ -686,7 +1025,7 @@
             <path d="M5.4 17.4c3.6-2.6 9.6-2.6 13.2 0"/>
           </svg>
         </div>
-        <h3>同步优学 金学典 P129-134</h3>
+        <h3>《同步优学 金学典》P129-134</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">历史</span>
@@ -694,7 +1033,106 @@
       </div>
     </div>
     <div class="task-content">
-      <p>完成《同步优学 金学典》P129-134 期末综合评价(一)。</p>
+      <div class="task-content-inner">
+        <p>《同步优学 金学典》P129-134，期末综合评价(一)，考试题按期末综合评价(一)(二)这两套试卷出。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="历史">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.6"/>
+            <path d="M3.6 12h16.8"/>
+            <path d="M12 3.4v17.2"/>
+            <path d="M5.4 6.6c3.6 2.6 9.6 2.6 13.2 0"/>
+            <path d="M5.4 17.4c3.6-2.6 9.6-2.6 13.2 0"/>
+          </svg>
+        </div>
+        <h3>《同步优学 金学典》P135-140</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">历史</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>《同步优学 金学典》P135-140，期末综合评价(二)，考试题按期末综合评价(一)(二)这两套试卷出。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 道法 ============ -->
+  <div class="task-card" data-subject="道德与法治">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
+          </svg>
+        </div>
+        <h3>《学法大视野》P29-32</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道德与法治</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>完成《学法大视野》P29-32（第一单元复习整合）。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="道德与法治">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
+          </svg>
+        </div>
+        <h3>《学法大视野》P73-75</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道德与法治</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>完成《学法大视野》P73-75（第二单元复习整合）。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="道德与法治">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
+          </svg>
+        </div>
+        <h3>背诵九上1-2单元复习清单</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">道德与法治</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>把“九上1-2单元复习清单”背完。</p>
+      </div>
     </div>
   </div>
 
@@ -716,7 +1154,7 @@
             <path d="M8 16l-2.1 2.1"/>
           </svg>
         </div>
-        <h3>同步优学 金学典 写到P66</h3>
+        <h3>《同步优学 金学典》写到P73</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">物理</span>
@@ -724,11 +1162,130 @@
       </div>
     </div>
     <div class="task-content">
-      <p>完成《同步优学 金学典》写到P66（欧姆定律），组长需要批改。</p>
+      <div class="task-content-inner">
+        <p>《同步优学 金学典》写到P73（欧姆定律在串、并联电路中的应用），组长需要批改。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="物理">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.2"/>
+            <path d="M12 3.4v3"/>
+            <path d="M12 17.6v3"/>
+            <path d="M3.4 12h3"/>
+            <path d="M17.6 12h3"/>
+            <path d="M5.9 5.9l2.1 2.1"/>
+            <path d="M16 16l2.1 2.1"/>
+            <path d="M18.1 5.9L16 8"/>
+            <path d="M8 16l-2.1 2.1"/>
+          </svg>
+        </div>
+        <h3>《同步优学 金学典》写到P128</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">物理</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>《同步优学 金学典》写到P128（第十七章巩固练习），组长需要批改。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="物理">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.2"/>
+            <path d="M12 3.4v3"/>
+            <path d="M12 17.6v3"/>
+            <path d="M3.4 12h3"/>
+            <path d="M17.6 12h3"/>
+            <path d="M5.9 5.9l2.1 2.1"/>
+            <path d="M16 16l2.1 2.1"/>
+            <path d="M18.1 5.9L16 8"/>
+            <path d="M8 16l-2.1 2.1"/>
+          </svg>
+        </div>
+        <h3>卷⑨ 第十七章基础诊断卷(A卷)</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">物理</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>完成卷⑨ 第十七章基础诊断卷(A卷)。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="物理">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.2"/>
+            <path d="M12 3.4v3"/>
+            <path d="M12 17.6v3"/>
+            <path d="M3.4 12h3"/>
+            <path d="M17.6 12h3"/>
+            <path d="M5.9 5.9l2.1 2.1"/>
+            <path d="M16 16l2.1 2.1"/>
+            <path d="M18.1 5.9L16 8"/>
+            <path d="M8 16l-2.1 2.1"/>
+          </svg>
+        </div>
+        <h3>假期至少看一遍物理书</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">物理</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>秋假期间至少通读一遍物理课本。</p>
+      </div>
     </div>
   </div>
 
   <!-- ============ 化学 ============ -->
+  <div class="task-card" data-subject="化学">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>《能力培养与测试(精编版)》P1-84</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>《能力培养与测试(精编版)》P1-84[第六单元 课题2 碳的氧化物  课时1  二氧化碳对生活和环境的影响、一氧化碳]。</p>
+      </div>
+    </div>
+  </div>
 
   <div class="task-card" data-subject="化学">
     <div class="task-header">
@@ -741,7 +1298,7 @@
             <path d="M7.6 13.4h8.8"/>
           </svg>
         </div>
-        <h3>能力培养与测试 写到P70</h3>
+        <h3>卷⑨ 第五单元基础诊断卷(A卷)</h3>
       </div>
       <div class="task-meta">
         <span class="subject-tag">化学</span>
@@ -749,7 +1306,34 @@
       </div>
     </div>
     <div class="task-content">
-      <p>完成《能力培养与测试(精编版)》P1-70（课题2 化学方程式 课时1）。</p>
+      <div class="task-content-inner">
+        <p>完成卷⑨ 第五单元基础诊断卷(A卷)。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-card" data-subject="化学">
+    <div class="task-header">
+      <div class="task-title">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
+            <path d="M8.6 3.4h6.8"/>
+            <path d="M7.6 13.4h8.8"/>
+          </svg>
+        </div>
+        <h3>自主复习</h3>
+      </div>
+      <div class="task-meta">
+        <span class="subject-tag">化学</span>
+        <span class="arrow">▼</span>
+      </div>
+    </div>
+    <div class="task-content">
+      <div class="task-content-inner">
+        <p>自主复习化学前面内容。</p>
+      </div>
     </div>
   </div>
 
@@ -773,28 +1357,22 @@
       </div>
     </div>
     <div class="task-content">
-      <div class="notice-content">
-        <div class="notice-item">
-          <div class="notice-dot">1</div>
-          <div class="notice-text"><strong>【期中知识竞赛】</strong> 2026年11月19日左右开始第一学月检测，考察科目有语文、数学、英语、道德与法治、世界历史、物理、化学、体育与健康，请复习。</div>
-        </div>
-        <div class="notice-item">
-          <div class="notice-dot">2</div>
-          <div class="notice-text"><strong>【研学】</strong> 研学活动定于2026年11月02日-04日，研学地点为广州，研学景点有云门山景区、广东省博物馆、长隆欢乐世界、黄埔军校旧址、广州大学。</div>
-        </div>
-        <div class="notice-item">
-          <div class="notice-dot">3</div>
-          <div class="notice-text"><strong>【研学物品准备】</strong> ①衣服(校服、外套)；②鞋；③毛巾(建议使用一次性的)；④袜子(2双，必须一日一换)；⑤裤子(1条)；⑥牙杯(用矿泉水瓶，矿泉水有发)；⑦牙刷；晕车的人备好晕车要用的；⑧零食；⑨手机、电话手表(电话手表不限，但需上报)、相机、MP3；⑩现金；其余可带物品，如桌游卡牌等。</div>
-        </div>
-        <div class="notice-item">
-          <div class="notice-dot">4</div>
-          <div class="notice-text">作业清单仅供参考，如有错误欢迎指出。</div>
+      <div class="task-content-inner">
+        <div class="notice-content">
+          <div class="notice-item">
+            <div class="notice-dot">1</div>
+            <div class="notice-text"><strong>【期中综合素养测试】</strong> 2026年11月19日开始期中综合素养测试，考察科目有语文、数学、英语、道德与法治、世界历史、物理、化学、体育与健康，请复习。</div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-dot">2</div>
+            <div class="notice-text">作业清单仅供参考，如有错误望指出。</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="footer">孤鸿组 · 好好学习 天天向上</div>
+  <div class="footer">孤鸿组 · 秋假作业清单</div>
 
 </div>
 
@@ -802,21 +1380,22 @@
 (function () {
   'use strict';
 
-  document.querySelectorAll('.task-content').forEach(function (el) {
-    var inner = document.createElement('div');
-    inner.className = 'task-content-inner';
-    while (el.firstChild) inner.appendChild(el.firstChild);
-    el.appendChild(inner);
-  });
-
+  /* ============================================================
+     1. 完成徽标：注入到科目图标右上角
+        （HTML 已手写 .task-content-inner，不再重复包裹，避免双层内边距和双重虚线）
+     ============================================================ */
   document.querySelectorAll('.task-card').forEach(function (card) {
-    if (card.querySelector('.check-badge')) return;
+    var icon = card.querySelector('.icon');
+    if (!icon || icon.querySelector('.check-badge')) return;
     var badge = document.createElement('span');
     badge.className = 'check-badge';
     badge.textContent = '✓';
-    card.appendChild(badge);
+    icon.appendChild(badge);
   });
 
+  /* ============================================================
+     2. 滚动方向感知（决定入场方向）
+     ============================================================ */
   var scrollDir = 'down';
   var lastScrollY = window.scrollY;
   window.addEventListener('scroll', function () {
@@ -827,7 +1406,10 @@
     }
   }, { passive: true });
 
-  var cards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
+  /* ============================================================
+     3. 卡片入场动画
+     ============================================================ */
+  var allCards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
 
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
@@ -850,18 +1432,19 @@
       threshold: 0.05,
       rootMargin: '0px 0px -30px 0px'
     });
-    cards.forEach(function (card) { io.observe(card); });
+    allCards.forEach(function (card) { io.observe(card); });
   } else {
-    cards.forEach(function (card) { card.classList.add('reveal'); });
+    allCards.forEach(function (card) { card.classList.add('reveal'); });
   }
 
+  /* ============================================================
+     4. 数据层：可勾选卡片集合（排除注意事项卡）
+     ============================================================ */
   function isNotice(card) {
     return card.classList.contains('notice-card');
   }
-  var allCards = cards;
-  var checkCards = allCards.filter(function (c) {
-    return !isNotice(c);
-  });
+
+  var checkCards = allCards.filter(function (c) { return !isNotice(c); });
 
   function cardId(card) {
     var subject = card.dataset.subject || '';
@@ -870,39 +1453,50 @@
     return subject + '::' + title;
   }
 
-  // 生成任务指纹，用来判断任务列表是否改动
+  /* 任务指纹：清单改动过就自动清空旧记录，避免勾选错位 */
   function buildTaskHash() {
     var ids = checkCards.map(cardId).sort();
-    return btoa(unescape(encodeURIComponent(ids.join('||'))));
+    var str = ids.join('||');
+    try {
+      return btoa(unescape(encodeURIComponent(str)));
+    } catch (e) {
+      return String(ids.length) + '-' + str.length;
+    }
   }
   var currentHash = buildTaskHash();
 
-  const STORE_KEY = 'guhong_work_v3';
+  var STORE_KEY = 'guhong_work_v4';
+
   function loadStorage() {
     try {
       var raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
+      return raw ? JSON.parse(raw) : null;
     } catch (e) {
       return null;
     }
   }
+
   function saveStorage(data) {
-    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    } catch (e) {}
   }
 
   var stored = loadStorage();
   var doneSet = [];
   var currentFilter = 'all';
 
-  // 对比指纹：任务改动 → 清空旧数据
   if (stored && stored.hash === currentHash) {
     doneSet = Array.isArray(stored.done) ? stored.done : [];
     currentFilter = stored.filter || 'all';
   } else {
-    doneSet = [];
     saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter });
   }
+
+  /* 只保留仍存在的任务，防止历史脏数据把「已完成」顶过总数 */
+  var validIds = {};
+  checkCards.forEach(function (c) { validIds[cardId(c)] = true; });
+  doneSet = doneSet.filter(function (id) { return validIds[id]; });
 
   var statTotal = document.getElementById('statTotal');
   var statDone = document.getElementById('statDone');
@@ -923,11 +1517,16 @@
     saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter });
   }
 
+  /* ============================================================
+     5. 完成状态切换（幂等：再长按即取消）
+     ============================================================ */
   function toggleDone(card) {
-    if (isNotice(card)) return false;
+    if (isNotice(card)) return null;
+
     var id = cardId(card);
     var idx = doneSet.indexOf(id);
     var isDone;
+
     if (idx === -1) {
       doneSet.push(id);
       isDone = true;
@@ -935,13 +1534,14 @@
       doneSet.splice(idx, 1);
       isDone = false;
     }
+
     applyDoneState(card, isDone);
     saveData();
     renderStats();
     applyFilter();
-    if (isDone) {
-      card.classList.remove('active');
-    }
+
+    if (isDone) card.classList.remove('active');
+
     if (navigator.vibrate) {
       try { navigator.vibrate(isDone ? 18 : [12, 40, 12]); } catch (e) {}
     }
@@ -953,37 +1553,62 @@
   });
   renderStats();
 
-  // 筛选逻辑
-  var filterBtns = document.querySelectorAll('.filter-btn');
-  function setFilter(mode) {
-    currentFilter = mode;
-    filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === mode));
-    saveData();
-    applyFilter();
-  }
+  /* ============================================================
+     6. 筛选
+     ============================================================ */
+  var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+
   function applyFilter() {
-    allCards.forEach(card => {
-      if(isNotice(card)){
+    allCards.forEach(function (card) {
+      if (isNotice(card)) {
         card.style.display = '';
         return;
       }
-      var id = cardId(card);
-      var isDone = doneSet.includes(id);
-      if(currentFilter === 'all'){
+      var isDone = doneSet.indexOf(cardId(card)) !== -1;
+      if (currentFilter === 'all') {
         card.style.display = '';
-      }else if(currentFilter === 'done'){
+      } else if (currentFilter === 'done') {
         card.style.display = isDone ? '' : 'none';
-      }else if(currentFilter === 'undone'){
-        card.style.display = !isDone ? '' : 'none';
+      } else {
+        card.style.display = isDone ? 'none' : '';
       }
-    })
+    });
   }
-  filterBtns.forEach(btn=>{
-    btn.onclick = ()=> setFilter(btn.dataset.filter);
-  })
+
+  function setFilter(mode) {
+    currentFilter = mode;
+    filterBtns.forEach(function (b) {
+      b.classList.toggle('active', b.dataset.filter === mode);
+    });
+    saveData();
+    applyFilter();
+  }
+
+  filterBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setFilter(btn.dataset.filter);
+    });
+  });
   setFilter(currentFilter);
 
+  /* ============================================================
+     7. 手势：轻触展开 / 长按标记完成（Pointer Events）
+        CSS 已关掉 user-select 与 touch-callout，长按不再触发系统选择
+     ============================================================ */
+  var LONG_PRESS_MS = 450;
+  var MOVE_TOLERANCE = 10;
+
   var suppressNextClick = false;
+  var suppressTimer = null;
+
+  /* 只吞掉紧随其后的那一次 click，窗口不宜过长，否则长按后再点会失灵 */
+  function suppressClick() {
+    suppressNextClick = true;
+    if (suppressTimer) clearTimeout(suppressTimer);
+    suppressTimer = setTimeout(function () { suppressNextClick = false; }, 120);
+  }
+
+  /* 桌面端右键不再弹系统菜单 */
   document.addEventListener('contextmenu', function (e) {
     e.preventDefault();
   });
@@ -1003,6 +1628,7 @@
         pressTimer = null;
       }
     }
+
     function reset() {
       clearPress();
       pointerId = null;
@@ -1019,7 +1645,9 @@
       moved = false;
       startX = e.clientX;
       startY = e.clientY;
+
       try { card.setPointerCapture(e.pointerId); } catch (err) {}
+
       if (!checkable) return;
 
       clearPress();
@@ -1028,15 +1656,13 @@
         longPressFired = true;
         toggleDone(card);
         if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
-      }, 450);
+      }, LONG_PRESS_MS);
     });
 
     card.addEventListener('pointermove', function (e) {
-      if (e.pointerId !== pointerId) return;
-      if (moved) return;
-      var dx = Math.abs(e.clientX - startX);
-      var dy = Math.abs(e.clientY - startY);
-      if (dx > 10 || dy > 10) {
+      if (e.pointerId !== pointerId || moved) return;
+      if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE ||
+          Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
         moved = true;
         clearPress();
       }
@@ -1044,23 +1670,21 @@
 
     card.addEventListener('pointerup', function (e) {
       if (e.pointerId !== pointerId) return;
+
       clearPress();
       var wasLong = longPressFired;
       var wasMoved = moved;
+
       try { card.releasePointerCapture(e.pointerId); } catch (err) {}
       reset();
       longPressFired = false;
 
       if (wasLong) {
         e.preventDefault();
-        suppressNextClick = true;
-        setTimeout(function () { suppressNextClick = false; }, 60);
+        suppressClick();
         return;
       }
-      if (wasMoved) {
-        suppressNextClick = true;
-        setTimeout(function () { suppressNextClick = false; }, 60);
-      }
+      if (wasMoved) suppressClick();
     });
 
     card.addEventListener('pointercancel', function (e) {
@@ -1073,6 +1697,11 @@
     card.addEventListener('click', function () {
       if (suppressNextClick || longPressFired) return;
       card.classList.toggle('active');
+    });
+
+    /* 桌面端右键 = 切换完成 */
+    card.addEventListener('contextmenu', function () {
+      if (checkable) toggleDone(card);
     });
   });
 

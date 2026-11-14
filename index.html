@@ -5,14 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>孤鸿组 · 学习资料中心</title>
 <style>
+/* ========== 自定义woff2字体，文件夹Fonts（大写F） ========== */
+@font-face {
+  font-family: "FZHei";
+  src: url("./Fonts/方正黑体简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZShuSong";
+  src: url("./Fonts/方正书宋简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZKai";
+  src: url("./Fonts/方正楷体简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FZFangSong";
+  src: url("./Fonts/方正仿宋简体.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* 倒计时数字专用粗体字体 XITS‑Bold */
+@font-face {
+  font-family: "XITS‑Bold";
+  src: url("./Fonts/XITS-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'FZLanTingHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'FZShuSong', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-weight: normal;
     -webkit-tap-highlight-color: transparent;
   }
-
   body {
     background: #f0f2f5;
     min-height: 100vh;
@@ -26,26 +63,21 @@
       radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
     background-attachment: fixed;
   }
-
   .container {
     width: 100%;
     max-width: 420px;
   }
-
-  /* ---------------- 顶部标题 ---------------- */
   .header {
     text-align: center;
     margin-bottom: 36px;
   }
-
   .logo {
     font-size: 2.4rem;
-    font-weight: 900;
+    font-weight: normal;
     letter-spacing: 4px;
     color: #1a1a1a;
     line-height: 1.2;
   }
-
   .subtitle {
     margin-top: 12px;
     font-size: 0.78rem;
@@ -53,7 +85,6 @@
     color: #9a9a9a;
     text-indent: 6px;
   }
-
   .divider {
     width: 36px;
     height: 3px;
@@ -62,17 +93,13 @@
     opacity: 0.85;
     margin: 18px auto 0;
   }
-
-  /* ---------------- 倒计时 ---------------- */
   .countdown {
     display: grid;
     margin-bottom: 16px;
   }
-
   .countdown > .cd-card {
     grid-area: 1 / 1;
   }
-
   .cd-card {
     opacity: 0;
     transform: scale(0.96);
@@ -84,7 +111,6 @@
                 background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                 box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
   .cd-card.is-visible {
     opacity: 1;
     transform: scale(1);
@@ -94,49 +120,35 @@
                 background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                 box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
   .cd-label {
     font-size: 0.72rem;
     letter-spacing: 1.6px;
     color: #9a9a9a;
     margin-bottom: 5px;
   }
-
   .cd-value {
     font-size: 1rem;
-    font-weight: 600;
     color: #1a1a1a;
     letter-spacing: 0.5px;
     line-height: 1.35;
   }
-
   .cd-num {
     font-size: 1.55rem;
-    font-weight: 900;
     letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
     margin: 0 4px;
   }
-
-  .cd-affix,
-  .cd-unit {
-    font-weight: 600;
-  }
-
   .cd-hint {
     margin-top: 6px;
     font-size: 0.68rem;
     letter-spacing: 1px;
     color: #b5b5b5;
   }
-
-  /* ---------------- 菜单入口 ---------------- */
   .menu {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
-
   .glass-card {
     display: flex;
     align-items: center;
@@ -152,12 +164,10 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
   .glass-card:active {
     transform: scale(0.97);
     background: rgba(255, 255, 255, 0.85);
   }
-
   .icon {
     flex-shrink: 0;
     width: 46px;
@@ -170,50 +180,41 @@
     align-items: center;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
   .icon svg {
     width: 22px;
     height: 22px;
     display: block;
     overflow: visible;
   }
-
   .glass-card:active .icon {
     transform: scale(0.92);
   }
-
   .card-text {
     flex: 1;
     min-width: 0;
   }
-
   .card-text h2 {
     font-size: 1.15rem;
-    font-weight: 700;
+    font-weight: normal;
     color: #1a1a1a;
     letter-spacing: 1px;
   }
-
   .card-text p {
     margin-top: 5px;
     font-size: 0.78rem;
     color: #9a9a9a;
     letter-spacing: 0.5px;
   }
-
   .arrow {
     flex-shrink: 0;
     font-size: 1rem;
     color: #ccc;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
   .glass-card:active .arrow {
     transform: translateX(5px);
     color: #1a1a1a;
   }
-
-  /* ---------------- 页脚 ---------------- */
   .footer {
     margin-top: 44px;
     text-align: center;
@@ -221,53 +222,42 @@
     letter-spacing: 2px;
     color: #b5b5b5;
   }
-
-  /* ---------------- 桌面端悬停 ---------------- */
   @media (hover: hover) {
     .glass-card:hover {
       transform: translateY(-2px);
       background: rgba(255, 255, 255, 0.85);
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
     }
-
     .glass-card:hover .arrow {
       transform: translateX(5px);
       color: #1a1a1a;
     }
-
     .glass-card:hover .icon {
       transform: rotate(-4deg) scale(1.05);
     }
-
     .cd-card.is-visible:hover {
       transform: translateY(-2px);
       background: rgba(255, 255, 255, 0.85);
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
     }
   }
-
-  /* ---------------- 小屏适配 ---------------- */
   @media (max-width: 360px) {
     .logo {
       font-size: 2rem;
     }
-
     .glass-card {
       padding: 18px 20px;
       gap: 13px;
     }
-
     .icon {
       width: 42px;
       height: 42px;
       border-radius: 13px;
     }
-
     .icon svg {
       width: 20px;
       height: 20px;
     }
-
     .cd-num {
       font-size: 1.35rem;
     }
@@ -275,148 +265,119 @@
 </style>
 </head>
 <body>
-
 <div class="container">
-
   <div class="header">
-    <div class="logo">孤鸿组</div>
-    <div class="subtitle">学习资料中心</div>
+    <div class="logo" style="font-family:'FZHei','PingFang SC','Microsoft YaHei',sans-serif;">孤鸿组</div>
+    <div class="subtitle" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">学习资料中心</div>
     <div class="divider"></div>
   </div>
-
-  <!-- ================= 倒计时 ================= -->
   <div class="countdown">
-
-    <!-- 卡片一：天数（第1个） -->
     <div class="glass-card cd-card is-visible" id="cdDays" role="button" tabindex="0" aria-label="切换到天分秒倒计时">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3.5" y="5" width="17" height="15.5" rx="2.6"/>
-          <path d="M3.5 10.2h17"/>
-          <path d="M8.2 2.8v4.2"/>
-          <path d="M15.8 2.8v4.2"/>
+          <rect x="3.5" y="5" width="17" height="15.5" rx="2.6" />
+          <path d="M3.5 10.2h17" />
+          <path d="M8.2 2.8v4.2" />
+          <path d="M15.8 2.8v4.2" />
         </svg>
       </div>
       <div class="card-text">
-        <p class="cd-label" id="cdDaysLabel">距离期中检测</p>
+        <p class="cd-label" id="cdDaysLabel" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">距离期中检测</p>
         <div class="cd-value" id="cdDaysValue">
-          <span class="cd-affix">还有</span><span class="cd-num">8</span><span class="cd-unit">天</span>
+          <span class="cd-affix">还有</span><span class="cd-num" style="font-family:'XITS‑Bold',serif;">8</span><span class="cd-unit">天</span>
         </div>
-        <p class="cd-hint">点击切换到天分秒</p>
+        <p class="cd-hint" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">点击切换到天分秒</p>
       </div>
     </div>
-
-    <!-- 卡片三：天时分秒（新增，第2个） -->
     <div class="glass-card cd-card" id="cdDHMS" role="button" tabindex="0" aria-label="切换到分秒倒计时">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12.3" r="8.6"/>
-          <path d="M12 7.6v4.9l3.2 1.9"/>
-          <path d="M6 12h12"/>
+          <circle cx="12" cy="12.3" r="8.6" />
+          <path d="M12 7.6v4.9l3.2 1.9" />
+          <path d="M6 12h12" />
         </svg>
       </div>
       <div class="card-text">
-        <p class="cd-label" id="cdDHMSLabel">距离期中检测</p>
+        <p class="cd-label" id="cdDHMSLabel" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">距离期中检测</p>
         <div class="cd-value" id="cdDHMSValue">
-          <span class="cd-affix">还有</span><span class="cd-num">8</span><span class="cd-unit">天</span>
-          <span class="cd-num">00</span><span class="cd-unit">时</span>
-          <span class="cd-num">00</span><span class="cd-unit">分</span>
-          <span class="cd-num">00</span><span class="cd-unit">秒</span>
+          <span class="cd-affix">还有</span><span class="cd-num" style="font-family:'XITS‑Bold',serif;">8</span><span class="cd-unit">天</span>
+          <span class="cd-num" style="font-family:'XITS‑Bold',serif;">00</span><span class="cd-unit">时</span>
+          <span class="cd-num" style="font-family:'XITS‑Bold',serif;">00</span><span class="cd-unit">分</span>
+          <span class="cd-num" style="font-family:'XITS‑Bold',serif;">00</span><span class="cd-unit">秒</span>
         </div>
-        <p class="cd-hint">点击切换到分秒</p>
+        <p class="cd-hint" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">点击切换到分秒</p>
       </div>
     </div>
-
-    <!-- 卡片二：总分钟+秒（移到最后，第3个） -->
     <div class="glass-card cd-card" id="cdTime" role="button" tabindex="0" aria-label="返回天数显示">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12.3" r="8.6"/>
-          <path d="M12 7.6v4.9l3.2 1.9"/>
+          <circle cx="12" cy="12.3" r="8.6" />
+          <path d="M12 7.6v4.9l3.2 1.9" />
         </svg>
       </div>
       <div class="card-text">
-        <p class="cd-label" id="cdTimeLabel">距离期中检测</p>
+        <p class="cd-label" id="cdTimeLabel" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">距离期中检测</p>
         <div class="cd-value" id="cdTimeValue">
-          <span class="cd-affix">还有</span><span class="cd-num">11520</span><span class="cd-unit">分</span><span class="cd-num">00</span><span class="cd-unit">秒</span>
+          <span class="cd-affix">还有</span><span class="cd-num" style="font-family:'XITS‑Bold',serif;">11520</span><span class="cd-unit">分</span><span class="cd-num" style="font-family:'XITS‑Bold',serif;">00</span><span class="cd-unit">秒</span>
         </div>
-        <p class="cd-hint">点击返回天数</p>
+        <p class="cd-hint" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">点击返回天数</p>
       </div>
     </div>
-
   </div>
-
-  <!-- ================= 菜单 ================= -->
   <div class="menu">
-
-    <!-- 作业清单 -->
     <a href="work.html" class="glass-card">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M14 2.5H6.5A2 2 0 0 0 4.5 4.5v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/>
-          <path d="M14 2.5V8h5.5"/>
-          <path d="M8.2 12.6l1.6 1.6 3.4-3.4"/>
-          <path d="M8.5 17.4h6.5"/>
+          <path d="M14 2.5H6.5A2 2 0 0 0 4.5 4.5v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z" />
+          <path d="M14 2.5V8h5.5" />
+          <path d="M8.2 12.6l1.6 1.6 3.4-3.4" />
+          <path d="M8.5 17.4h6.5" />
         </svg>
       </div>
       <div class="card-text">
-        <h2>作业清单</h2>
-        <p>查看各科作业安排</p>
+        <h2 style="font-family:'FZHei','PingFang SC','Microsoft YaHei',sans-serif;">作业清单</h2>
+        <p style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">查看各科作业安排</p>
       </div>
       <span class="arrow">→</span>
     </a>
-
-    <!-- 作业答案 -->
     <a href="qa.html" class="glass-card">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="8.6"/>
-          <path d="M8.1 12.4l2.7 2.7 5.2-5.4"/>
+          <circle cx="12" cy="12" r="8.6" />
+          <path d="M8.1 12.4l2.7 2.7 5.2-5.4" />
         </svg>
       </div>
       <div class="card-text">
-        <h2>作业答案</h2>
-        <p>对照参考答案</p>
+        <h2 style="font-family:'FZHei','PingFang SC','Microsoft YaHei',sans-serif;">作业答案</h2>
+        <p style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">对照参考答案</p>
       </div>
       <span class="arrow">→</span>
     </a>
-
   </div>
-
-  <div class="footer">孤鸿组 · 好好学习 天天向上</div>
-
+  <div class="footer" style="font-family:'FZKai','PingFang SC','Microsoft YaHei',sans-serif;">孤鸿组 · 好好学习 天天向上</div>
 </div>
-
 <script>
 (function () {
   'use strict';
-
-  /* ============================================================
-     期中检测时间：2026年11月19日 08:00
-     ============================================================ */
   var EXAM_TS  = new Date(2026, 10, 19, 8, 0, 0, 0).getTime();
   var EXAM_MID = new Date(2026, 10, 19, 0, 0, 0, 0).getTime();
   var DAY_MS   = 86400000;
   var HOUR_MS  = 3600000;
   var MIN_MS   = 60000;
-
   var cardDays  = document.getElementById('cdDays');
   var cardDHMS  = document.getElementById('cdDHMS');
   var cardTime  = document.getElementById('cdTime');
-
   var labelDays = document.getElementById('cdDaysLabel');
   var valueDays = document.getElementById('cdDaysValue');
   var labelDHMS = document.getElementById('cdDHMSLabel');
   var valueDHMS = document.getElementById('cdDHMSValue');
   var labelTime = document.getElementById('cdTimeLabel');
   var valueTime = document.getElementById('cdTimeValue');
-
-  /* ---------------- 三卡片循环切换 ---------------- */
   function showDaysCard() {
     [cardDays, cardDHMS, cardTime].forEach(card => card.classList.remove('is-visible'));
     cardDays.classList.add('is-visible');
@@ -429,13 +390,9 @@
     [cardDays, cardDHMS, cardTime].forEach(card => card.classList.remove('is-visible'));
     cardTime.classList.add('is-visible');
   }
-
-  // 点击切换顺序：天数 → 天时分秒 → 总分秒 → 回到天数
   cardDays.addEventListener('click', showDHMSCard);
   cardDHMS.addEventListener('click', showTimeCard);
   cardTime.addEventListener('click', showDaysCard);
-
-  // 键盘回车/空格支持
   cardDays.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDHMSCard(); }
   });
@@ -445,74 +402,56 @@
   cardTime.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDaysCard(); }
   });
-
   function pad2(n) { return n < 10 ? '0' + n : String(n); }
-
-  /* ---------------- 渲染倒计时 ---------------- */
   function update() {
     var now    = Date.now();
     var diff   = EXAM_TS - now;
     var isPast = diff < 0;
     var abs    = Math.abs(diff);
-
-    // 1. 天时分秒拆分
     var days  = Math.floor(abs / DAY_MS);
     var rem1  = abs % DAY_MS;
     var hours = Math.floor(rem1 / HOUR_MS);
     var rem2  = rem1 % HOUR_MS;
     var mins  = Math.floor(rem2 / MIN_MS);
     var secs  = Math.floor((rem2 % MIN_MS) / 1000);
-
-    // 2. 总分钟+总秒（原有卡片2逻辑）
     var totalSec = Math.floor(abs / 1000);
     var totalMin = Math.floor(totalSec / 60);
     var sec      = totalSec % 60;
-
-    // 3. 日历天数差（天数卡片）
     var todayMid = new Date();
     todayMid.setHours(0, 0, 0, 0);
     var dayDelta = Math.round((EXAM_MID - todayMid.getTime()) / DAY_MS);
-
-    /* ---------- 卡片一：天数 ---------- */
     if (dayDelta > 0) {
       labelDays.textContent = '距离期中检测';
       valueDays.innerHTML =
         '<span class="cd-affix">还有</span>' +
-        '<span class="cd-num">' + dayDelta + '</span>' +
+        '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + dayDelta + '</span>' +
         '<span class="cd-unit">天</span>';
     } else if (dayDelta === 0) {
       labelDays.textContent = '期中检测';
-      valueDays.innerHTML = '<span class="cd-num">今天</span><span class="cd-unit">开考</span>';
+      valueDays.innerHTML = '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">今天</span><span class="cd-unit">开考</span>';
     } else {
       labelDays.textContent = '期中检测';
       valueDays.innerHTML =
         '<span class="cd-affix">已过去</span>' +
-        '<span class="cd-num">' + (-dayDelta) + '</span>' +
+        '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + (-dayDelta) + '</span>' +
         '<span class="cd-unit">天</span>';
     }
-
-    /* ---------- 卡片三：天时分秒（新增） ---------- */
     labelDHMS.textContent = isPast ? '期中检测' : '距离期中检测';
     valueDHMS.innerHTML =
       '<span class="cd-affix">' + (isPast ? '已过去' : '还有') + '</span>' +
-      '<span class="cd-num">' + days + '</span><span class="cd-unit">天</span>' +
-      '<span class="cd-num">' + pad2(hours) + '</span><span class="cd-unit">时</span>' +
-      '<span class="cd-num">' + pad2(mins) + '</span><span class="cd-unit">分</span>' +
-      '<span class="cd-num">' + pad2(secs) + '</span><span class="cd-unit">秒</span>';
-
-    /* ---------- 卡片二：总分秒（最后一张） ---------- */
+      '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + days + '</span><span class="cd-unit">天</span>' +
+      '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + pad2(hours) + '</span><span class="cd-unit">时</span>' +
+      '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + pad2(mins) + '</span><span class="cd-unit">分</span>' +
+      '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + pad2(secs) + '</span><span class="cd-unit">秒</span>';
     labelTime.textContent = isPast ? '期中检测' : '距离期中检测';
     valueTime.innerHTML =
       '<span class="cd-affix">' + (isPast ? '已过去' : '还有') + '</span>' +
-      '<span class="cd-num">' + totalMin + '</span><span class="cd-unit">分</span>' +
-      '<span class="cd-num">' + pad2(sec) + '</span><span class="cd-unit">秒</span>';
+      '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + totalMin + '</span><span class="cd-unit">分</span>' +
+      '<span class="cd-num" style="font-family:\'XITS‑Bold\',serif;">' + pad2(sec) + '</span><span class="cd-unit">秒</span>';
   }
-
   update();
   setInterval(update, 1000);
-
 })();
 </script>
-
 </body>
 </html>
