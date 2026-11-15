@@ -4,45 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>作业清单 · 孤鸿组</title>
-<style>
-/* ========== 字体系统（与「作业答案」页保持一致，Fonts 文件夹首字母大写） ========== */
-@font-face {
-  font-family: "FZHei";
-  src: url("./Fonts/方正黑体简体.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "FZShuSong";
-  src: url("./Fonts/方正书宋简体.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "FZKai";
-  src: url("./Fonts/方正楷体简体.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-/* 题序 / 数字 / 英文加粗专用 */
-@font-face {
-  font-family: "XITS-Bold";
-  src: url("./Fonts/XITS-Bold.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-/* 英文字母（基本拉丁） */
-@font-face {
-  font-family: "XITS";
-  src: url("./Fonts/XITS.woff2") format("woff2");
-  unicode-range: U+0020-007E, U+00A0-00BF, U+00D7, U+00F7, U+2000-206F, U+2100-214F;
-  font-display: swap;
-}
+<link rel="preload" href="./fonts/方正书宋简体.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./fonts/XITS.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./fonts/XITS-Bold.woff2" as="font" type="font/woff2" crossorigin>
 
+<style>
+/* ========== 字体声明 ========== */
+@font-face { font-family: "FZHei"; src: url("./fonts/方正黑体简体.woff2") format("woff2"); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: "FZShuSong"; src: url("./fonts/方正书宋简体.woff2") format("woff2"); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: "FZKai"; src: url("./fonts/方正楷体简体.woff2") format("woff2"); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: "XITS-Bold"; src: url("./fonts/XITS-Bold.woff2") format("woff2"); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: "XITS"; src: url("./fonts/XITS.woff2") format("woff2"); unicode-range: U+0020-007E, U+00A0-00BF, U+00D7, U+00F7, U+2000-206F, U+2100-214F; font-display: swap; }
+
+/* ========== 全局重置 ========== */
 * {
   margin: 0;
   padding: 0;
@@ -51,7 +25,6 @@
   font-weight: normal;
   -webkit-tap-highlight-color: transparent;
 }
-
 html, body {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -60,596 +33,169 @@ html, body {
   -webkit-touch-callout: none;
   touch-action: manipulation;
 }
-
-.task-card,
-.task-card * {
+.task-card, .task-card * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
 }
-
-.task-card {
-  touch-action: pan-y;
-}
-
+.task-card { touch-action: pan-y; }
 body {
   background: #f0f2f5;
   min-height: 100vh;
   padding: 24px;
   background-image:
-    radial-gradient(circle at 20% 30%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(200, 255, 255, 0.3) 0%, transparent 50%);
+    radial-gradient(circle at 20% 30%, rgba(200,200,255,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(200,255,255,0.3) 0%, transparent 50%);
   background-attachment: fixed;
 }
+.container { max-width: 600px; margin: 0 auto; }
 
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* ---------------- 顶部标题 ---------------- */
-.header {
-  text-align: center;
-  margin-bottom: 28px;
-  opacity: 0;
-  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
-}
-
-.header-top {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 12px;
-}
-
-.header h1 {
-  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 1.75rem;
-  letter-spacing: 3px;
-  color: #1a1a1a;
-}
-
-.subtitle {
-  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 5px;
-  color: #9a9a9a;
-  text-indent: 5px;
-}
-
-.divider {
-  width: 32px;
-  height: 3px;
-  border-radius: 2px;
-  background: #1a1a1a;
-  opacity: 0.85;
-  margin: 14px auto 0;
-}
-
-/* 返回按钮 */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  color: #666;
-  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.85rem;
-  padding: 8px 16px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+/* ========== 顶部标题 ========== */
+.header { text-align: center; margin-bottom: 28px; opacity: 0; animation: fadeDown 0.6s cubic-bezier(0.4,0,0.2,1) 0.05s forwards; }
+.header-top { display: flex; justify-content: center; align-items: center; gap: 14px; margin-bottom: 12px; }
+.header h1 { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 1.75rem; letter-spacing: 3px; color: #1a1a1a; }
+.subtitle { font-family: 'FZKai','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.72rem; letter-spacing: 5px; color: #9a9a9a; text-indent: 5px; }
+.divider { width: 32px; height: 3px; border-radius: 2px; background: #1a1a1a; opacity: 0.85; margin: 14px auto 0; }
+.back-btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #666; font-family: 'FZKai','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.85rem; padding: 8px 16px; border-radius: 12px; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 4px 16px rgba(0,0,0,0.04); transition: all 0.25s cubic-bezier(0.4,0,0.2,1); }
 .back-btn svg { width: 14px; height: 14px; }
+.back-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.9); }
+@media (hover: hover) { .back-btn:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); } }
 
-.back-btn:active {
-  transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.9);
-}
+/* ========== 筛选按钮组 ========== */
+.filter-bar { display: flex; gap: 8px; margin-bottom: 16px; opacity: 0; animation: fadeDown 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s forwards; }
+.filter-btn { flex: 1; padding: 9px 0; border-radius: 14px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.78rem; letter-spacing: 1px; color: #666; cursor: pointer; transition: all 0.32s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 14px rgba(0,0,0,0.04); }
+.filter-btn.active { background: linear-gradient(180deg, rgba(46,46,52,0.92) 0%, rgba(24,24,28,0.88) 100%); backdrop-filter: blur(22px) saturate(1.7); -webkit-backdrop-filter: blur(22px) saturate(1.7); color: #fff; border-color: rgba(255,255,255,0.16); box-shadow: 0 6px 22px rgba(0,0,0,0.24), 0 1px 3px rgba(0,0,0,0.18), inset 2px -2px 1px -1px rgba(255,255,255,0.22), inset -2px 2px 1px -1px rgba(255,255,255,0.14), inset 0 0 2px rgba(255,255,255,0.10); transform: translateY(-1px); }
+.filter-btn:active { transform: scale(0.96); }
+.filter-btn.active:active { transform: translateY(-1px) scale(0.97); }
 
-@media (hover: hover) {
-  .back-btn:hover {
-    background: rgba(255, 255, 255, 0.9);
-    transform: translateY(-1px);
-  }
-}
+/* ========== 统计条 ========== */
+.stats-bar { display: flex; gap: 10px; margin-bottom: 16px; opacity: 0; animation: fadeDown 0.6s cubic-bezier(0.4,0,0.2,1) 0.15s forwards; }
+.stat-item { flex: 1; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: 18px; padding: 12px 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.04); cursor: pointer; position: relative; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.42s cubic-bezier(0.22,1,0.36,1), border-color 0.35s ease, box-shadow 0.42s cubic-bezier(0.22,1,0.36,1), backdrop-filter 0.35s ease; }
+.stat-item:active { transform: scale(0.96); }
+.stat-item.active { background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.22) 100%); backdrop-filter: blur(26px) saturate(1.8); -webkit-backdrop-filter: blur(26px) saturate(1.8); border-color: rgba(255,255,255,0.75); box-shadow: 0 10px 30px rgba(91,155,213,0.16), 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.98), inset 0 -1px 0 rgba(255,255,255,0.45), inset 1px 0 0 rgba(255,255,255,0.55), inset -1px 0 0 rgba(255,255,255,0.30); }
+@media (hover: hover) { .stat-item:hover { background: rgba(255,255,255,0.85); transform: translateY(-1px); } }
+.stat-num { font-family: 'XITS-Bold','XITS',serif; font-size: 1.5rem; font-weight: normal; color: #5b9bd5; line-height: 1.1; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; }
+.stat-label { margin-top: 4px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.66rem; color: #9a9a9a; letter-spacing: 1.2px; transition: color 0.3s ease; }
 
-/* ---------------- 筛选按钮组 ---------------- */
-.filter-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  opacity: 0;
-  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
-}
-
-.filter-btn {
-  flex: 1;
-  padding: 9px 0;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.78rem;
-  letter-spacing: 1px;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.filter-btn.active {
-  background: #1a1a1a;
-  color: #fff;
-  border-color: #1a1a1a;
-}
-
-.filter-btn:active {
-  transform: scale(0.96);
-}
-
-/* ---------------- 统计条 ---------------- */
-.stats-bar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-  opacity: 0;
-  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards;
-}
-
-.stat-item {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 18px;
-  padding: 12px 14px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-}
-
-/* 统计数字：XITS-Bold + 浅蓝 */
-.stat-num {
-  font-family: 'XITS-Bold', 'XITS', serif;
-  font-size: 1.5rem;
-  font-weight: normal;
-  color: #5b9bd5;
-  line-height: 1.1;
-  letter-spacing: 0.5px;
-  font-variant-numeric: tabular-nums;
-}
-
-.stat-label {
-  margin-top: 4px;
-  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.66rem;
-  color: #9a9a9a;
-  letter-spacing: 1.2px;
-}
-
-/* ---------------- 卡片 ---------------- */
+/* ========== 卡片本体 ========== */
 .task-card {
   position: relative;
   width: 100%;
   max-width: 100%;
-
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255,255,255,0.65);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255,255,255,0.8);
   border-radius: 22px;
   padding: 15px 20px;
   margin-bottom: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.04);
   cursor: pointer;
-
   opacity: 0;
   translate: 0 36px;
-
-  transition:
-    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    translate 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: scale(1);
-}
-
-.task-card.enter-from-top {
-  translate: 0 -36px;
-}
-
-.task-card.reveal {
-  opacity: 1;
-  translate: 0 0;
-}
-
-.task-card:active {
-  transform: scale(0.985);
-  background: rgba(255, 255, 255, 0.85);
-}
-
-/* 头部：左文字组、右科目组，两端分布，整体垂直居中 */
-.task-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  min-height: 38px;
-}
-
-.task-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
-}
-
-.task-title h3 {
-  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.98rem;
-  color: #1a1a1a;
-  line-height: 1.45;
-  letter-spacing: 0.4px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* 科目图标 */
-.icon {
-  position: relative;
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: #1a1a1a;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 0.3s ease;
-}
-
-.icon svg {
-  width: 18px;
-  height: 18px;
-  display: block;
-  overflow: visible;
-}
-
-.task-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.subject-tag {
-  background: #1a1a1a;
-  color: #fff;
-  padding: 3px 9px;
-  border-radius: 7px;
-  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.68rem;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  transition: background 0.3s ease;
-}
-
-.arrow {
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
-  color: #ccc;
-  font-size: 0.75rem;
-}
-
-.task-card.active .arrow {
-  transform: rotate(180deg);
-  color: #1a1a1a;
-}
-
-/* ---------------- 内容区域：grid-template-rows 平滑展开（不受内容高度限制） ---------------- */
-.task-content {
-  display: grid;
-  grid-template-rows: 0fr;
-  margin-top: 0;
-  color: #555;
-  line-height: 1.7;
-  font-size: 0.9rem;
-  overflow: hidden;
   transition:
-    grid-template-rows 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-    margin-top 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.5s cubic-bezier(0.4,0,0.2,1),
+    translate 0.5s cubic-bezier(0.4,0,0.2,1),
+    background 0.3s cubic-bezier(0.4,0,0.2,1),
+    box-shadow 0.3s cubic-bezier(0.4,0,0.2,1),
+    transform 0.3s cubic-bezier(0.4,0,0.2,1),
+    border-color 0.3s cubic-bezier(0.4,0,0.2,1);
 }
+.task-card.enter-from-top { translate: 0 -36px; }
+.task-card.reveal { opacity: 1; translate: 0 0; }
+/* 筛选隐藏：用 display:none 物理移出，绝不依赖会残留的 opacity */
+.task-card.card-hidden { display: none !important; }
+.task-card:active { transform: scale(0.985); background: rgba(255,255,255,0.85); }
 
-.task-card.active .task-content {
-  grid-template-rows: 1fr;
-  margin-top: 9px;
-}
+/* 头部 */
+.task-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 38px; }
+.task-title { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.task-title h3 { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.98rem; color: #1a1a1a; line-height: 1.45; letter-spacing: 0.4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.3s ease; }
+.icon { position: relative; flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), background 0.4s ease; }
+.icon svg { width: 18px; height: 18px; display: block; overflow: visible; }
+.task-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.subject-tag { background: #1a1a1a; color: #fff; padding: 3px 9px; border-radius: 7px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.68rem; letter-spacing: 0.5px; white-space: nowrap; transition: background 0.4s ease, opacity 0.3s ease; }
+.arrow { transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), color 0.3s; color: #ccc; font-size: 0.75rem; }
+.task-card.active .arrow { transform: rotate(180deg); color: #1a1a1a; }
 
-/* 收起时：内层不占 padding / border，确保卡片整体垂直居中 */
-.task-content-inner {
-  min-height: 0;
-  overflow: hidden;
-  padding-top: 0;
-  border-top: 0 dashed transparent;
-  font-family: 'XITS', 'FZShuSong', 'PingFang SC', 'Microsoft YaHei', serif;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition:
-    opacity 0.24s ease,
-    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
-    padding-top 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-    border-top-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.3s ease;
-}
-
-/* 展开时：恢复 padding 与虚线分隔线 */
-.task-card.active .task-content-inner {
-  padding-top: 10px;
-  border-top-width: 1px;
-  border-top-color: rgba(0, 0, 0, 0.08);
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.36s ease 0.06s,
-    transform 0.46s cubic-bezier(0.22, 1, 0.36, 1) 0.03s,
-    padding-top 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-    border-top-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.3s ease;
-}
-
+/* 展开内容 */
+.task-content { display: grid; grid-template-rows: 0fr; margin-top: 0; color: #555; line-height: 1.7; font-size: 0.9rem; overflow: hidden; transition: grid-template-rows 0.42s cubic-bezier(0.22,1,0.36,1), margin-top 0.42s cubic-bezier(0.22,1,0.36,1); }
+.task-card.active .task-content { grid-template-rows: 1fr; margin-top: 9px; }
+.task-content-inner { min-height: 0; overflow: hidden; padding-top: 0; border-top: 0 dashed transparent; font-family: 'XITS','FZShuSong','PingFang SC','Microsoft YaHei',serif; opacity: 0; transform: translateY(-6px); transition: opacity 0.24s ease, transform 0.38s cubic-bezier(0.22,1,0.36,1), padding-top 0.42s cubic-bezier(0.22,1,0.36,1), border-top-width 0.42s cubic-bezier(0.22,1,0.36,1), border-color 0.3s ease; }
+.task-card.active .task-content-inner { padding-top: 10px; border-top-width: 1px; border-top-color: rgba(0,0,0,0.08); opacity: 1; transform: translateY(0); transition: opacity 0.36s ease 0.06s, transform 0.46s cubic-bezier(0.22,1,0.36,1) 0.03s, padding-top 0.42s cubic-bezier(0.22,1,0.36,1), border-top-width 0.42s cubic-bezier(0.22,1,0.36,1), border-color 0.3s ease; }
 .task-content-inner > :first-child { margin-top: 0; }
 .task-content-inner > :last-child { margin-bottom: 0; }
+.task-content p { line-height: 1.75; font-size: 0.9rem; margin-bottom: 6px; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+.task-content strong, .task-content b { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; color: #1a1a1a; }
 
-.task-content p {
-  line-height: 1.75;
-  font-size: 0.9rem;
-  margin-bottom: 6px;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-}
+/* 完成态 */
+.task-card.done { background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.16) 100%); backdrop-filter: blur(28px) saturate(1.5); -webkit-backdrop-filter: blur(28px) saturate(1.5); border-color: rgba(255,255,255,0.55); box-shadow: 0 8px 32px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(255,255,255,0.30), inset 1px 0 0 rgba(255,255,255,0.40); }
+.task-card.done .task-title h3 { color: #9a9a9a; text-decoration: line-through; text-decoration-color: rgba(26,26,26,0.30); text-decoration-thickness: 1.5px; }
+.task-card.done .subject-tag { background: rgba(160,160,160,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.task-card.done .icon { background: linear-gradient(180deg, #e0e0e0 0%, #cacaca 100%); color: #888; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.05); }
+.task-card.done .arrow { color: #ddd; }
+.check-badge { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: #fff; color: #1a1a1a; border: 1.2px solid #1a1a1a; display: flex; align-items: center; justify-content: center; z-index: 3; transform: scale(0); opacity: 0; transition: transform 0.34s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease; pointer-events: none; }
+.check-badge svg { width: 11px; height: 11px; display: block; stroke: #1a1a1a; stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+.task-card.done .check-badge { transform: scale(1); opacity: 1; }
 
-.task-content strong,
-.task-content b {
-  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  color: #1a1a1a;
-}
+/* 注意事项卡 */
+.task-card.notice-card .icon { background: #fff; color: #1a1a1a; border: 1.5px solid #1a1a1a; }
+.task-card.notice-card.done .icon { background: #fff; color: #1a1a1a; border: 1.5px solid #1a1a1a; }
+.notice-content { font-size: 0.88rem; line-height: 1.75; color: #555; }
+.notice-item { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
+.notice-item + .notice-item { border-top: 1px dashed rgba(0,0,0,0.06); }
+.notice-dot { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; font-family: 'XITS-Bold',serif; font-size: 0.68rem; margin-top: 2px; }
+.notice-text { flex: 1; min-width: 0; }
+.notice-text strong { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; color: #1a1a1a; }
 
-/* ---------------- 完成态 ---------------- */
-.task-card.done {
-  background: rgba(255, 255, 255, 0.42);
-}
+/* 提示条 / 页脚 */
+.hint-bar { text-align: center; font-family: 'FZKai','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.66rem; color: #b5b5b5; letter-spacing: 1px; margin-bottom: 14px; opacity: 0; animation: fadeDown 0.6s cubic-bezier(0.4,0,0.2,1) 0.25s forwards; }
+.footer { margin-top: 30px; text-align: center; font-family: 'FZKai','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.68rem; letter-spacing: 2px; color: #b5b5b5; opacity: 0; animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.8s forwards; }
 
-.task-card.done .task-title h3 {
-  color: #9a9a9a;
-  text-decoration: line-through;
-  text-decoration-color: rgba(26, 26, 26, 0.35);
-  text-decoration-thickness: 1.5px;
-}
+/* ========== 关键帧 ========== */
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-.task-card.done .subject-tag {
-  background: #c4c4c4;
-}
-
-.task-card.done .icon {
-  background: #d8d8d8;
-}
-
-.task-card.done .arrow {
-  color: #ddd;
-}
-
-/* 完成徽标：贴在科目图标右上角 */
-.check-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  color: #1a1a1a;
-  border: 1.2px solid #1a1a1a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'XITS-Bold', serif;
-  font-size: 11px;
-  line-height: 1;
-  z-index: 3;
-  transform: scale(0);
-  opacity: 0;
-  transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
-              opacity 0.2s ease;
-  pointer-events: none;
-}
-
-.task-card.done .check-badge {
-  transform: scale(1);
-  opacity: 1;
-}
-
-/* ---------------- 注意事项卡片 ---------------- */
-.task-card.notice-card .icon {
-  background: #fff;
-  color: #1a1a1a;
-  border: 1.5px solid #1a1a1a;
-}
-
-.notice-content {
-  font-size: 0.88rem;
-  line-height: 1.75;
-  color: #555;
-}
-
-.notice-item {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 6px 0;
-}
-
-.notice-item + .notice-item {
-  border-top: 1px dashed rgba(0, 0, 0, 0.06);
-}
-
-.notice-dot {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #1a1a1a;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'XITS-Bold', serif;
-  font-size: 0.68rem;
-  margin-top: 2px;
-}
-
-.notice-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.notice-text strong {
-  font-family: 'FZHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  color: #1a1a1a;
-}
-
-/* ---------------- 提示条 / 页脚 ---------------- */
-.hint-bar {
-  text-align: center;
-  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.66rem;
-  color: #b5b5b5;
-  letter-spacing: 1px;
-  margin-bottom: 14px;
-  opacity: 0;
-  animation: fadeDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
-}
-
-.footer {
-  margin-top: 30px;
-  text-align: center;
-  font-family: 'FZKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 0.68rem;
-  letter-spacing: 2px;
-  color: #b5b5b5;
-  opacity: 0;
-  animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
-}
-
-/* ---------------- 动画 ---------------- */
-@keyframes fadeDown {
-  from { opacity: 0; transform: translateY(-14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ---------------- 桌面端悬停 ---------------- */
+/* ========== 桌面悬停 ========== */
 @media (hover: hover) {
-  .task-card:hover {
-    transform: translateY(-2px) scale(1);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
-  }
-
-  .task-card:hover .icon {
-    transform: rotate(-4deg) scale(1.06);
-  }
-
-  .task-card.active:hover .icon {
-    transform: rotate(-6deg) scale(1.06);
-  }
-
-  .filter-btn:hover {
-    background: rgba(255, 255, 255, 0.9);
-  }
-
-  .filter-btn.active:hover {
-    background: #1a1a1a;
-  }
-
-  /* 已完成卡片悬停时保持淡雅，不被通用 hover 提亮 */
-  .task-card.done:hover {
-    background: rgba(255, 255, 255, 0.55);
-  }
+  .task-card:hover { transform: translateY(-2px) scale(1); background: rgba(255,255,255,0.85); box-shadow: 0 12px 40px rgba(0,0,0,0.07); }
+  .task-card:hover .icon { transform: rotate(-4deg) scale(1.06); }
+  .task-card.active:hover .icon { transform: rotate(-6deg) scale(1.06); }
+  .filter-btn:hover { background: rgba(255,255,255,0.9); }
+  .filter-btn.active:hover { background: linear-gradient(180deg, rgba(46,46,52,0.92) 0%, rgba(24,24,28,0.88) 100%); }
+  .task-card.done:hover { background: linear-gradient(135deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.22) 100%); box-shadow: 0 12px 40px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(255,255,255,0.30); }
 }
+.task-card:active .icon { transform: scale(0.9); }
+.task-card.active .icon { transform: rotate(-6deg) scale(1.06); }
 
-.task-card:active .icon {
-  transform: scale(0.9);
-}
-
-.task-card.active .icon {
-  transform: rotate(-6deg) scale(1.06);
-}
-
-/* ---------------- 小屏适配 ---------------- */
+/* ========== 小屏适配 ========== */
 @media (max-width: 360px) {
   body { padding: 18px; }
-
   .header h1 { font-size: 1.5rem; letter-spacing: 2px; }
-
   .task-card { padding: 13px 17px; }
-
   .task-title h3 { font-size: 0.92rem; }
-
-  .icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-  }
-
+  .icon { width: 34px; height: 34px; border-radius: 10px; }
   .icon svg { width: 16px; height: 16px; }
-
-  .subject-tag {
-    font-size: 0.62rem;
-    padding: 2px 7px;
-  }
-
+  .subject-tag { font-size: 0.62rem; padding: 2px 7px; }
   .stat-num { font-size: 1.25rem; }
   .stat-label { font-size: 0.6rem; }
-
-  .check-badge {
-    width: 16px;
-    height: 16px;
-    font-size: 10px;
-    top: -5px;
-    right: -5px;
-  }
+  .check-badge { width: 16px; height: 16px; top: -5px; right: -5px; }
+  .check-badge svg { width: 10px; height: 10px; }
 }
 </style>
 </head>
 <body>
-
 <div class="container">
 
+  <!-- ============ 顶部标题 ============ -->
   <div class="header">
     <div class="header-top">
       <h1>作业清单</h1>
       <a href="index.html" class="back-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
         返回
@@ -659,23 +205,24 @@ body {
     <div class="divider"></div>
   </div>
 
-  <!-- 筛选栏 -->
+  <!-- ============ 筛选栏 ============ -->
   <div class="filter-bar">
     <button class="filter-btn active" data-filter="all">全部</button>
     <button class="filter-btn" data-filter="done">已完成</button>
     <button class="filter-btn" data-filter="undone">未完成</button>
   </div>
 
+  <!-- ============ 统计条 ============ -->
   <div class="stats-bar">
-    <div class="stat-item">
+    <div class="stat-item" data-filter="all" role="button" tabindex="0">
       <div class="stat-num" id="statTotal">0</div>
       <div class="stat-label">总任务</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item" data-filter="done" role="button" tabindex="0">
       <div class="stat-num" id="statDone">0</div>
       <div class="stat-label">已完成</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item" data-filter="undone" role="button" tabindex="0">
       <div class="stat-num" id="statLeft">0</div>
       <div class="stat-label">待完成</div>
     </div>
@@ -688,8 +235,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
@@ -698,7 +244,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -712,8 +258,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
@@ -722,7 +267,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -736,8 +281,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
@@ -746,7 +290,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -760,8 +304,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
@@ -770,7 +313,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -784,8 +327,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
@@ -794,7 +336,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">语文</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -804,13 +346,13 @@ body {
     </div>
   </div>
 
+
   <!-- ============ 数学 ============ -->
   <div class="task-card" data-subject="数学">
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
             <path d="M8.4 17.4h7.2"/>
@@ -820,7 +362,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">数学</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -834,8 +376,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
             <path d="M8.4 17.4h7.2"/>
@@ -845,7 +386,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">数学</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -859,8 +400,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M8.4 12.4l2.4 2.4 4.8-5"/>
             <path d="M8.4 17.4h7.2"/>
@@ -870,7 +410,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">数学</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -880,13 +420,13 @@ body {
     </div>
   </div>
 
+
   <!-- ============ 英语 ============ -->
   <div class="task-card" data-subject="英语">
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M3.6 12h16.8"/>
             <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
@@ -897,7 +437,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">英语</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -911,8 +451,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M3.6 12h16.8"/>
             <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
@@ -923,7 +462,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">英语</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -937,8 +476,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M3.6 12h16.8"/>
             <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
@@ -949,7 +487,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">英语</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -963,8 +501,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M3.6 12h16.8"/>
             <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
@@ -975,7 +512,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">英语</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -989,8 +526,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M3.6 12h16.8"/>
             <path d="M12 3.4c2.4 2.7 2.4 14.5 0 17.2"/>
@@ -1001,7 +537,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">英语</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1011,13 +547,13 @@ body {
     </div>
   </div>
 
-  <!-- ============ 世界历史 ============ -->
+
+  <!-- ============ 历史 ============ -->
   <div class="task-card" data-subject="历史">
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M3.6 12h16.8"/>
             <path d="M12 3.4v17.2"/>
@@ -1029,7 +565,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">历史</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1043,8 +579,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M3.6 12h16.8"/>
             <path d="M12 3.4v17.2"/>
@@ -1056,7 +591,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">历史</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1066,13 +601,13 @@ body {
     </div>
   </div>
 
-  <!-- ============ 道法 ============ -->
+
+  <!-- ============ 道德与法治 ============ -->
   <div class="task-card" data-subject="道德与法治">
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
           </svg>
         </div>
@@ -1080,7 +615,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">道德与法治</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1094,8 +629,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
           </svg>
         </div>
@@ -1103,7 +637,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">道德与法治</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1117,8 +651,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l4.414 4.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
           </svg>
         </div>
@@ -1126,7 +659,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">道德与法治</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1136,13 +669,13 @@ body {
     </div>
   </div>
 
+
   <!-- ============ 物理 ============ -->
   <div class="task-card" data-subject="物理">
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="2.2"/>
             <path d="M12 3.4v3"/>
             <path d="M12 17.6v3"/>
@@ -1158,7 +691,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">物理</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1172,8 +705,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="2.2"/>
             <path d="M12 3.4v3"/>
             <path d="M12 17.6v3"/>
@@ -1189,7 +721,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">物理</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1203,8 +735,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="2.2"/>
             <path d="M12 3.4v3"/>
             <path d="M12 17.6v3"/>
@@ -1220,7 +751,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">物理</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1234,8 +765,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="2.2"/>
             <path d="M12 3.4v3"/>
             <path d="M12 17.6v3"/>
@@ -1251,7 +781,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">物理</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1261,13 +791,13 @@ body {
     </div>
   </div>
 
+
   <!-- ============ 化学 ============ -->
   <div class="task-card" data-subject="化学">
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
             <path d="M8.6 3.4h6.8"/>
             <path d="M7.6 13.4h8.8"/>
@@ -1277,7 +807,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">化学</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1291,8 +821,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
             <path d="M8.6 3.4h6.8"/>
             <path d="M7.6 13.4h8.8"/>
@@ -1302,7 +831,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">化学</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1316,8 +845,7 @@ body {
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M10 3.4v6.2L5.2 17.8a2 2 0 0 0 1.7 3H17a2 2 0 0 0 1.7-3L14 9.6V3.4"/>
             <path d="M8.6 3.4h6.8"/>
             <path d="M7.6 13.4h8.8"/>
@@ -1327,7 +855,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">化学</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1337,13 +865,13 @@ body {
     </div>
   </div>
 
+
   <!-- ============ 注意事项 ============ -->
   <div class="task-card notice-card" data-subject="注意事项">
     <div class="task-header">
       <div class="task-title">
         <div class="icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="8.6"/>
             <path d="M12 8v5"/>
             <circle cx="12" cy="16.2" r="0.9" fill="currentColor" stroke="none"/>
@@ -1353,7 +881,7 @@ body {
       </div>
       <div class="task-meta">
         <span class="subject-tag">注意事项</span>
-        <span class="arrow">▼</span>
+        <span class="arrow">&#9660;</span>
       </div>
     </div>
     <div class="task-content">
@@ -1372,6 +900,8 @@ body {
     </div>
   </div>
 
+
+  <!-- ============ 页脚 ============ -->
   <div class="footer">孤鸿组 · 秋假作业清单</div>
 
 </div>
@@ -1381,20 +911,26 @@ body {
   'use strict';
 
   /* ============================================================
-     1. 完成徽标：注入到科目图标右上角
-        （HTML 已手写 .task-content-inner，不再重复包裹，避免双层内边距和双重虚线）
+     1. 完成徽标（给每张卡的图标右上角挂一个 SVG 对勾）
      ============================================================ */
+  var SVG_NS = 'http://www.w3.org/2000/svg';
   document.querySelectorAll('.task-card').forEach(function (card) {
     var icon = card.querySelector('.icon');
     if (!icon || icon.querySelector('.check-badge')) return;
     var badge = document.createElement('span');
     badge.className = 'check-badge';
-    badge.textContent = '✓';
+    var svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    var path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute('d', 'M5.5 12.6l4.2 4.2 8.8-9');
+    svg.appendChild(path);
+    badge.appendChild(svg);
     icon.appendChild(badge);
   });
 
   /* ============================================================
-     2. 滚动方向感知（决定入场方向）
+     2. 滚动方向感知（决定卡片从上方还是下方入场）
      ============================================================ */
   var scrollDir = 'down';
   var lastScrollY = window.scrollY;
@@ -1406,44 +942,34 @@ body {
     }
   }, { passive: true });
 
-  /* ============================================================
-     3. 卡片入场动画
-     ============================================================ */
   var allCards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
 
+  /* ============================================================
+     3. 滚动入场：进入视口淡入一次，.reveal 永久保留
+        （不再因离开视口移除 .reveal，避免布局变化导致意外 opacity:0）
+     ============================================================ */
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var el = entry.target;
         if (entry.isIntersecting) {
           if (el.classList.contains('reveal')) return;
-          if (scrollDir === 'up') {
-            el.classList.add('enter-from-top');
-          } else {
-            el.classList.remove('enter-from-top');
-          }
+          if (scrollDir === 'up') { el.classList.add('enter-from-top'); }
+          else { el.classList.remove('enter-from-top'); }
           void el.offsetWidth;
           el.classList.add('reveal');
-        } else {
-          el.classList.remove('reveal');
         }
       });
-    }, {
-      threshold: 0.05,
-      rootMargin: '0px 0px -30px 0px'
-    });
+    }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
     allCards.forEach(function (card) { io.observe(card); });
   } else {
     allCards.forEach(function (card) { card.classList.add('reveal'); });
   }
 
   /* ============================================================
-     4. 数据层：可勾选卡片集合（排除注意事项卡）
+     4. 数据层：id 计算、本地存储、统计
      ============================================================ */
-  function isNotice(card) {
-    return card.classList.contains('notice-card');
-  }
-
+  function isNotice(card) { return card.classList.contains('notice-card'); }
   var checkCards = allCards.filter(function (c) { return !isNotice(c); });
 
   function cardId(card) {
@@ -1452,40 +978,20 @@ body {
     var title = h3 ? h3.textContent.replace(/\s+/g, ' ').trim() : '';
     return subject + '::' + title;
   }
-
-  /* 任务指纹：清单改动过就自动清空旧记录，避免勾选错位 */
   function buildTaskHash() {
     var ids = checkCards.map(cardId).sort();
     var str = ids.join('||');
-    try {
-      return btoa(unescape(encodeURIComponent(str)));
-    } catch (e) {
-      return String(ids.length) + '-' + str.length;
-    }
+    try { return btoa(unescape(encodeURIComponent(str))); } catch (e) { return String(ids.length) + '-' + str.length; }
   }
   var currentHash = buildTaskHash();
-
   var STORE_KEY = 'guhong_work_v4';
 
-  function loadStorage() {
-    try {
-      var raw = localStorage.getItem(STORE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function saveStorage(data) {
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(data));
-    } catch (e) {}
-  }
+  function loadStorage() { try { var raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+  function saveStorage(data) { try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {} }
 
   var stored = loadStorage();
   var doneSet = [];
   var currentFilter = 'all';
-
   if (stored && stored.hash === currentHash) {
     doneSet = Array.isArray(stored.done) ? stored.done : [];
     currentFilter = stored.filter || 'all';
@@ -1493,7 +999,6 @@ body {
     saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter });
   }
 
-  /* 只保留仍存在的任务，防止历史脏数据把「已完成」顶过总数 */
   var validIds = {};
   checkCards.forEach(function (c) { validIds[cardId(c)] = true; });
   doneSet = doneSet.filter(function (id) { return validIds[id]; });
@@ -1501,212 +1006,187 @@ body {
   var statTotal = document.getElementById('statTotal');
   var statDone = document.getElementById('statDone');
   var statLeft = document.getElementById('statLeft');
-
   function renderStats() {
     statTotal.textContent = checkCards.length;
     statDone.textContent = doneSet.length;
     statLeft.textContent = Math.max(0, checkCards.length - doneSet.length);
   }
-
-  function applyDoneState(card, isDone) {
-    card.classList.toggle('done', !!isDone);
-    card.setAttribute('aria-checked', isDone ? 'true' : 'false');
-  }
-
-  function saveData() {
-    saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter });
-  }
+  function applyDoneState(card, isDone) { card.classList.toggle('done', !!isDone); card.setAttribute('aria-checked', isDone ? 'true' : 'false'); }
+  function saveData() { saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter }); }
 
   /* ============================================================
-     5. 完成状态切换（幂等：再长按即取消）
+     5. 完成状态切换（长按触发）
      ============================================================ */
   function toggleDone(card) {
     if (isNotice(card)) return null;
-
     var id = cardId(card);
     var idx = doneSet.indexOf(id);
     var isDone;
-
-    if (idx === -1) {
-      doneSet.push(id);
-      isDone = true;
-    } else {
-      doneSet.splice(idx, 1);
-      isDone = false;
-    }
-
+    if (idx === -1) { doneSet.push(id); isDone = true; } else { doneSet.splice(idx, 1); isDone = false; }
     applyDoneState(card, isDone);
     saveData();
     renderStats();
-    applyFilter();
-
+    applyFilter(false);            // 标记完成：即时隐藏/显示该卡，不做整屏动画
     if (isDone) card.classList.remove('active');
-
-    if (navigator.vibrate) {
-      try { navigator.vibrate(isDone ? 18 : [12, 40, 12]); } catch (e) {}
-    }
+    if (navigator.vibrate) { try { navigator.vibrate(isDone ? 18 : [12, 40, 12]); } catch (e) {} }
     return isDone;
   }
 
-  checkCards.forEach(function (card) {
-    if (doneSet.indexOf(cardId(card)) !== -1) applyDoneState(card, true);
-  });
+  checkCards.forEach(function (card) { if (doneSet.indexOf(cardId(card)) !== -1) applyDoneState(card, true); });
   renderStats();
 
   /* ============================================================
-     6. 筛选
+     6. 视图切换（带过渡动画，且绝不出现“卡片自己消失”）
+        防消失铁律：动画一律 fill:none，最终可见性只由 class + display 决定，
+        绝不让任何会残留 opacity:0 的动画覆盖 CSS。
+          显示：停旧动画 -> 去 card-hidden/display:none -> 清内联 -> 补 reveal -> 淡入(fill:none)
+          隐藏：停旧动画 -> 淡出(fill:none) -> 动画结束、若仍应隐藏才加 card-hidden(display:none)
+        任何时刻卡片是否可见，都由 card-hidden 这个 class 说了算，动画只负责“过程”。
      ============================================================ */
-  var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+  var cardAnim = new WeakMap();
 
-  function applyFilter() {
+  function stopAnim(card) {
+    var a = cardAnim.get(card);
+    if (a) { try { a.cancel(); } catch (e) {} cardAnim.delete(card); }
+  }
+
+  function showCard(card, animate) {
+    stopAnim(card);
+    card.classList.remove('card-hidden');
+    card.style.display = '';
+    card.style.opacity = '';
+    card.style.transform = '';
+    card.classList.add('reveal');                 // 保证最终 opacity 为 1
+    if (animate && card.animate) {
+      var a = card.animate(
+        [{ opacity: 0, transform: 'translateY(-10px) scale(0.97)' },
+         { opacity: 1, transform: 'translateY(0) scale(1)' }],
+        { duration: 320, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'none' }
+      );
+      cardAnim.set(card, a);
+      a.onfinish = function () { if (cardAnim.get(card) === a) cardAnim.delete(card); };
+    }
+  }
+
+  function hideCard(card, animate) {
+    stopAnim(card);
+    if (animate && card.animate) {
+      var a = card.animate(
+        [{ opacity: 1, transform: 'translateY(0) scale(1)' },
+         { opacity: 0, transform: 'translateY(-8px) scale(0.96)' }],
+        { duration: 240, easing: 'cubic-bezier(0.4,0,0.2,1)', fill: 'none' }
+      );
+      cardAnim.set(card, a);
+      a.onfinish = function () {
+        if (cardAnim.get(card) !== a) return;     // 已被更新的动画接管，放弃
+        if (shouldShowCard(card)) { showCard(card, false); return; }  // 期间又要求显示
+        card.style.opacity = '';
+        card.style.transform = '';
+        card.classList.add('card-hidden');        // 此时才物理隐藏
+        cardAnim.delete(card);
+      };
+    } else {
+      card.style.opacity = '';
+      card.style.transform = '';
+      card.classList.add('card-hidden');
+    }
+  }
+
+  function shouldShowCard(card) {
+    if (isNotice(card)) return true;
+    var isDone = doneSet.indexOf(cardId(card)) !== -1;
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'done') return isDone;
+    return !isDone;
+  }
+
+  function applyFilter(animate) {
+    if (animate === undefined) animate = true;
     allCards.forEach(function (card) {
-      if (isNotice(card)) {
-        card.style.display = '';
-        return;
-      }
-      var isDone = doneSet.indexOf(cardId(card)) !== -1;
-      if (currentFilter === 'all') {
-        card.style.display = '';
-      } else if (currentFilter === 'done') {
-        card.style.display = isDone ? '' : 'none';
-      } else {
-        card.style.display = isDone ? 'none' : '';
-      }
+      if (shouldShowCard(card)) showCard(card, animate);
+      else hideCard(card, animate);
     });
   }
-
-  function setFilter(mode) {
-    currentFilter = mode;
-    filterBtns.forEach(function (b) {
-      b.classList.toggle('active', b.dataset.filter === mode);
-    });
-    saveData();
-    applyFilter();
-  }
-
-  filterBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      setFilter(btn.dataset.filter);
-    });
-  });
-  setFilter(currentFilter);
 
   /* ============================================================
-     7. 手势：轻触展开 / 长按标记完成（Pointer Events）
-        CSS 已关掉 user-select 与 touch-callout，长按不再触发系统选择
+     7. 筛选交互（按钮 + 统计卡点击切换视图）
+     ============================================================ */
+  var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+  var statItems = Array.prototype.slice.call(document.querySelectorAll('.stat-item'));
+  function syncFilterUI() {
+    filterBtns.forEach(function (b) { b.classList.toggle('active', b.dataset.filter === currentFilter); });
+    statItems.forEach(function (s) { s.classList.toggle('active', s.dataset.filter === currentFilter); });
+  }
+  function setFilter(mode) {
+    if (currentFilter === mode) { syncFilterUI(); return; }
+    currentFilter = mode;
+    syncFilterUI();
+    saveData();
+    applyFilter(true);            // 切换视图：带过渡动画
+  }
+  filterBtns.forEach(function (btn) { btn.addEventListener('click', function () { setFilter(btn.dataset.filter); }); });
+  statItems.forEach(function (item) {
+    item.addEventListener('click', function () { setFilter(item.dataset.filter); });
+    item.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFilter(item.dataset.filter); } });
+  });
+
+  /* 初始化：同步 UI；按当前筛选落位（无动画，保留滚动入场效果） */
+  syncFilterUI();
+  allCards.forEach(function (card) {
+    if (shouldShowCard(card)) {
+      card.classList.remove('card-hidden');
+      card.style.display = '';
+    } else {
+      card.classList.add('card-hidden');
+    }
+  });
+
+  /* ============================================================
+     8. 手势：轻触展开 / 长按标记完成（含移动端右键长按兜底）
      ============================================================ */
   var LONG_PRESS_MS = 450;
-  var MOVE_TOLERANCE = 10;
-
-  var suppressNextClick = false;
-  var suppressTimer = null;
-
-  /* 只吞掉紧随其后的那一次 click，窗口不宜过长，否则长按后再点会失灵 */
-  function suppressClick() {
-    suppressNextClick = true;
-    if (suppressTimer) clearTimeout(suppressTimer);
-    suppressTimer = setTimeout(function () { suppressNextClick = false; }, 120);
-  }
-
-  /* 桌面端右键不再弹系统菜单 */
-  document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
-  });
+  var MOVE_TOLERANCE = 16;
+  var CLICK_BLOCK_MS = 300;
+  document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 
   allCards.forEach(function (card) {
     var checkable = !isNotice(card);
     var pressTimer = null;
-    var startX = 0;
-    var startY = 0;
-    var pointerId = null;
-    var longPressFired = false;
-    var moved = false;
-
-    function clearPress() {
-      if (pressTimer !== null) {
-        clearTimeout(pressTimer);
-        pressTimer = null;
-      }
-    }
-
-    function reset() {
-      clearPress();
-      pointerId = null;
-      moved = false;
-    }
+    var startX = 0, startY = 0, pointerId = null, moved = false, lastLongPressTime = 0;
+    function clearPress() { if (pressTimer !== null) { clearTimeout(pressTimer); pressTimer = null; } }
+    function reset() { clearPress(); pointerId = null; moved = false; }
 
     card.addEventListener('pointerdown', function (e) {
       if (!e.isPrimary) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       if (pointerId !== null) return;
-
-      pointerId = e.pointerId;
-      longPressFired = false;
-      moved = false;
-      startX = e.clientX;
-      startY = e.clientY;
-
-      try { card.setPointerCapture(e.pointerId); } catch (err) {}
-
       if (!checkable) return;
-
+      pointerId = e.pointerId; moved = false; startX = e.clientX; startY = e.clientY;
+      try { card.setPointerCapture(e.pointerId); } catch (err) {}
       clearPress();
       pressTimer = setTimeout(function () {
         pressTimer = null;
-        longPressFired = true;
+        lastLongPressTime = Date.now();
         toggleDone(card);
         if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
       }, LONG_PRESS_MS);
     });
-
     card.addEventListener('pointermove', function (e) {
       if (e.pointerId !== pointerId || moved) return;
-      if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE ||
-          Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
-        moved = true;
-        clearPress();
-      }
+      if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE || Math.abs(e.clientY - startY) > MOVE_TOLERANCE) { moved = true; clearPress(); }
     });
-
     card.addEventListener('pointerup', function (e) {
       if (e.pointerId !== pointerId) return;
-
       clearPress();
-      var wasLong = longPressFired;
-      var wasMoved = moved;
-
       try { card.releasePointerCapture(e.pointerId); } catch (err) {}
       reset();
-      longPressFired = false;
-
-      if (wasLong) {
-        e.preventDefault();
-        suppressClick();
-        return;
-      }
-      if (wasMoved) suppressClick();
     });
-
-    card.addEventListener('pointercancel', function (e) {
-      if (e.pointerId !== pointerId) return;
-      clearPress();
-      reset();
-      longPressFired = false;
-    });
-
-    card.addEventListener('click', function () {
-      if (suppressNextClick || longPressFired) return;
-      card.classList.toggle('active');
-    });
-
-    /* 桌面端右键 = 切换完成 */
-    card.addEventListener('contextmenu', function () {
-      if (checkable) toggleDone(card);
-    });
+    card.addEventListener('pointercancel', function (e) { if (e.pointerId !== pointerId) return; clearPress(); reset(); });
+    card.addEventListener('click', function () { if (Date.now() - lastLongPressTime < CLICK_BLOCK_MS) return; card.classList.toggle('active'); });
+    card.addEventListener('contextmenu', function (e) { e.preventDefault(); if (!checkable) return; if (Date.now() - lastLongPressTime < 500) return; toggleDone(card); });
   });
 
 })();
 </script>
-
 </body>
 </html>

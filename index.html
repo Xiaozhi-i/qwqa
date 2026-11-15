@@ -4,52 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>孤鸿组 · 学习资料中心</title>
+<!-- 只预加载真正首屏就要用到的2个字体：全局FZShuSong + 倒计时数字XITS‑Bold -->
+<link rel="preload" href="./fonts/方正书宋简体.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./fonts/XITS-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* ========== 自定义woff2字体，文件夹Fonts（大写F） ========== */
+/* ========== 自定义woff2字体，改成小写fonts，避免大小写坑 ========== */
 @font-face {
   font-family: "FZHei";
-  src: url("./Fonts/方正黑体简体.woff2") format("woff2");
+  src: url("./fonts/方正黑体简体.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  /* 不预加载，按需加载，只有用到才下载 */
 }
 @font-face {
   font-family: "FZShuSong";
-  src: url("./Fonts/方正书宋简体.woff2") format("woff2");
+  src: url("./fonts/方正书宋简体.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "FZKai";
-  src: url("./Fonts/方正楷体简体.woff2") format("woff2");
+  src: url("./fonts/方正楷体简体.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: "FZFangSong";
-  src: url("./Fonts/方正仿宋简体.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* ❗ FZFangSong页面完全未使用，直接删除 @font‑face */
+
 /* 倒计时数字专用粗体字体 XITS‑Bold */
 @font-face {
   font-family: "XITS‑Bold";
-  src: url("./Fonts/XITS-Bold.woff2") format("woff2");
+  src: url("./fonts/XITS-Bold.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
+
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* 全局默认字体：方正书宋 */
     font-family: 'FZShuSong', 'PingFang SC', 'Microsoft YaHei', sans-serif;
     font-weight: normal;
     -webkit-tap-highlight-color: transparent;
   }
+
+/* 👉把所有行内style的font-family全部迁移到CSS类，删除html上大量重复style */
+.font-fzhei {
+  font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif;
+}
+.font-fzkai {
+  font-family: 'FZKai','PingFang SC','Microsoft YaHei',sans-serif;
+}
+.font-xitsbold {
+  font-family: 'XITS‑Bold',serif;
+}
+
   body {
     background: #f0f2f5;
     min-height: 100vh;
