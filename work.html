@@ -65,7 +65,7 @@ body {
 
 /* ========== 筛选按钮组 ========== */
 .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; opacity: 0; animation: fadeDown 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s forwards; }
-.filter-btn { flex: 1; padding: 9px 0; border-radius: 14px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.78rem; letter-spacing: 1px; color: #666; cursor: pointer; transition: all 0.32s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 14px rgba(0,0,0,0.04); }
+.filter-btn { flex: 1; padding: 9px 0; border-radius: 14px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.78rem; letter-spacing: 1px; color: #666; cursor: pointer; transition: background 0.3s cubic-bezier(0.4,0,0.2,1), color 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.25s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 14px rgba(0,0,0,0.04); }
 .filter-btn.active { background: linear-gradient(180deg, rgba(46,46,52,0.92) 0%, rgba(24,24,28,0.88) 100%); backdrop-filter: blur(22px) saturate(1.7); -webkit-backdrop-filter: blur(22px) saturate(1.7); color: #fff; border-color: rgba(255,255,255,0.16); box-shadow: 0 6px 22px rgba(0,0,0,0.24), 0 1px 3px rgba(0,0,0,0.18), inset 2px -2px 1px -1px rgba(255,255,255,0.22), inset -2px 2px 1px -1px rgba(255,255,255,0.14), inset 0 0 2px rgba(255,255,255,0.10); transform: translateY(-1px); }
 .filter-btn:active { transform: scale(0.96); }
 .filter-btn.active:active { transform: translateY(-1px) scale(0.97); }
@@ -79,62 +79,101 @@ body {
 .stat-num { font-family: 'XITS-Bold','XITS',serif; font-size: 1.5rem; font-weight: normal; color: #5b9bd5; line-height: 1.1; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; }
 .stat-label { margin-top: 4px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.66rem; color: #9a9a9a; letter-spacing: 1.2px; transition: color 0.3s ease; }
 
+/* ========== 卡片容器：无过渡，仅承载 FLIP 的 transform ========== */
+.card-wrapper {
+  display: block;
+  margin-bottom: 12px;
+}
+.card-wrapper.is-hidden {
+  display: none;
+}
+
+/* 动画期间：禁用 backdrop-filter，用不透明纯色替代 —— 这是性能关键 */
+body.card-animating .task-card,
+body.card-animating .stat-item,
+body.card-animating .filter-btn {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.card-animating .task-card {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+body.card-animating .task-card.done {
+  background-color: rgba(245, 245, 250, 0.94) !important;
+}
+body.card-animating .task-card.notice-card {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+
 /* ========== 卡片本体 ========== */
 .task-card {
   position: relative;
   width: 100%;
   max-width: 100%;
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.8);
   border-radius: 22px;
   padding: 15px 20px;
-  margin-bottom: 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.04);
   cursor: pointer;
   opacity: 0;
   translate: 0 36px;
   transform: scale(1);
   transition:
-    opacity 0.5s cubic-bezier(0.4,0,0.2,1),
-    translate 0.5s cubic-bezier(0.4,0,0.2,1),
-    background 0.3s cubic-bezier(0.4,0,0.2,1),
-    box-shadow 0.3s cubic-bezier(0.4,0,0.2,1),
-    transform 0.3s cubic-bezier(0.4,0,0.2,1),
-    border-color 0.3s cubic-bezier(0.4,0,0.2,1);
+    opacity 0.28s cubic-bezier(0.4,0,0.2,1),
+    translate 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.22s cubic-bezier(0.4,0,0.2,1);
 }
 .task-card.enter-from-top { translate: 0 -36px; }
 .task-card.reveal { opacity: 1; translate: 0 0; }
-/* 筛选隐藏：用 display:none 物理移出，绝不依赖会残留的 opacity */
-.task-card.card-hidden { display: none !important; }
 .task-card:active { transform: scale(0.985); background: rgba(255,255,255,0.85); }
 
 /* 头部 */
 .task-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 38px; }
 .task-title { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
 .task-title h3 { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.98rem; color: #1a1a1a; line-height: 1.45; letter-spacing: 0.4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.3s ease; }
-.icon { position: relative; flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), background 0.4s ease; }
+.icon { position: relative; flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease; }
 .icon svg { width: 18px; height: 18px; display: block; overflow: visible; }
 .task-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.subject-tag { background: #1a1a1a; color: #fff; padding: 3px 9px; border-radius: 7px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.68rem; letter-spacing: 0.5px; white-space: nowrap; transition: background 0.4s ease, opacity 0.3s ease; }
-.arrow { transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), color 0.3s; color: #ccc; font-size: 0.75rem; }
+.subject-tag { background: #1a1a1a; color: #fff; padding: 3px 9px; border-radius: 7px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.68rem; letter-spacing: 0.5px; white-space: nowrap; transition: background 0.3s ease, opacity 0.3s ease; }
+.arrow { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), color 0.3s; color: #ccc; font-size: 0.75rem; }
 .task-card.active .arrow { transform: rotate(180deg); color: #1a1a1a; }
 
-/* 展开内容 */
-.task-content { display: grid; grid-template-rows: 0fr; margin-top: 0; color: #555; line-height: 1.7; font-size: 0.9rem; overflow: hidden; transition: grid-template-rows 0.42s cubic-bezier(0.22,1,0.36,1), margin-top 0.42s cubic-bezier(0.22,1,0.36,1); }
-.task-card.active .task-content { grid-template-rows: 1fr; margin-top: 9px; }
-.task-content-inner { min-height: 0; overflow: hidden; padding-top: 0; border-top: 0 dashed transparent; font-family: 'XITS','FZShuSong','PingFang SC','Microsoft YaHei',serif; opacity: 0; transform: translateY(-6px); transition: opacity 0.24s ease, transform 0.38s cubic-bezier(0.22,1,0.36,1), padding-top 0.42s cubic-bezier(0.22,1,0.36,1), border-top-width 0.42s cubic-bezier(0.22,1,0.36,1), border-color 0.3s ease; }
-.task-card.active .task-content-inner { padding-top: 10px; border-top-width: 1px; border-top-color: rgba(0,0,0,0.08); opacity: 1; transform: translateY(0); transition: opacity 0.36s ease 0.06s, transform 0.46s cubic-bezier(0.22,1,0.36,1) 0.03s, padding-top 0.42s cubic-bezier(0.22,1,0.36,1), border-top-width 0.42s cubic-bezier(0.22,1,0.36,1), border-color 0.3s ease; }
-.task-content-inner > :first-child { margin-top: 0; }
-.task-content-inner > :last-child { margin-bottom: 0; }
+/* 展开内容：只保留 grid-template-rows 一个过渡 + opacity，去掉 padding/border/margin 过渡 */
+.task-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.task-card.active .task-content {
+  grid-template-rows: 1fr;
+}
+.task-content-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 9px;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+  color: #555;
+  line-height: 1.7;
+  font-size: 0.9rem;
+  font-family: 'XITS','FZShuSong','PingFang SC','Microsoft YaHei',serif;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.task-card.active .task-content-inner {
+  opacity: 1;
+  transition: opacity 0.24s ease 0.04s;
+}
 .task-content p { line-height: 1.75; font-size: 0.9rem; margin-bottom: 6px; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
 .task-content strong, .task-content b { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; color: #1a1a1a; }
 
 /* 完成态 */
-.task-card.done { background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.16) 100%); backdrop-filter: blur(28px) saturate(1.5); -webkit-backdrop-filter: blur(28px) saturate(1.5); border-color: rgba(255,255,255,0.55); box-shadow: 0 8px 32px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(255,255,255,0.30), inset 1px 0 0 rgba(255,255,255,0.40); }
+.task-card.done { background: linear-gradient(135deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.18) 100%); backdrop-filter: blur(12px) saturate(1.3); -webkit-backdrop-filter: blur(12px) saturate(1.3); border-color: rgba(255,255,255,0.55); box-shadow: 0 8px 32px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(255,255,255,0.30), inset 1px 0 0 rgba(255,255,255,0.40); }
 .task-card.done .task-title h3 { color: #9a9a9a; text-decoration: line-through; text-decoration-color: rgba(26,26,26,0.30); text-decoration-thickness: 1.5px; }
-.task-card.done .subject-tag { background: rgba(160,160,160,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.task-card.done .subject-tag { background: rgba(160,160,160,0.85); }
 .task-card.done .icon { background: linear-gradient(180deg, #e0e0e0 0%, #cacaca 100%); color: #888; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.05); }
 .task-card.done .arrow { color: #ddd; }
 .check-badge { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: #fff; color: #1a1a1a; border: 1.2px solid #1a1a1a; display: flex; align-items: center; justify-content: center; z-index: 3; transform: scale(0); opacity: 0; transition: transform 0.34s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease; pointer-events: none; }
@@ -161,12 +200,12 @@ body {
 
 /* ========== 桌面悬停 ========== */
 @media (hover: hover) {
-  .task-card:hover { transform: translateY(-2px) scale(1); background: rgba(255,255,255,0.85); box-shadow: 0 12px 40px rgba(0,0,0,0.07); }
+  .task-card:hover { transform: translateY(-2px) scale(1); background: rgba(255,255,255,0.88); box-shadow: 0 12px 40px rgba(0,0,0,0.07); }
   .task-card:hover .icon { transform: rotate(-4deg) scale(1.06); }
   .task-card.active:hover .icon { transform: rotate(-6deg) scale(1.06); }
   .filter-btn:hover { background: rgba(255,255,255,0.9); }
   .filter-btn.active:hover { background: linear-gradient(180deg, rgba(46,46,52,0.92) 0%, rgba(24,24,28,0.88) 100%); }
-  .task-card.done:hover { background: linear-gradient(135deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.22) 100%); box-shadow: 0 12px 40px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(255,255,255,0.30); }
+  .task-card.done:hover { background: linear-gradient(135deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.24) 100%); }
 }
 .task-card:active .icon { transform: scale(0.9); }
 .task-card.active .icon { transform: rotate(-6deg) scale(1.06); }
@@ -911,7 +950,7 @@ body {
   'use strict';
 
   /* ============================================================
-     1. 完成徽标（给每张卡的图标右上角挂一个 SVG 对勾）
+     1. 完成徽标
      ============================================================ */
   var SVG_NS = 'http://www.w3.org/2000/svg';
   document.querySelectorAll('.task-card').forEach(function (card) {
@@ -930,7 +969,22 @@ body {
   });
 
   /* ============================================================
-     2. 滚动方向感知（决定卡片从上方还是下方入场）
+     2. 包 .card-wrapper（仅作为 FLIP 的位移容器，不做高度过渡）
+     ============================================================ */
+  var allCards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
+
+  allCards.forEach(function (card) {
+    if (card.parentNode && card.parentNode.classList &&
+        card.parentNode.classList.contains('card-wrapper')) return;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'card-wrapper';
+    card.parentNode.insertBefore(wrapper, card);
+    wrapper.appendChild(card);
+    card._wrapper = wrapper;
+  });
+
+  /* ============================================================
+     3. 滚动方向感知
      ============================================================ */
   var scrollDir = 'down';
   var lastScrollY = window.scrollY;
@@ -942,11 +996,8 @@ body {
     }
   }, { passive: true });
 
-  var allCards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
-
   /* ============================================================
-     3. 滚动入场：进入视口淡入一次，.reveal 永久保留
-        （不再因离开视口移除 .reveal，避免布局变化导致意外 opacity:0）
+     4. 滚动入场
      ============================================================ */
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
@@ -967,7 +1018,7 @@ body {
   }
 
   /* ============================================================
-     4. 数据层：id 计算、本地存储、统计
+     5. 数据层
      ============================================================ */
   function isNotice(card) { return card.classList.contains('notice-card'); }
   var checkCards = allCards.filter(function (c) { return !isNotice(c); });
@@ -1015,7 +1066,7 @@ body {
   function saveData() { saveStorage({ hash: currentHash, done: doneSet, filter: currentFilter }); }
 
   /* ============================================================
-     5. 完成状态切换（长按触发）
+     6. 完成状态切换
      ============================================================ */
   function toggleDone(card) {
     if (isNotice(card)) return null;
@@ -1026,7 +1077,6 @@ body {
     applyDoneState(card, isDone);
     saveData();
     renderStats();
-    applyFilter(false);            // 标记完成：即时隐藏/显示该卡，不做整屏动画
     if (isDone) card.classList.remove('active');
     if (navigator.vibrate) { try { navigator.vibrate(isDone ? 18 : [12, 40, 12]); } catch (e) {} }
     return isDone;
@@ -1036,60 +1086,21 @@ body {
   renderStats();
 
   /* ============================================================
-     6. 视图切换（带过渡动画，且绝不出现“卡片自己消失”）
-        防消失铁律：动画一律 fill:none，最终可见性只由 class + display 决定，
-        绝不让任何会残留 opacity:0 的动画覆盖 CSS。
-          显示：停旧动画 -> 去 card-hidden/display:none -> 清内联 -> 补 reveal -> 淡入(fill:none)
-          隐藏：停旧动画 -> 淡出(fill:none) -> 动画结束、若仍应隐藏才加 card-hidden(display:none)
-        任何时刻卡片是否可见，都由 card-hidden 这个 class 说了算，动画只负责“过程”。
+     7. 视图切换：FLIP 动画
+        · 用 display:none 立即隐藏/显示，DOM 位置瞬间到位
+        · 对受影响的可见卡片做 FLIP（transform 位移回落），全部走合成层
+        · 新出现的卡片从下方 10px 上浮 + 淡入，配合瀑布流延迟 18ms
+        · 动画期间 body.card-animating，禁用 backdrop-filter
      ============================================================ */
-  var cardAnim = new WeakMap();
+  var animTimer = null;
 
-  function stopAnim(card) {
-    var a = cardAnim.get(card);
-    if (a) { try { a.cancel(); } catch (e) {} cardAnim.delete(card); }
-  }
-
-  function showCard(card, animate) {
-    stopAnim(card);
-    card.classList.remove('card-hidden');
-    card.style.display = '';
-    card.style.opacity = '';
-    card.style.transform = '';
-    card.classList.add('reveal');                 // 保证最终 opacity 为 1
-    if (animate && card.animate) {
-      var a = card.animate(
-        [{ opacity: 0, transform: 'translateY(-10px) scale(0.97)' },
-         { opacity: 1, transform: 'translateY(0) scale(1)' }],
-        { duration: 320, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'none' }
-      );
-      cardAnim.set(card, a);
-      a.onfinish = function () { if (cardAnim.get(card) === a) cardAnim.delete(card); };
-    }
-  }
-
-  function hideCard(card, animate) {
-    stopAnim(card);
-    if (animate && card.animate) {
-      var a = card.animate(
-        [{ opacity: 1, transform: 'translateY(0) scale(1)' },
-         { opacity: 0, transform: 'translateY(-8px) scale(0.96)' }],
-        { duration: 240, easing: 'cubic-bezier(0.4,0,0.2,1)', fill: 'none' }
-      );
-      cardAnim.set(card, a);
-      a.onfinish = function () {
-        if (cardAnim.get(card) !== a) return;     // 已被更新的动画接管，放弃
-        if (shouldShowCard(card)) { showCard(card, false); return; }  // 期间又要求显示
-        card.style.opacity = '';
-        card.style.transform = '';
-        card.classList.add('card-hidden');        // 此时才物理隐藏
-        cardAnim.delete(card);
-      };
-    } else {
-      card.style.opacity = '';
-      card.style.transform = '';
-      card.classList.add('card-hidden');
-    }
+  function markAnimating(duration) {
+    document.body.classList.add('card-animating');
+    if (animTimer) clearTimeout(animTimer);
+    animTimer = setTimeout(function () {
+      document.body.classList.remove('card-animating');
+      animTimer = null;
+    }, duration);
   }
 
   function shouldShowCard(card) {
@@ -1100,16 +1111,119 @@ body {
     return !isDone;
   }
 
-  function applyFilter(animate) {
-    if (animate === undefined) animate = true;
+  function isCardVisible(card) {
+    return card._wrapper.style.display !== 'none';
+  }
+
+  function setCardVisibleNow(card, visible) {
+    var w = card._wrapper;
+    if (visible) {
+      w.style.display = '';
+      if (!card.classList.contains('reveal')) card.classList.add('reveal');
+    } else {
+      w.style.display = 'none';
+    }
+    w.style.transform = '';
+    w.style.opacity = '';
+    w.style.transition = '';
+  }
+
+  function applyFilterInstant() {
     allCards.forEach(function (card) {
-      if (shouldShowCard(card)) showCard(card, animate);
-      else hideCard(card, animate);
+      setCardVisibleNow(card, shouldShowCard(card));
     });
   }
 
+  function applyFilterWithAnimation() {
+    markAnimating(460);
+
+    /* 1. 记录所有当前可见卡片的旧位置 */
+    var oldTops = new Map();
+    allCards.forEach(function (card) {
+      if (!isCardVisible(card)) return;
+      oldTops.set(card, card._wrapper.getBoundingClientRect().top);
+    });
+
+    /* 2. 应用 DOM 变化：display 立即切换 */
+    var newlyShown = [];
+    allCards.forEach(function (card) {
+      var show = shouldShowCard(card);
+      var visible = isCardVisible(card);
+      if (show && !visible) {
+        // 显示：先设初始态，随后触发过渡
+        card._wrapper.style.display = '';
+        if (!card.classList.contains('reveal')) card.classList.add('reveal');
+        card._wrapper.style.opacity = '0';
+        card._wrapper.style.transform = 'translateY(10px)';
+        card._wrapper.style.transition = 'none';
+        newlyShown.push(card);
+      } else if (!show && visible) {
+        // 隐藏：立即移除，空间瞬间回收
+        card._wrapper.style.display = 'none';
+      }
+    });
+
+    /* 3. FLIP：对仍可见、且之前也可见的卡片，计算位移 */
+    var flips = [];
+    allCards.forEach(function (card) {
+      if (!isCardVisible(card)) return;
+      if (!oldTops.has(card)) return; // 之前不可见，不参与 FLIP
+      var oldTop = oldTops.get(card);
+      var newTop = card._wrapper.getBoundingClientRect().top;
+      var delta = oldTop - newTop;
+      if (Math.abs(delta) > 0.5) {
+        flips.push({ card: card, delta: delta });
+      }
+    });
+
+    /* 4. 设置初始位移（无过渡） */
+    flips.forEach(function (item) {
+      item.card._wrapper.style.transition = 'none';
+      item.card._wrapper.style.transform = 'translateY(' + item.delta + 'px)';
+    });
+
+    /* 5. 强制重排 */
+    void document.body.offsetHeight;
+
+    /* 6. 触发过渡 */
+    requestAnimationFrame(function () {
+      flips.forEach(function (item) {
+        var w = item.card._wrapper;
+        w.style.transition = 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+        w.style.transform = '';
+      });
+
+      /* 新出现的卡片：瀑布流错开，从下方 10px 上浮 + 淡入 */
+      var STEP = 18;
+      newlyShown.forEach(function (card, i) {
+        var w = card._wrapper;
+        var delay = i * STEP;
+        setTimeout(function () {
+          w.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+          w.style.opacity = '1';
+          w.style.transform = '';
+        }, delay);
+      });
+    });
+
+    /* 7. 清理 */
+    setTimeout(function () {
+      allCards.forEach(function (card) {
+        var w = card._wrapper;
+        w.style.transition = '';
+        w.style.transform = '';
+        w.style.opacity = '';
+      });
+    }, 600);
+  }
+
+  function applyFilter(animate) {
+    if (!animate) { applyFilterInstant(); return; }
+    applyFilterWithAnimation();
+  }
+
   /* ============================================================
-     7. 筛选交互（按钮 + 统计卡点击切换视图）
+     8. 筛选交互
      ============================================================ */
   var filterBtns = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
   var statItems = Array.prototype.slice.call(document.querySelectorAll('.stat-item'));
@@ -1122,7 +1236,7 @@ body {
     currentFilter = mode;
     syncFilterUI();
     saveData();
-    applyFilter(true);            // 切换视图：带过渡动画
+    applyFilter(true);
   }
   filterBtns.forEach(function (btn) { btn.addEventListener('click', function () { setFilter(btn.dataset.filter); }); });
   statItems.forEach(function (item) {
@@ -1130,60 +1244,115 @@ body {
     item.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFilter(item.dataset.filter); } });
   });
 
-  /* 初始化：同步 UI；按当前筛选落位（无动画，保留滚动入场效果） */
+  /* 初始化：立即落位，无动画 */
   syncFilterUI();
-  allCards.forEach(function (card) {
-    if (shouldShowCard(card)) {
-      card.classList.remove('card-hidden');
-      card.style.display = '';
-    } else {
-      card.classList.add('card-hidden');
-    }
-  });
+  applyFilterInstant();
 
   /* ============================================================
-     8. 手势：轻触展开 / 长按标记完成（含移动端右键长按兜底）
+     9. 手势
      ============================================================ */
   var LONG_PRESS_MS = 450;
   var MOVE_TOLERANCE = 16;
   var CLICK_BLOCK_MS = 300;
+  var interactingPointerId = null;
+
   document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 
   allCards.forEach(function (card) {
     var checkable = !isNotice(card);
     var pressTimer = null;
-    var startX = 0, startY = 0, pointerId = null, moved = false, lastLongPressTime = 0;
-    function clearPress() { if (pressTimer !== null) { clearTimeout(pressTimer); pressTimer = null; } }
-    function reset() { clearPress(); pointerId = null; moved = false; }
+    var startX = 0, startY = 0;
+    var pointerId = null;
+    var moved = false;
+    var longPressFired = false;
+    var lastLongPressTime = 0;
+
+    function clearPress() {
+      if (pressTimer !== null) { clearTimeout(pressTimer); pressTimer = null; }
+    }
+    function resetPointer() {
+      clearPress();
+      pointerId = null;
+      moved = false;
+      longPressFired = false;
+      if (interactingPointerId !== null) interactingPointerId = null;
+    }
 
     card.addEventListener('pointerdown', function (e) {
       if (!e.isPrimary) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       if (pointerId !== null) return;
       if (!checkable) return;
-      pointerId = e.pointerId; moved = false; startX = e.clientX; startY = e.clientY;
+      if (interactingPointerId !== null) return;
+
+      pointerId = e.pointerId;
+      interactingPointerId = e.pointerId;
+      moved = false;
+      longPressFired = false;
+      startX = e.clientX;
+      startY = e.clientY;
+
       try { card.setPointerCapture(e.pointerId); } catch (err) {}
+
       clearPress();
       pressTimer = setTimeout(function () {
         pressTimer = null;
+        longPressFired = true;
         lastLongPressTime = Date.now();
         toggleDone(card);
         if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
       }, LONG_PRESS_MS);
     });
+
     card.addEventListener('pointermove', function (e) {
       if (e.pointerId !== pointerId || moved) return;
-      if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE || Math.abs(e.clientY - startY) > MOVE_TOLERANCE) { moved = true; clearPress(); }
+      if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE ||
+          Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
+        moved = true;
+        clearPress();
+      }
     });
+
     card.addEventListener('pointerup', function (e) {
       if (e.pointerId !== pointerId) return;
+      var wasLong = longPressFired;
+      var wasMoved = moved;
+
       clearPress();
       try { card.releasePointerCapture(e.pointerId); } catch (err) {}
-      reset();
+      resetPointer();
+
+      if (wasLong) {
+        applyFilter(true);
+        if (e.cancelable) e.preventDefault();
+        return;
+      }
+      if (wasMoved) return;
+
+      card.classList.toggle('active');
+      // 展开/收起时也短暂禁用 backdrop-filter，避免展开动画卡顿
+      markAnimating(360);
     });
-    card.addEventListener('pointercancel', function (e) { if (e.pointerId !== pointerId) return; clearPress(); reset(); });
-    card.addEventListener('click', function () { if (Date.now() - lastLongPressTime < CLICK_BLOCK_MS) return; card.classList.toggle('active'); });
-    card.addEventListener('contextmenu', function (e) { e.preventDefault(); if (!checkable) return; if (Date.now() - lastLongPressTime < 500) return; toggleDone(card); });
+
+    card.addEventListener('pointercancel', function (e) {
+      if (e.pointerId !== pointerId) return;
+      var wasLong = longPressFired;
+      clearPress();
+      resetPointer();
+      if (wasLong) applyFilter(true);
+    });
+
+    card.addEventListener('click', function () {
+      if (Date.now() - lastLongPressTime < CLICK_BLOCK_MS) return;
+    });
+
+    card.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      if (!checkable) return;
+      if (Date.now() - lastLongPressTime < 500) return;
+      toggleDone(card);
+      applyFilter(true);
+    });
   });
 
 })();
