@@ -1824,35 +1824,45 @@ body.lightbox-lock {
   }
 
   /* ---------- 2. 题序着色：把 "1." "2." 这类包成 XITS-Bold 浅蓝 ---------- */
-  var QNO_SOURCE = '(^|[^0-9A-Za-z])(\\d{1,2})\\.(?=[(（A-Za-z\\u4e00-\\u9fa5])';
-
   function decorateTextNode(node) {
-    var text = node.nodeValue;
-    if (!text || text.indexOf('.') === -1) return;
+  var text = node.nodeValue;
+  if (!text) return;
+  // 快速跳过：不含 . ( （ 的直接跳过
+  if (text.indexOf('.') === -1 && text.indexOf('(') === -1 && text.indexOf('（') === -1) return;
 
-    var re = new RegExp(QNO_SOURCE, 'g');
-    var m, last = 0, matched = false;
-    var frag = document.createDocumentFragment();
+  // 同时匹配三种题序：
+  //   1. "数字."      例：1.  2.
+  //   2. "(数字)"     例：(33)  (1)
+  //   3. "（数字）"   例：（1）  （2）
+  var re = /(^|[^0-9A-Za-z])(?:\((\d{1,2})\)|（(\d{1,2})）|(\d{1,2})\.(?=[(（A-Za-z\u4e00-\u9fa5]))/g;
+  var m, last = 0, matched = false;
+  var frag = document.createDocumentFragment();
 
-    while ((m = re.exec(text))) {
-      matched = true;
-      var start = m.index + m[1].length;
-      if (start > last) {
-        frag.appendChild(document.createTextNode(text.slice(last, start)));
-      }
-      var span = document.createElement('span');
-      span.className = 'qno';
-      span.textContent = m[2] + '.';
-      frag.appendChild(span);
-      last = start + m[2].length + 1;
+  while ((m = re.exec(text))) {
+    matched = true;
+    var start = m.index + m[1].length;
+    if (start > last) {
+      frag.appendChild(document.createTextNode(text.slice(last, start)));
     }
-
-    if (!matched) return;
-    if (last < text.length) {
-      frag.appendChild(document.createTextNode(text.slice(last)));
+    var span = document.createElement('span');
+    span.className = 'qno';
+    if (m[2] !== undefined) {
+      span.textContent = '(' + m[2] + ')';
+    } else if (m[3] !== undefined) {
+      span.textContent = '（' + m[3] + '）';
+    } else {
+      span.textContent = m[4] + '.';
     }
-    node.parentNode.replaceChild(frag, node);
+    frag.appendChild(span);
+    last = m.index + m[0].length;
   }
+
+  if (!matched) return;
+  if (last < text.length) {
+    frag.appendChild(document.createTextNode(text.slice(last)));
+  }
+  node.parentNode.replaceChild(frag, node);
+}
 
   function decorateQuestionNumbers() {
     var root = document.querySelector('.container');
