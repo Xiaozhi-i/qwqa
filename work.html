@@ -63,23 +63,89 @@ body {
 .back-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.9); }
 @media (hover: hover) { .back-btn:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); } }
 
-/* ========== 筛选按钮组 ========== */
+/* ========== 筛选按钮组：选中态为浅蓝液态玻璃 ========== */
 .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; opacity: 0; animation: fadeDown 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s forwards; }
-.filter-btn { flex: 1; padding: 9px 0; border-radius: 14px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.78rem; letter-spacing: 1px; color: #666; cursor: pointer; transition: background 0.3s cubic-bezier(0.4,0,0.2,1), color 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.25s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 14px rgba(0,0,0,0.04); }
-.filter-btn.active { background: linear-gradient(180deg, rgba(46,46,52,0.92) 0%, rgba(24,24,28,0.88) 100%); backdrop-filter: blur(22px) saturate(1.7); -webkit-backdrop-filter: blur(22px) saturate(1.7); color: #fff; border-color: rgba(255,255,255,0.16); box-shadow: 0 6px 22px rgba(0,0,0,0.24), 0 1px 3px rgba(0,0,0,0.18), inset 2px -2px 1px -1px rgba(255,255,255,0.22), inset -2px 2px 1px -1px rgba(255,255,255,0.14), inset 0 0 2px rgba(255,255,255,0.10); transform: translateY(-1px); }
+.filter-btn {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  color: #666;
+  cursor: pointer;
+  transition: background 0.24s cubic-bezier(0.22,0.9,0.35,1), color 0.24s cubic-bezier(0.22,0.9,0.35,1), transform 0.2s cubic-bezier(0.22,0.9,0.35,1), box-shadow 0.24s cubic-bezier(0.22,0.9,0.35,1), border-color 0.24s;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+.filter-btn.active {
+  background:
+    linear-gradient(180deg,
+      rgba(214, 236, 254, 0.92) 0%,
+      rgba(158, 202, 244, 0.90) 100%);
+  backdrop-filter: blur(28px) saturate(1.8);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
+  color: #174a7d;
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 8px 26px rgba(120, 175, 230, 0.30),
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -1px 0 rgba(120, 165, 220, 0.42),
+    inset 1.5px 0 1px -0.5px rgba(255, 255, 255, 0.88),
+    inset -1.5px 0 1px -0.5px rgba(255, 255, 255, 0.66),
+    inset 0 0 8px rgba(255, 255, 255, 0.42);
+  transform: translateY(-1px);
+}
 .filter-btn:active { transform: scale(0.96); }
 .filter-btn.active:active { transform: translateY(-1px) scale(0.97); }
 
-/* ========== 统计条 ========== */
+/* ========== 统计条：未选中纯白底，选中态为纯白高光液态玻璃 ========== */
 .stats-bar { display: flex; gap: 10px; margin-bottom: 16px; opacity: 0; animation: fadeDown 0.6s cubic-bezier(0.4,0,0.2,1) 0.15s forwards; }
-.stat-item { flex: 1; background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: 18px; padding: 12px 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.04); cursor: pointer; position: relative; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.42s cubic-bezier(0.22,1,0.36,1), border-color 0.35s ease, box-shadow 0.42s cubic-bezier(0.22,1,0.36,1), backdrop-filter 0.35s ease; }
+.stat-item {
+  flex: 1;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.22s cubic-bezier(0.22,0.9,0.35,1), background 0.24s cubic-bezier(0.22,0.9,0.35,1), border-color 0.24s ease, box-shadow 0.24s cubic-bezier(0.22,0.9,0.35,1), backdrop-filter 0.24s ease;
+}
 .stat-item:active { transform: scale(0.96); }
-.stat-item.active { background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.22) 100%); backdrop-filter: blur(26px) saturate(1.8); -webkit-backdrop-filter: blur(26px) saturate(1.8); border-color: rgba(255,255,255,0.75); box-shadow: 0 10px 30px rgba(91,155,213,0.16), 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.98), inset 0 -1px 0 rgba(255,255,255,0.45), inset 1px 0 0 rgba(255,255,255,0.55), inset -1px 0 0 rgba(255,255,255,0.30); }
-@media (hover: hover) { .stat-item:hover { background: rgba(255,255,255,0.85); transform: translateY(-1px); } }
-.stat-num { font-family: 'XITS-Bold','XITS',serif; font-size: 1.5rem; font-weight: normal; color: #5b9bd5; line-height: 1.1; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; }
-.stat-label { margin-top: 4px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.66rem; color: #9a9a9a; letter-spacing: 1.2px; transition: color 0.3s ease; }
+.stat-item.active {
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(250,252,255,0.98) 100%);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow:
+    0 12px 36px rgba(91, 155, 213, 0.16),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(230, 240, 255, 0.6),
+    inset 1.5px 0 1px -0.5px rgba(255, 255, 255, 1),
+    inset -1.5px 0 1px -0.5px rgba(255, 255, 255, 0.8),
+    inset 0 0 20px rgba(220, 235, 255, 0.5);
+  transform: translateY(-1px);
+}
+.stat-item.active .stat-num { color: #3a8bd0; }
+.stat-item.active .stat-label { color: #4a7aa8; }
+@media (hover: hover) {
+  .stat-item:hover { background: rgba(255,255,255,0.98); transform: translateY(-1px); }
+  .stat-item.active:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(250,252,255,0.98) 100%);
+  }
+}
+.stat-num { font-family: 'XITS-Bold','XITS',serif; font-size: 1.5rem; font-weight: normal; color: #5b9bd5; line-height: 1.1; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; transition: color 0.24s ease; }
+.stat-label { margin-top: 4px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.66rem; color: #9a9a9a; letter-spacing: 1.2px; transition: color 0.24s ease; }
 
-/* ========== 卡片容器：无过渡，仅承载 FLIP 的 transform ========== */
+/* ========== 卡片容器 ========== */
 .card-wrapper {
   display: block;
   margin-bottom: 12px;
@@ -88,7 +154,7 @@ body {
   display: none;
 }
 
-/* 动画期间：禁用 backdrop-filter，用不透明纯色替代 —— 这是性能关键 */
+/* 动画期间：禁用 backdrop-filter，用不透明纯色替代 */
 body.card-animating .task-card,
 body.card-animating .stat-item,
 body.card-animating .filter-btn {
@@ -99,11 +165,20 @@ body.card-animating .task-card {
   background-color: rgba(255, 255, 255, 0.94) !important;
 }
 body.card-animating .task-card.done {
-  background-color: rgba(245, 245, 250, 0.94) !important;
+  background-color: rgba(244, 248, 255, 0.94) !important;
 }
 body.card-animating .task-card.notice-card {
   background-color: rgba(255, 255, 255, 0.94) !important;
 }
+/* 动画期间选中态不闪白 */
+body.card-animating .filter-btn.active {
+  background: linear-gradient(180deg, rgba(214,236,254,0.94) 0%, rgba(158,202,244,0.92) 100%) !important;
+  color: #174a7d !important;
+}
+body.card-animating .stat-item.active {
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(250,252,255,0.98) 100%) !important;
+}
+body.card-animating .stat-item.active .stat-num { color: #3a8bd0 !important; }
 
 /* ========== 卡片本体 ========== */
 .task-card {
@@ -122,9 +197,9 @@ body.card-animating .task-card.notice-card {
   translate: 0 36px;
   transform: scale(1);
   transition:
-    opacity 0.28s cubic-bezier(0.4,0,0.2,1),
-    translate 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.22s cubic-bezier(0.4,0,0.2,1);
+    opacity 0.26s cubic-bezier(0.22,0.9,0.35,1),
+    translate 0.42s cubic-bezier(0.22,0.9,0.35,1),
+    transform 0.2s cubic-bezier(0.22,0.9,0.35,1);
 }
 .task-card.enter-from-top { translate: 0 -36px; }
 .task-card.reveal { opacity: 1; translate: 0 0; }
@@ -133,20 +208,50 @@ body.card-animating .task-card.notice-card {
 /* 头部 */
 .task-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 38px; }
 .task-title { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
-.task-title h3 { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.98rem; color: #1a1a1a; line-height: 1.45; letter-spacing: 0.4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.3s ease; }
-.icon { position: relative; flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease; }
+.task-title h3 { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.98rem; color: #1a1a1a; line-height: 1.45; letter-spacing: 0.4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.24s ease; }
+
+/* ★ 科目图标：深蓝渐变底色 + 内高光 */
+.icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #3a5169 0%, #2c3e50 100%);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 -1px 0 rgba(0,0,0,0.18);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), background 0.24s ease;
+}
 .icon svg { width: 18px; height: 18px; display: block; overflow: visible; }
 .task-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.subject-tag { background: #1a1a1a; color: #fff; padding: 3px 9px; border-radius: 7px; font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; font-size: 0.68rem; letter-spacing: 0.5px; white-space: nowrap; transition: background 0.3s ease, opacity 0.3s ease; }
-.arrow { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), color 0.3s; color: #ccc; font-size: 0.75rem; }
+
+/* ★ 科目标签：同款深蓝渐变底色 */
+.subject-tag {
+  background: linear-gradient(180deg, #3a5169 0%, #2c3e50 100%);
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 7px;
+  font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: background 0.24s ease, opacity 0.24s ease;
+}
+.arrow { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), color 0.24s; color: #ccc; font-size: 0.75rem; }
 .task-card.active .arrow { transform: rotate(180deg); color: #1a1a1a; }
 
-/* 展开内容：只保留 grid-template-rows 一个过渡 + opacity，去掉 padding/border/margin 过渡 */
+/* 展开内容 */
 .task-content {
   display: grid;
   grid-template-rows: 0fr;
   overflow: hidden;
-  transition: grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: grid-template-rows 0.28s cubic-bezier(0.22,0.9,0.35,1);
 }
 .task-card.active .task-content {
   grid-template-rows: 1fr;
@@ -161,17 +266,33 @@ body.card-animating .task-card.notice-card {
   font-size: 0.9rem;
   font-family: 'XITS','FZShuSong','PingFang SC','Microsoft YaHei',serif;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.18s ease;
 }
 .task-card.active .task-content-inner {
   opacity: 1;
-  transition: opacity 0.24s ease 0.04s;
+  transition: opacity 0.22s ease 0.03s;
 }
 .task-content p { line-height: 1.75; font-size: 0.9rem; margin-bottom: 6px; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
 .task-content strong, .task-content b { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; color: #1a1a1a; }
 
 /* 完成态 */
-.task-card.done { background: linear-gradient(135deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.18) 100%); backdrop-filter: blur(12px) saturate(1.3); -webkit-backdrop-filter: blur(12px) saturate(1.3); border-color: rgba(255,255,255,0.55); box-shadow: 0 8px 32px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(255,255,255,0.30), inset 1px 0 0 rgba(255,255,255,0.40); }
+.task-card.done {
+  background:
+    linear-gradient(135deg,
+      rgba(255, 255, 255, 0.44) 0%,
+      rgba(240, 246, 255, 0.26) 100%);
+  backdrop-filter: blur(20px) saturate(1.7);
+  -webkit-backdrop-filter: blur(20px) saturate(1.7);
+  border-color: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    0 10px 38px rgba(91, 155, 213, 0.10),
+    0 2px 8px rgba(0, 0, 0, 0.03),
+    inset 0 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.52),
+    inset 1px 0 0 rgba(255, 255, 255, 0.62),
+    inset -1px 0 0 rgba(255, 255, 255, 0.42),
+    inset 0 0 24px rgba(255, 255, 255, 0.16);
+}
 .task-card.done .task-title h3 { color: #9a9a9a; text-decoration: line-through; text-decoration-color: rgba(26,26,26,0.30); text-decoration-thickness: 1.5px; }
 .task-card.done .subject-tag { background: rgba(160,160,160,0.85); }
 .task-card.done .icon { background: linear-gradient(180deg, #e0e0e0 0%, #cacaca 100%); color: #888; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.05); }
@@ -181,12 +302,28 @@ body.card-animating .task-card.notice-card {
 .task-card.done .check-badge { transform: scale(1); opacity: 1; }
 
 /* 注意事项卡 */
-.task-card.notice-card .icon { background: #fff; color: #1a1a1a; border: 1.5px solid #1a1a1a; }
+.task-card.notice-card .icon { background: #fff; color: #1a1a1a; border: 1.5px solid #1a1a1a; box-shadow: none; }
 .task-card.notice-card.done .icon { background: #fff; color: #1a1a1a; border: 1.5px solid #1a1a1a; }
 .notice-content { font-size: 0.88rem; line-height: 1.75; color: #555; }
 .notice-item { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
 .notice-item + .notice-item { border-top: 1px dashed rgba(0,0,0,0.06); }
-.notice-dot { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; font-family: 'XITS-Bold',serif; font-size: 0.68rem; margin-top: 2px; }
+.notice-dot {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #3a5169 0%, #2c3e50 100%);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'XITS-Bold', serif;
+  font-size: 0.68rem;
+  margin-top: 2px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+}
 .notice-text { flex: 1; min-width: 0; }
 .notice-text strong { font-family: 'FZHei','PingFang SC','Microsoft YaHei',sans-serif; color: #1a1a1a; }
 
@@ -204,8 +341,8 @@ body.card-animating .task-card.notice-card {
   .task-card:hover .icon { transform: rotate(-4deg) scale(1.06); }
   .task-card.active:hover .icon { transform: rotate(-6deg) scale(1.06); }
   .filter-btn:hover { background: rgba(255,255,255,0.9); }
-  .filter-btn.active:hover { background: linear-gradient(180deg, rgba(46,46,52,0.92) 0%, rgba(24,24,28,0.88) 100%); }
-  .task-card.done:hover { background: linear-gradient(135deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.24) 100%); }
+  .filter-btn.active:hover { background: linear-gradient(180deg, rgba(214,236,254,0.92) 0%, rgba(158,202,244,0.90) 100%); }
+  .task-card.done:hover { background: linear-gradient(135deg, rgba(255,255,255,0.52) 0%, rgba(240,246,255,0.34) 100%); }
 }
 .task-card:active .icon { transform: scale(0.9); }
 .task-card.active .icon { transform: rotate(-6deg) scale(1.06); }
@@ -969,7 +1106,7 @@ body.card-animating .task-card.notice-card {
   });
 
   /* ============================================================
-     2. 包 .card-wrapper（仅作为 FLIP 的位移容器，不做高度过渡）
+     2. 包 .card-wrapper
      ============================================================ */
   var allCards = Array.prototype.slice.call(document.querySelectorAll('.task-card'));
 
@@ -1086,11 +1223,7 @@ body.card-animating .task-card.notice-card {
   renderStats();
 
   /* ============================================================
-     7. 视图切换：FLIP 动画
-        · 用 display:none 立即隐藏/显示，DOM 位置瞬间到位
-        · 对受影响的可见卡片做 FLIP（transform 位移回落），全部走合成层
-        · 新出现的卡片从下方 10px 上浮 + 淡入，配合瀑布流延迟 18ms
-        · 动画期间 body.card-animating，禁用 backdrop-filter
+     7. 视图切换：FLIP 动画（缩短时长、更跟手的缓动、更小的错开延迟）
      ============================================================ */
   var animTimer = null;
 
@@ -1135,39 +1268,37 @@ body.card-animating .task-card.notice-card {
   }
 
   function applyFilterWithAnimation() {
-    markAnimating(460);
+    markAnimating(500);
 
-    /* 1. 记录所有当前可见卡片的旧位置 */
+    /* 1. 记录旧位置 */
     var oldTops = new Map();
     allCards.forEach(function (card) {
       if (!isCardVisible(card)) return;
       oldTops.set(card, card._wrapper.getBoundingClientRect().top);
     });
 
-    /* 2. 应用 DOM 变化：display 立即切换 */
+    /* 2. 应用 DOM 变化 */
     var newlyShown = [];
     allCards.forEach(function (card) {
       var show = shouldShowCard(card);
       var visible = isCardVisible(card);
       if (show && !visible) {
-        // 显示：先设初始态，随后触发过渡
         card._wrapper.style.display = '';
         if (!card.classList.contains('reveal')) card.classList.add('reveal');
         card._wrapper.style.opacity = '0';
-        card._wrapper.style.transform = 'translateY(10px)';
+        card._wrapper.style.transform = 'translateY(6px)';
         card._wrapper.style.transition = 'none';
         newlyShown.push(card);
       } else if (!show && visible) {
-        // 隐藏：立即移除，空间瞬间回收
         card._wrapper.style.display = 'none';
       }
     });
 
-    /* 3. FLIP：对仍可见、且之前也可见的卡片，计算位移 */
+    /* 3. FLIP */
     var flips = [];
     allCards.forEach(function (card) {
       if (!isCardVisible(card)) return;
-      if (!oldTops.has(card)) return; // 之前不可见，不参与 FLIP
+      if (!oldTops.has(card)) return;
       var oldTop = oldTops.get(card);
       var newTop = card._wrapper.getBoundingClientRect().top;
       var delta = oldTop - newTop;
@@ -1176,37 +1307,34 @@ body.card-animating .task-card.notice-card {
       }
     });
 
-    /* 4. 设置初始位移（无过渡） */
     flips.forEach(function (item) {
       item.card._wrapper.style.transition = 'none';
       item.card._wrapper.style.transform = 'translateY(' + item.delta + 'px)';
     });
 
-    /* 5. 强制重排 */
     void document.body.offsetHeight;
 
-    /* 6. 触发过渡 */
+    /* 4. 触发过渡 */
     requestAnimationFrame(function () {
       flips.forEach(function (item) {
         var w = item.card._wrapper;
-        w.style.transition = 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+        w.style.transition = 'transform 0.3s cubic-bezier(0.22,0.9,0.35,1)';
         w.style.transform = '';
       });
 
-      /* 新出现的卡片：瀑布流错开，从下方 10px 上浮 + 淡入 */
-      var STEP = 18;
+      var STEP = 8;
       newlyShown.forEach(function (card, i) {
         var w = card._wrapper;
         var delay = i * STEP;
         setTimeout(function () {
-          w.style.transition = 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+          w.style.transition = 'opacity 0.22s cubic-bezier(0.22,0.9,0.35,1), transform 0.3s cubic-bezier(0.22,0.9,0.35,1)';
           w.style.opacity = '1';
           w.style.transform = '';
         }, delay);
       });
     });
 
-    /* 7. 清理 */
+    /* 5. 清理 */
     setTimeout(function () {
       allCards.forEach(function (card) {
         var w = card._wrapper;
@@ -1214,7 +1342,7 @@ body.card-animating .task-card.notice-card {
         w.style.transform = '';
         w.style.opacity = '';
       });
-    }, 600);
+    }, 520);
   }
 
   function applyFilter(animate) {
@@ -1244,7 +1372,7 @@ body.card-animating .task-card.notice-card {
     item.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFilter(item.dataset.filter); } });
   });
 
-  /* 初始化：立即落位，无动画 */
+  /* 初始化 */
   syncFilterUI();
   applyFilterInstant();
 
@@ -1282,7 +1410,6 @@ body.card-animating .task-card.notice-card {
       if (!e.isPrimary) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       if (pointerId !== null) return;
-      if (!checkable) return;
       if (interactingPointerId !== null) return;
 
       pointerId = e.pointerId;
@@ -1293,6 +1420,8 @@ body.card-animating .task-card.notice-card {
       startY = e.clientY;
 
       try { card.setPointerCapture(e.pointerId); } catch (err) {}
+
+      if (!checkable) return;
 
       clearPress();
       pressTimer = setTimeout(function () {
@@ -1330,8 +1459,7 @@ body.card-animating .task-card.notice-card {
       if (wasMoved) return;
 
       card.classList.toggle('active');
-      // 展开/收起时也短暂禁用 backdrop-filter，避免展开动画卡顿
-      markAnimating(360);
+      markAnimating(300);
     });
 
     card.addEventListener('pointercancel', function (e) {
